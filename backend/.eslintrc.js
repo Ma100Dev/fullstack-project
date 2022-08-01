@@ -11,8 +11,7 @@ module.exports = {
         ecmaVersion: 'latest',
     },
     rules: {
-        'no-console': 'off',
-        indent: ['error', 2, { SwitchCase: 1, ObjectExpression: 2 }],
+        indent: ['error', 2, { SwitchCase: 1, ObjectExpression: 2, FunctionExpression: { body: 2 } }],
         'no-underscore-dangle': 'off',
         'no-param-reassign': 'off',
         'consistent-return': 'off',
