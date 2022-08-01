@@ -1,6 +1,12 @@
 {
   "extends": [
-    "next/babel",
+    "next",
     "next/core-web-vitals"
-  ]
+  ],
+  "rules": {
+    "semi": [
+      "error",
+      "always"
+    ]
+  }
 }
