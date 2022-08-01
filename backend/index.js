@@ -1,22 +1,10 @@
-const express = require('express');
-const userManagement = require('express-user-management');
+const http = require('http');
+const app = require('./app');
 const config = require('./utils/config');
+const logger = require('./utils/logger');
 
-const app = express();
-
-const options = {
-    adapter: 'passport-mongo',
-    usersTable: 'users',
-    mongoUrl: config.MONGODB_URI,
-    nodeMailerConfig: undefined,
-    activationRequired: false,
-    secret: config.SECRET,
-};
-
-userManagement.init(app, options);
-
-app.use(express.json());
-
-app.listen(config.PORT, () => {
-  console.log(`Example app listening on port ${config.PORT}!`);
+http.createServer(app);
+const { PORT } = config;
+app.listen(PORT, () => {
+  logger.log(`Server running on port ${PORT}`);
 });
