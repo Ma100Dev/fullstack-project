@@ -21,7 +21,7 @@
   "dependencies": {
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "express-user-manager": "^3.0.1",
+    "express-user-management": "^1.6.8",
     "mongoose": "^6.5.0"
   },
   "devDependencies": {
