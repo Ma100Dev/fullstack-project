@@ -3,25 +3,17 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { Formik } from 'formik';
 import { Button, Grid, Typography } from '@mui/material';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const Login = () => {
-    const navigate = useNavigate();
+const SignUp = () => {
     const [open, setOpen] = React.useState(false);
     const [error, setError] = React.useState("");
-    const [redirect, setRedirect] = React.useState(0);
-    React.useEffect(() => {
-        if (redirect > 0) {
-            navigate('/');
-        }
-    }, [redirect]);
     const handleClose = () => {
         setOpen(false);
     };
@@ -74,7 +66,7 @@ const Login = () => {
                         });
                     if (!error) {
                         localStorage.setItem('user', JSON.stringify(data));
-                        setRedirect(1);
+                        history.go("/");
                     }
                     setSubmitting(false);
                 }}
@@ -144,9 +136,12 @@ const Login = () => {
                         <Button variant="contained" type="submit" disabled={isSubmitting} sx={{ width: '100%' }}>
                             Submit
                         </Button>
-                        <Link to="/signUp">
-                            <Button>Sign up</Button>
-                        </Link>
+                        <div>
+                            Already have an account?
+                            <Link to="/login">
+                                <Button>Log in</Button>
+                            </Link>
+                        </div>
                     </Box>
                 )}
             </Formik>
@@ -154,4 +149,4 @@ const Login = () => {
     );
 }
 
-export default Login;
+export default SignUp;
