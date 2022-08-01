@@ -4,8 +4,20 @@ import Box from '@mui/material/Box';
 import { Formik } from 'formik';
 import { Button, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import axios from 'axios';
+import { useHistory } from "react-router-dom";
 
 function Login() {
+    const [open, setOpen] = React.useState(false);
+    const [error, setError] = React.useState("");
+    const handleClose = () => {
+        setOpen(false);
+    };
     return (
         <Grid
             container
@@ -15,28 +27,49 @@ function Login() {
             justifyContent="center"
             style={{ minHeight: '100vh', width: '100%' }}
         >
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    Error!
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        {error}
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>OK</Button>
+                </DialogActions>
+            </Dialog>
             <Formik
-                initialValues={{ email: '', password: '' }}
+                initialValues={{ username: '', password: '' }}
                 validate={(values) => {
                     const errors = {};
-                    if (!values.email) {
-                        errors.email = 'Required';
-                    } else if ( // Test email format with regex
-                        !/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/i
-                            .test(values.email)
-                    ) {
-                        errors.email = 'Invalid email address';
+                    if (!values.username) {
+                        errors.username = 'Required';
                     }
                     if (!values.password) {
                         errors.password = 'Required';
                     }
                     return errors;
                 }}
-                onSubmit={(values, { setSubmitting }) => {
-                    setTimeout(() => {
-                        alert(JSON.stringify(values, null, 2));
-                        setSubmitting(false);
-                    }, 400);
+                onSubmit={async (values, { setSubmitting }) => {
+                    let error = false;
+                    const { data } = await axios.post('http://localhost:3001/api/login', values)
+                        .catch(error => {
+                            setError(error.response?.data?.error);
+                            setOpen(true);
+                            error = true;
+                        });
+                    if (!error) {
+                        localStorage.setItem('user', JSON.stringify(data));
+                        history.go("/");
+                    }
+                    setSubmitting(false);
                 }}
             >
                 {({
@@ -63,12 +96,12 @@ function Login() {
                         }}
                     >
                         <TextField
-                            type="email"
-                            name="email"
+                            type="username"
+                            name="username"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.email}
-                            placeholder="Email"
+                            value={values.username}
+                            placeholder="Username"
                             sx={{ width: '100%' }}
                         />
                         <br />
@@ -79,7 +112,7 @@ function Login() {
                                 mb: 1,
                             }}
                         >
-                            {(errors.email && touched.email && errors.email) || '⠀'}
+                            {(errors.username && touched.username && errors.username) || '⠀'}
                         </Typography>
                         <br />
                         <TextField

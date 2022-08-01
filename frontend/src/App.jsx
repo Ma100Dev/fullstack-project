@@ -8,7 +8,7 @@ import {
 function App() {
   return (
     <Routes>
-      <Route path='/' element={(!localStorage.getItem('user') && <Login />)} />
+      <Route path='/' element={(!localStorage.getItem('user') ? <Login /> : <div>front page</div>)} />
       <Route path='/signUp' element={<div />} />
     </Routes>
   );
