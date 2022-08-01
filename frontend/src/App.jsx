@@ -1,9 +1,16 @@
 import React from 'react';
 import Login from './components/Login';
+import {
+  Routes,
+  Route,
+} from "react-router-dom";
 
 function App() {
   return (
-    (!localStorage.getItem('user') && <Login />)
+    <Routes>
+      <Route path='/' element={(!localStorage.getItem('user') && <Login />)} />
+      <Route path='/signUp' element={<div />} />
+    </Routes>
   );
 }
 
