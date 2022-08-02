@@ -9,11 +9,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const SignUp = () => {
     const [open, setOpen] = React.useState(false);
     const [error, setError] = React.useState("");
+    const navigate = useNavigate();
     const handleClose = () => {
         setOpen(false);
     };
@@ -45,9 +47,14 @@ const SignUp = () => {
                 </DialogActions>
             </Dialog>
             <Formik
-                initialValues={{ username: '', password: '' }}
+                initialValues={{ email: '', name: '', username: '', password: '' }}
                 validate={(values) => {
                     const errors = {};
+                    if (!values.email) {
+                        errors.email = 'Required';
+                    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+                        errors.email = 'Invalid email address';
+                    }
                     if (!values.username) {
                         errors.username = 'Required';
                     }
@@ -58,15 +65,25 @@ const SignUp = () => {
                 }}
                 onSubmit={async (values, { setSubmitting }) => {
                     let error = false;
-                    const { data } = await axios.post('http://localhost:3001/api/login', values)
+                    const { data } = await axios.post('http://localhost:3001/api/users', values)
                         .catch(error => {
                             setError(error.response?.data?.error);
                             setOpen(true);
                             error = true;
                         });
+                    const signUpData = { ...data };
                     if (!error) {
-                        localStorage.setItem('user', JSON.stringify(data));
-                        history.go("/");
+                        const { data } = await axios.post('http://localhost:3001/api/login', { username: signUpData.username, password: values.password })
+                            .catch(error => {
+                                setError(error.response?.data?.error);
+                                setOpen(true);
+                                error = true;
+                            });
+                        if (!error) {
+                            localStorage.setItem('user', JSON.stringify(data));
+                            setSubmitting(false);
+                            navigate('/');
+                        }
                     }
                     setSubmitting(false);
                 }}
@@ -95,6 +112,40 @@ const SignUp = () => {
                         }}
                     >
                         <TextField
+                            name="email"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.email}
+                            placeholder="E-mail"
+                            sx={{ width: '100%' }}
+                        />
+                        <Typography
+                            sx={{
+                                color: 'red',
+                                mt: 1,
+                                mb: 1,
+                            }}
+                        >
+                            {(errors.email && touched.email && errors.email) || '⠀'}
+                        </Typography>
+                        <TextField
+                            name="name"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.name}
+                            placeholder="Name"
+                            sx={{ width: '100%' }}
+                        />
+                        <Typography
+                            sx={{
+                                color: 'red',
+                                mt: 1,
+                                mb: 1,
+                            }}
+                        >
+                            {(errors.name && touched.name && errors.name) || '⠀'}
+                        </Typography>
+                        <TextField
                             type="username"
                             name="username"
                             onChange={handleChange}
@@ -103,7 +154,6 @@ const SignUp = () => {
                             placeholder="Username"
                             sx={{ width: '100%' }}
                         />
-                        <br />
                         <Typography
                             sx={{
                                 color: 'red',
@@ -113,7 +163,6 @@ const SignUp = () => {
                         >
                             {(errors.username && touched.username && errors.username) || '⠀'}
                         </Typography>
-                        <br />
                         <TextField
                             type="password"
                             name="password"
@@ -123,7 +172,6 @@ const SignUp = () => {
                             placeholder="Password"
                             sx={{ width: '100%' }}
                         />
-                        <br />
                         <Typography sx={{
                             color: 'red',
                             mt: 1,
@@ -136,12 +184,12 @@ const SignUp = () => {
                         <Button variant="contained" type="submit" disabled={isSubmitting} sx={{ width: '100%' }}>
                             Submit
                         </Button>
-                        <div>
+                        <Typography sx={{ mt: 1 }}>
                             Already have an account?
                             <Link to="/login">
                                 <Button>Log in</Button>
                             </Link>
-                        </div>
+                        </Typography>
                     </Box>
                 )}
             </Formik>
