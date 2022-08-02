@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-undef
 module.exports = {
   settings: {
     react: {
@@ -9,7 +10,8 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    'plugin:react/recommended'
+    'plugin:react/recommended',
+    'eslint:recommended',
   ],
   parserOptions: {
     ecmaFeatures: {

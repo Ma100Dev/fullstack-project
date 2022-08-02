@@ -1,14 +1,14 @@
 import React from 'react';
 import Login from './components/Login';
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import SignUp from './components/SignUp';
 import FrontPage from './components/FrontPage';
+import MenuAppBar from './components/MenuAppBar';
 
 const App = () => {
-  const isLoggedIn = localStorage.getItem('user')
   return (
     <>
-      <div>APP BAR</div>
+      <MenuAppBar />
       <Routes>
         <Route path='/' element={(<FrontPage />)} />
         <Route path='/signUp' element={<SignUp />} />
