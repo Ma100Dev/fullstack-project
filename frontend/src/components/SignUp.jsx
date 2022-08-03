@@ -12,27 +12,30 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import * as Yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../reducers/userReducer';
 
 const SignUpSchema = Yup.object().shape({
-    username: Yup.string
+    username: Yup.string()
         .min(3, 'Must be at least 3 characters')
         .max(20, 'Must be less than 20 characters')
         .required('Required'),
-    password: Yup.string
+    password: Yup.string()
         .min(8, 'Must be at least 8 characters')
         .required('Required'),
-    confirmPassword: Yup.string
+    confirmPassword: Yup.string()
         .oneOf([Yup.ref('password'), null], 'Passwords must match'),
-    email: Yup.string
+    email: Yup.string()
         .email('Invalid email address')
         .required('Required'),
-    name: Yup.string
+    name: Yup.string()
         .min(3, 'Must be at least 3 characters')
         .notRequired()
 });
 
 
 const SignUp = () => {
+    const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const [error, setError] = React.useState("");
     const navigate = useNavigate();
@@ -87,6 +90,7 @@ const SignUp = () => {
                             });
                         if (!error) {
                             localStorage.setItem('user', JSON.stringify(data));
+                            dispatch(setUser(data));
                             setSubmitting(false);
                             navigate('/');
                         }
@@ -191,7 +195,7 @@ const SignUp = () => {
                             name="confirmPassword"
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            value={values.password}
+                            value={values.confirmPassword}
                             placeholder="Confirm Password"
                             sx={{ width: '100%' }}
                         />
@@ -201,7 +205,7 @@ const SignUp = () => {
                             mb: 1,
                         }}
                         >
-                            {(errors.password && touched.password && errors.password) || '⠀'}
+                            {(errors.confirmPassword && touched.confirmPassword && errors.confirmPassword) || '⠀'}
                         </Typography>
                         <br />
                         <Button variant="contained" type="submit" disabled={isSubmitting} sx={{ width: '100%' }}>

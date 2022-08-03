@@ -12,15 +12,18 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import * as Yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../reducers/userReducer';
 
 const LoginSchema = Yup.object().shape({
-    username: Yup.string
+    username: Yup.string()
         .required('Required'),
     password: Yup.string()
         .required('Required')
 });
 
 const Login = () => {
+    const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const [error, setError] = React.useState("");
     const navigate = useNavigate();
@@ -67,6 +70,7 @@ const Login = () => {
                         });
                     if (!error) {
                         localStorage.setItem('user', JSON.stringify(data));
+                        dispatch(setUser(data));
                         setSubmitting(false);
                         navigate('/');
                     }
