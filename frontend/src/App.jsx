@@ -4,8 +4,16 @@ import { Routes, Route } from "react-router-dom";
 import SignUp from './components/SignUp';
 import FrontPage from './components/FrontPage';
 import MenuAppBar from './components/MenuAppBar';
+import { useSelector, useDispatch } from 'react-redux'
+import { setUser, clearUser } from './reducers/userReducer'
+
+const user = localStorage.getItem('user')
 
 const App = () => {
+  const dispatch = useDispatch()
+  if (user) {
+    dispatch(setUser(JSON.parse(user)))
+  }
   return (
     <>
       <MenuAppBar />

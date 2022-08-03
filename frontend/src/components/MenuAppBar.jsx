@@ -3,9 +3,11 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import ButtonBase from '@mui/material/ButtonBase';
 import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 
 const MenuAppBar = () => {
-    const isLoggedIn = localStorage.getItem('user') || false
+    const user = useSelector(state => state.user)
+    const isLoggedIn = Boolean(user)
     return (
         <Box sx={{
             flexGrow: 1,
