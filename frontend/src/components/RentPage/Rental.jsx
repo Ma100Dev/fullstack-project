@@ -65,7 +65,7 @@ Rental.propTypes = {
         image: PropTypes.shape({
             contentType: PropTypes.string.isRequired,
             data: PropTypes.shape({
-                data: PropTypes.string.isRequired,
+                data: PropTypes.array.isRequired,
             }).isRequired,
         })
     }).isRequired,

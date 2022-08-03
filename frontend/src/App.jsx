@@ -9,6 +9,7 @@ import SignUp from './components/SignUp';
 import FrontPage from './components/FrontPage';
 import MenuAppBar from './components/MenuAppBar';
 import RentPage from './components/RentPage';
+import Profile from './Profile';
 
 const user = localStorage.getItem('user');
 
@@ -25,6 +26,7 @@ const App = () => {
         <Route path='/signUp' element={<SignUp />} />
         <Route path='/login' element={<Login />} />
         <Route path='/rent' element={<RentPage />} />
+        <Route path='/profile' element={<Profile />} />
       </Routes>
     </>
   );

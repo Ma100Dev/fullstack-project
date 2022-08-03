@@ -26,7 +26,7 @@ const MenuItem = ({ text, link, isButton = false, onClick }) => (
 
 MenuItem.propTypes = {
     text: PropTypes.string.isRequired,
-    link: PropTypes.string.isRequired,
+    link: PropTypes.string,
     isButton: PropTypes.bool,
     onClick: PropTypes.func
 };
