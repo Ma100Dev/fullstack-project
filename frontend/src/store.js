@@ -1,10 +1,14 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
+
 import userReducer from './reducers/userReducer';
+import rentalReducer from './reducers/rentalReducer';
+
 import thunk from 'redux-thunk';
 
 const reducer = combineReducers(
     {
-        user: userReducer
+        user: userReducer,
+        rentals: rentalReducer,
     }
 );
 
