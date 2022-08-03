@@ -195,6 +195,6 @@ const SignUp = () => {
             </Formik>
         </Grid>
     );
-}
+};
 
 export default SignUp;

@@ -1,15 +1,12 @@
-import React from 'react'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import ButtonBase from '@mui/material/ButtonBase';
-import { Link } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { clearUser } from '../reducers/userReducer'
+import React from 'react';
+import Box from '@mui/material/Box';
+import { useSelector, useDispatch } from 'react-redux';
+import { clearUser } from '../../reducers/userReducer';
 
 const MenuAppBar = () => {
-    const dispatch = useDispatch()
-    const user = useSelector(state => state.user)
-    const isLoggedIn = Boolean(user)
+    const dispatch = useDispatch();
+    const user = useSelector(state => state.user);
+    const isLoggedIn = Boolean(user);
     return (
         <Box sx={{
             flexGrow: 1,
@@ -26,6 +23,11 @@ const MenuAppBar = () => {
             <Typography variant="h6" color="inherit" sx={{ flexGrow: 1, mt: 1, ml: 2, mb: 1, mr: 1 }}>
                 <Link to="/">
                     Home
+                </Link>
+            </Typography>
+            <Typography variant="h6" color="inherit" sx={{ flexGrow: 1, mt: 1, ml: 2, mb: 1, mr: 1 }}>
+                <Link to="/rent">
+                    Rent
                 </Link>
             </Typography>
             {isLoggedIn ? (
@@ -49,7 +51,7 @@ const MenuAppBar = () => {
                 </>
             )}
         </Box>
-    )
-}
+    );
+};
 
-export default MenuAppBar
+export default MenuAppBar;

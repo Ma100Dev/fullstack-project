@@ -1,27 +1,27 @@
-const initialState = null
+const initialState = null;
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
     case 'SET_USER':
-        return action.user
+        return action.user;
     case 'CLEAR_USER':
-        return initialState
+        return initialState;
     default:
-        return state
+        return state;
     }
-}
+};
 
 export const setUser = (user) => {
     return {
         type: 'SET_USER',
         user
-    }
-}
+    };
+};
 
 export const clearUser = () => {
     return {
         type: 'CLEAR_USER'
-    }
-}
+    };
+};
 
-export default reducer
+export default reducer;

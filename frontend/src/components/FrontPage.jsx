@@ -7,6 +7,6 @@ const FrontPage = () => {
             <h1>Front Page</h1>
         </div>
     );
-}
+};
 
 export default FrontPage;

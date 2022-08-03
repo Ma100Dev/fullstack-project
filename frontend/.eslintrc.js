@@ -26,5 +26,6 @@ module.exports = {
   rules: {
     'no-control-regex': 'off',
     'comma-dangle': 'off',
+    'semi': 'error',
   },
 };

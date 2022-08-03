@@ -150,6 +150,6 @@ const Login = () => {
             </Formik>
         </Grid>
     );
-}
+};
 
 export default Login;

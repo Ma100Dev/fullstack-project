@@ -1,18 +1,21 @@
 import React from 'react';
 import Login from './components/Login';
 import { Routes, Route } from "react-router-dom";
+
+import { useDispatch } from 'react-redux';
+import { setUser } from './reducers/userReducer';
+
 import SignUp from './components/SignUp';
 import FrontPage from './components/FrontPage';
 import MenuAppBar from './components/MenuAppBar';
-import { useDispatch } from 'react-redux'
-import { setUser } from './reducers/userReducer'
+import RentPage from './components/RentPage';
 
-const user = localStorage.getItem('user')
+const user = localStorage.getItem('user');
 
 const App = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   if (user) {
-    dispatch(setUser(JSON.parse(user)))
+    dispatch(setUser(JSON.parse(user)));
   }
   return (
     <>
@@ -21,9 +24,10 @@ const App = () => {
         <Route path='/' element={(<FrontPage />)} />
         <Route path='/signUp' element={<SignUp />} />
         <Route path='/login' element={<Login />} />
+        <Route path='/rent' element={<RentPage />} />
       </Routes>
     </>
   );
-}
+};
 
 export default App;
