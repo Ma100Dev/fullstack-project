@@ -27,5 +27,6 @@ module.exports = {
     'no-control-regex': 'off',
     'comma-dangle': 'off',
     'semi': 'error',
+    'react/prop-types': 'off',
   },
 };

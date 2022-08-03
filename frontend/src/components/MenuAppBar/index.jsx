@@ -2,6 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearUser } from '../../reducers/userReducer';
+import MenuItem from './MenuItem';
 
 const MenuAppBar = () => {
     const dispatch = useDispatch();
@@ -20,34 +21,14 @@ const MenuAppBar = () => {
             justifyContent: 'center',
             alignItems: 'center',
         }}>
-            <Typography variant="h6" color="inherit" sx={{ flexGrow: 1, mt: 1, ml: 2, mb: 1, mr: 1 }}>
-                <Link to="/">
-                    Home
-                </Link>
-            </Typography>
-            <Typography variant="h6" color="inherit" sx={{ flexGrow: 1, mt: 1, ml: 2, mb: 1, mr: 1 }}>
-                <Link to="/rent">
-                    Rent
-                </Link>
-            </Typography>
+            <MenuItem text="Home" link="/" />
+            <MenuItem text="Rent" link="/rent" />
             {isLoggedIn ? (
-                <ButtonBase onClick={() => dispatch(clearUser())}>
-                    <Typography variant="h6" color="inherit" sx={{ flexGrow: 1, mt: 1, ml: 2, mb: 1, mr: 1 }}>
-                        Log out
-                    </Typography>
-                </ButtonBase>
+                <MenuItem text="Log out" isButton={true} onClick={() => dispatch(clearUser())} />
             ) : (
                 <>
-                    <Typography variant="h6" color="inherit" sx={{ flexGrow: 1, mt: 1, ml: 2, mb: 1, mr: 1 }}>
-                        <Link to="/login">
-                            Log in
-                        </Link>
-                    </Typography>
-                    <Typography variant="h6" color="inherit" sx={{ flexGrow: 1, mt: 1, ml: 2, mb: 1, mr: 1 }}>
-                        <Link to="/signUp">
-                            Sign up
-                        </Link>
-                    </Typography>
+                    <MenuItem text="Log in" link="/login" />
+                    <MenuItem text="Sign up" link="/signUp" />
                 </>
             )}
         </Box>
