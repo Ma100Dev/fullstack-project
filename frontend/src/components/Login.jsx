@@ -11,6 +11,14 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import * as Yup from 'yup';
+
+const LoginSchema = Yup.object().shape({
+    username: Yup.string
+        .required('Required'),
+    password: Yup.string()
+        .required('Required')
+});
 
 const Login = () => {
     const [open, setOpen] = React.useState(false);
@@ -48,16 +56,7 @@ const Login = () => {
             </Dialog>
             <Formik
                 initialValues={{ username: '', password: '' }}
-                validate={(values) => {
-                    const errors = {};
-                    if (!values.username) {
-                        errors.username = 'Required';
-                    }
-                    if (!values.password) {
-                        errors.password = 'Required';
-                    }
-                    return errors;
-                }}
+                validationSchema={LoginSchema}
                 onSubmit={async (values, { setSubmitting }) => {
                     let error = false;
                     const { data } = await axios.post('http://localhost:3001/api/login', values)

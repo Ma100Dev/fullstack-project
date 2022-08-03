@@ -11,6 +11,26 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import * as Yup from 'yup';
+
+const SignUpSchema = Yup.object().shape({
+    username: Yup.string
+        .min(3, 'Must be at least 3 characters')
+        .max(20, 'Must be less than 20 characters')
+        .required('Required'),
+    password: Yup.string
+        .min(8, 'Must be at least 8 characters')
+        .required('Required'),
+    confirmPassword: Yup.string
+        .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    email: Yup.string
+        .email('Invalid email address')
+        .required('Required'),
+    name: Yup.string
+        .min(3, 'Must be at least 3 characters')
+        .notRequired()
+});
+
 
 const SignUp = () => {
     const [open, setOpen] = React.useState(false);
@@ -47,22 +67,8 @@ const SignUp = () => {
                 </DialogActions>
             </Dialog>
             <Formik
-                initialValues={{ email: '', name: '', username: '', password: '' }}
-                validate={(values) => {
-                    const errors = {};
-                    if (!values.email) {
-                        errors.email = 'Required';
-                    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-                        errors.email = 'Invalid email address';
-                    }
-                    if (!values.username) {
-                        errors.username = 'Required';
-                    }
-                    if (!values.password) {
-                        errors.password = 'Required';
-                    }
-                    return errors;
-                }}
+                initialValues={{ email: '', name: '', username: '', password: '', confirmPassword: '' }}
+                validationSchema={SignUpSchema}
                 onSubmit={async (values, { setSubmitting }) => {
                     let error = false;
                     const { data } = await axios.post('http://localhost:3001/api/users', values)
@@ -170,6 +176,23 @@ const SignUp = () => {
                             onBlur={handleBlur}
                             value={values.password}
                             placeholder="Password"
+                            sx={{ width: '100%' }}
+                        />
+                        <Typography sx={{
+                            color: 'red',
+                            mt: 1,
+                            mb: 1,
+                        }}
+                        >
+                            {(errors.password && touched.password && errors.password) || '⠀'}
+                        </Typography>
+                        <TextField
+                            type="confirmPassword"
+                            name="confirmPassword"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.password}
+                            placeholder="Confirm Password"
                             sx={{ width: '100%' }}
                         />
                         <Typography sx={{
