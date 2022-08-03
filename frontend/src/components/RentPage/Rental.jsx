@@ -20,25 +20,35 @@ const Rental = ({ rental }) => {
                 outline: "1px solid #ccc",
                 p: 3,
                 borderRadius: "5px",
+                display: "flex",
+                flexDirection: "row",
             }}
         >
-            <Typography variant="h5">{rental.title}</Typography>
-            <Typography variant="subtitle2"
-                sx={{
-                    fontSize: "0.8rem",
-                    color: "text.secondary",
-                    fontStyle: "italic",
-                    mt: 1,
-                    mb: 1,
-                    ml: 1,
-                    mr: 2,
-                }}
-            >{rental.description}</Typography>
-            <Typography>Price per night: {rental.price}</Typography>
-            <Typography>Bed(s): {rental.beds}</Typography>
-            <Typography>Address: {rental.address}</Typography>
-            {rental.petsAllowed && <PetsIcon />}
-            <img src={`data:${rental.image.contentType};base64,${arrayBufferToBase64(rental.image.data.data)}`} alt={rental.title} />
+            <Box>
+                <img
+                    src={`data:${rental.image.contentType};base64,${arrayBufferToBase64(rental.image.data.data)}`}
+                    alt={rental.title}
+                    style={{ outline: "1px solid #ccc", borderRadius: "5px" }}
+                />
+            </Box>
+            <Box sx={{ ml: 5 }}>
+                <Typography variant="h5">{rental.title}</Typography>
+                <Typography variant="subtitle2"
+                    sx={{
+                        fontSize: "0.8rem",
+                        color: "text.secondary",
+                        fontStyle: "italic",
+                        mt: 1,
+                        mb: 1,
+                        ml: 1,
+                        mr: 2,
+                    }}
+                >{rental.description}</Typography>
+                <Typography>Price per night: {rental.price}</Typography>
+                <Typography>Bed(s): {rental.beds}</Typography>
+                <Typography>Address: {rental.address}</Typography>
+                {rental.petsAllowed && <PetsIcon />}
+            </Box>
         </Box>
     );
 };
