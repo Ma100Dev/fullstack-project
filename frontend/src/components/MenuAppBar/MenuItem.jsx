@@ -2,6 +2,7 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import ButtonBase from '@mui/material/ButtonBase';
 import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const typographyProps = {
     variant: "h6",
@@ -22,5 +23,12 @@ const MenuItem = ({ text, link, isButton = false, onClick }) => (
         }
     </>
 );
+
+MenuItem.propTypes = {
+    text: PropTypes.string.isRequired,
+    link: PropTypes.string.isRequired,
+    isButton: PropTypes.bool,
+    onClick: PropTypes.func
+};
 
 export default MenuItem;

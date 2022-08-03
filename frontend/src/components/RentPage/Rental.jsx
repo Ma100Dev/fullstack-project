@@ -2,6 +2,7 @@ import React from "react";
 import PetsIcon from '@mui/icons-material/Pets';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import PropTypes from 'prop-types';
 
 const arrayBufferToBase64 = (buffer) => {
     let binary = '';
@@ -51,6 +52,23 @@ const Rental = ({ rental }) => {
             </Box>
         </Box>
     );
+};
+
+Rental.propTypes = {
+    rental: PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        beds: PropTypes.number.isRequired,
+        address: PropTypes.string.isRequired,
+        petsAllowed: PropTypes.bool.isRequired,
+        image: PropTypes.shape({
+            contentType: PropTypes.string.isRequired,
+            data: PropTypes.shape({
+                data: PropTypes.string.isRequired,
+            }).isRequired,
+        })
+    }).isRequired,
 };
 
 export default Rental;
