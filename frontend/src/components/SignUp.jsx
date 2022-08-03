@@ -24,7 +24,7 @@ const SignUpSchema = Yup.object().shape({
         .min(8, 'Must be at least 8 characters')
         .required('Required'),
     confirmPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+        .oneOf([Yup.ref('password')], 'Passwords must match'),
     email: Yup.string()
         .email('Invalid email address')
         .required('Required'),
@@ -70,7 +70,7 @@ const SignUp = () => {
                 </DialogActions>
             </Dialog>
             <Formik
-                initialValues={{ email: '', name: '', username: '', password: '', confirmPassword: '' }}
+                initialValues={{ email: '', name: '', username: '', password: '', confirmPassword: 'Confirm password' }}
                 validationSchema={SignUpSchema}
                 onSubmit={async (values, { setSubmitting }) => {
                     let error = false;

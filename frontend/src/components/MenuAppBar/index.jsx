@@ -25,11 +25,11 @@ const MenuAppBar = () => {
             <MenuItem text="Rent" link="/rent" />
             {isLoggedIn ? (
                 <>
+                    <MenuItem text="Profile" link="/profile" />
                     <MenuItem text="Log out" isButton={true} onClick={() => {
                         localStorage.removeItem('user');
                         dispatch(clearUser());
                     }} />
-                    <MenuItem text="Profile" link="/profile" />
                 </>
             ) : (
                 <>
