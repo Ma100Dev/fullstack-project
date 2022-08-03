@@ -7,6 +7,7 @@ const { userExtractor } = require('../utils/middleware');
 propertyRouter.post('/', userExtractor, async (request, response) => {
     const { body } = request;
     const property = new Property({
+        title: body.title,
         address: body.address,
         price: Number(body.price),
         beds: Number(body.beds),

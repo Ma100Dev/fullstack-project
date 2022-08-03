@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
 const propertySchema = mongoose.Schema({
+    title: {
+        type: String,
+        required: true,
+        minLength: 5,
+    },
     address: {
         type: String,
         required: true,
