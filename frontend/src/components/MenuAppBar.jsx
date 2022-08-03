@@ -4,8 +4,10 @@ import Typography from '@mui/material/Typography'
 import ButtonBase from '@mui/material/ButtonBase';
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { clearUser } from '../reducers/userReducer'
 
 const MenuAppBar = () => {
+    const dispatch = useDispatch()
     const user = useSelector(state => state.user)
     const isLoggedIn = Boolean(user)
     return (
@@ -27,7 +29,7 @@ const MenuAppBar = () => {
                 </Link>
             </Typography>
             {isLoggedIn ? (
-                <ButtonBase onClick={() => console.log('log out')}>
+                <ButtonBase onClick={() => dispatch(clearUser())}>
                     <Typography variant="h6" color="inherit" sx={{ flexGrow: 1, mt: 1, ml: 2, mb: 1, mr: 1 }}>
                         Log out
                     </Typography>
