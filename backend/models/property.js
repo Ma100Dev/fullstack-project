@@ -31,6 +31,11 @@ const propertySchema = mongoose.Schema({
         type: Boolean,
         required: true,
     },
+    image:
+    {
+        data: Buffer,
+        contentType: String,
+    },
     owner:
     {
         type: mongoose.Schema.Types.ObjectId,
@@ -45,6 +50,7 @@ propertySchema.set('toJSON', {
         delete returnedObject._id;
         delete returnedObject.__v;
         delete returnedObject.owner;
+        delete returnedObject.image;
     },
 });
 

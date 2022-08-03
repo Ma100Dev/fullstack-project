@@ -9,13 +9,24 @@ const Rental = ({ rental }) => {
             sx={{
                 outline: "1px solid #ccc",
                 p: 3,
+                borderRadius: "5px",
             }}
         >
-            <Typography>title</Typography>
-            <Typography>{rental.description}</Typography>
-            <Typography>{rental.price}</Typography>
-            <Typography>{rental.beds}</Typography>
-            <Typography>{rental.address}</Typography>
+            <Typography variant="h5">{rental.title}</Typography>
+            <Typography variant="subtitle2"
+                sx={{
+                    fontSize: "0.8rem",
+                    color: "text.secondary",
+                    fontStyle: "italic",
+                    mt: 1,
+                    mb: 1,
+                    ml: 1,
+                    mr: 2,
+                }}
+            >{rental.description}</Typography>
+            <Typography>Price per night: {rental.price}</Typography>
+            <Typography>Bed(s): {rental.beds}</Typography>
+            <Typography>Address: {rental.address}</Typography>
             {rental.petsAllowed && <PetsIcon />}
         </Box>
     );
