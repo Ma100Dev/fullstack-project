@@ -3,6 +3,16 @@ import PetsIcon from '@mui/icons-material/Pets';
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
+const arrayBufferToBase64 = (buffer) => {
+    let binary = '';
+    let bytes = new Uint8Array(buffer);
+    let len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+};
+
 const Rental = ({ rental }) => {
     return (
         <Box
@@ -28,6 +38,7 @@ const Rental = ({ rental }) => {
             <Typography>Bed(s): {rental.beds}</Typography>
             <Typography>Address: {rental.address}</Typography>
             {rental.petsAllowed && <PetsIcon />}
+            <img src={`data:${rental.image.contentType};base64,${arrayBufferToBase64(rental.image.data.data)}`} alt={rental.title} />
         </Box>
     );
 };
