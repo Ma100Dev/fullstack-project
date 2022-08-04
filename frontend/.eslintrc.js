@@ -28,5 +28,7 @@ module.exports = {
     'comma-dangle': 'off',
     'semi': 'error',
     'quotes': [2, 'single', 'avoid-escape'],
+    'no-multiple-empty-lines': 'error',
+    'no-console': 'warn',
   },
 };

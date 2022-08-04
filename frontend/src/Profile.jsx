@@ -2,13 +2,15 @@ import React from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
+import CircularProgress from '@mui/material/CircularProgress';
 import propTypes from 'prop-types';
 import * as yup from 'yup';
+import axios from 'axios';
 
 const editValidationSchema = yup.object().shape({
     username: yup.string()
@@ -20,12 +22,10 @@ const editValidationSchema = yup.object().shape({
         .notRequired(),
     email: yup.string()
         .email('Invalid email address')
-        .required('Email address is equired'),
+        .required('Email address is required'),
     password: yup.string()
         .required('Password is required'),
 });
-
-
 
 const TypographyProps = {
     variant: 'h5',
@@ -36,9 +36,24 @@ const TypographyProps = {
 
 const Profile = ({ editMode = false }) => {
     const [errors, setErrors] = React.useState([]);
-    const user = useSelector(state => state.user);
-    const isLoggedIn = Boolean(user);
     const navigate = useNavigate();
+    let localUser = useSelector(state => state.user);
+    if (!localUser) {
+        localUser = {};
+    }
+    React.useEffect(() => {
+        if (Object.keys(localUser).length === 0) {
+            navigate('/login');
+        }
+    }, [localUser, navigate]);
+    const [user, setUser] = React.useState({});
+    React.useEffect(() => {
+        if (Object.keys(user).length === 0) {
+            axios.get('/api/users/' + localUser.id).then(res => {
+                setUser(res.data);
+            });
+        }
+    }, [user, setUser]);
     const onSubmit = async (event) => {
         event.preventDefault();
         if (!editMode) {
@@ -56,11 +71,34 @@ const Profile = ({ editMode = false }) => {
             error = true;
         });
         if (!error) {
-            console.log(values);
+            await (axios.put(`/api/users/${localUser.id}`,
+                values,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${localUser.token}`
+                    }
+                }
+            )).catch(err => {
+                setErrors([err.response.data.error]);
+                error = true;
+            });
+            if (!error) {
+                setUser({});
+                navigate('/profile');
+            }
         }
     };
-    if (!isLoggedIn) {
-        navigate('/login');
+    if (Object.keys(user).length === 0) {
+        return (
+            <Box sx={{
+                'display': 'flex',
+                'justifyContent': 'center',
+                'alignItems': 'center',
+                'height': '100vh'
+            }}>
+                <CircularProgress />
+            </Box>
+        );
     }
     return (
         <div>
@@ -71,6 +109,7 @@ const Profile = ({ editMode = false }) => {
             <h1>Profile</h1>
             <form onSubmit={onSubmit}>
                 <Typography {...{ ...TypographyProps, sx: { color: 'red' } }}>{errors.join(', ')}</Typography>
+                <Typography>You may need to log out and log in again for changes to apply.</Typography>
                 <table>
                     <tbody>
                         <tr>

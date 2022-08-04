@@ -33,7 +33,6 @@ const SignUpSchema = Yup.object().shape({
         .notRequired()
 });
 
-
 const SignUp = () => {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
