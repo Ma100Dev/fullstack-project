@@ -27,6 +27,7 @@ const App = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/rent' element={<RentPage />} />
         <Route path='/profile' element={<Profile />} />
+        <Route path='/profile/edit' element={<Profile editMode={true} />} />
       </Routes>
     </>
   );

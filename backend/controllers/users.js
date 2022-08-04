@@ -3,6 +3,7 @@ const usersRouter = require('express').Router();
 require('../models/property');
 const User = require('../models/user');
 require('express-async-errors');
+const { userExtractor } = require('../utils/middleware');
 
 usersRouter.post('/', async (request, response) => {
     const { body } = request;
@@ -29,6 +30,22 @@ usersRouter.get('/', async (request, response) => {
         id: 1, address: 1, price: 1, beds: 1, description: 1, petsAllowed: 1,
     });
     response.json(users.map((user) => user.toJSON()));
+});
+
+usersRouter.put('/:id', userExtractor, async (request, response) => {
+    const { body } = request;
+    const { user } = request;
+    const { id } = request.params;
+    if (id !== user.id) {
+      response.status(401).json({ error: 'Not authorized' });
+      return;
+    }
+    const updatedUser = await User.findByIdAndUpdate(id, {
+        username: body.username,
+        name: body.name,
+        email: body.email,
+    }, { new: true });
+    response.json(updatedUser.toJSON());
 });
 
 module.exports = usersRouter;
