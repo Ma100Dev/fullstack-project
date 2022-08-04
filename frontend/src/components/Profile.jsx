@@ -1,6 +1,6 @@
 import React from 'react';
 
-//TODO implement profile picture, properties etc.
+//TODO implement profile picture
 //Backend changes also required
 
 import { useNavigate } from 'react-router-dom';
