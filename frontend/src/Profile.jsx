@@ -8,6 +8,24 @@ import TextField from '@mui/material/TextField';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import propTypes from "prop-types";
+import * as yup from 'yup';
+
+const editValidationSchema = yup.object().shape({
+    username: yup.string()
+        .min(3, "Username must be at least 3 characters long")
+        .max(20, "Username must be at most 20 characters long")
+        .required('Username is required'),
+    name: yup.string()
+        .min(3, "Name must be at least 3 characters long")
+        .notRequired(),
+    email: yup.string()
+        .email("Invalid email address")
+        .required('Email address is equired'),
+    password: yup.string()
+        .required('Password is required'),
+});
+
+
 
 const TypographyProps = {
     variant: "h5",
@@ -17,23 +35,42 @@ const TypographyProps = {
 };
 
 const Profile = ({ editMode = false }) => {
+    const [errors, setErrors] = React.useState([]);
     const user = useSelector(state => state.user);
     const isLoggedIn = Boolean(user);
     const navigate = useNavigate();
-    const onSubmit = (event) => {
+    const onSubmit = async (event) => {
         event.preventDefault();
         if (!editMode) {
             navigate("/");
         }
-        console.log(event.target.email.value, event.target.password.value, event.target.username.value, event.target.name.value);
+        const values = {
+            email: event.target.email.value,
+            password: event.target.password.value,
+            username: event.target.username.value,
+            name: event.target.name.value
+        };
+        let error = false;
+        await editValidationSchema.validate(values).catch(err => {
+            setErrors(err.errors);
+            error = true;
+        });
+        if (!error) {
+            console.log(values);
+        }
     };
     if (!isLoggedIn) {
         navigate("/login");
     }
     return (
         <div>
+            {
+                //TODO implement profile picture, properties, modifying profile etc.
+                //Backend changes also required.
+            }
             <h1>Profile</h1>
             <form onSubmit={onSubmit}>
+                <Typography {...{ ...TypographyProps, sx: { color: 'red' } }}>{errors.join(", ")}</Typography>
                 <table>
                     <tbody>
                         <tr>
@@ -113,7 +150,7 @@ const Profile = ({ editMode = false }) => {
                                         <Typography {...TypographyProps}>Password:</Typography>
                                     </td>
                                     <td>
-                                        <TextField name="password" type="password" placeholder="Password" />
+                                        <TextField name="password" type="password" placeholder="Enter your password to confirm" sx={{}} />
                                     </td>
                                 </tr >
                             </>
@@ -134,10 +171,6 @@ const Profile = ({ editMode = false }) => {
                             </tr>
                         </tbody>
                     </table>
-                }
-                {
-                    //TODO implement profile picture, properties, modifying profile etc.
-                    //Backend changes also required.
                 }
             </form>
         </div>
