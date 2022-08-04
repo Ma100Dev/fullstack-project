@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 import PetsIcon from '@mui/icons-material/Pets';
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 
 const arrayBufferToBase64 = (buffer) => {
@@ -18,27 +18,27 @@ const Rental = ({ rental }) => {
     return (
         <Box
             sx={{
-                outline: "1px solid #ccc",
+                outline: '1px solid #ccc',
                 p: 3,
-                borderRadius: "5px",
-                display: "flex",
-                flexDirection: "row",
+                borderRadius: '5px',
+                display: 'flex',
+                flexDirection: 'row',
             }}
         >
             <Box>
                 <img
                     src={`data:${rental.image.contentType};base64,${arrayBufferToBase64(rental.image.data.data)}`}
                     alt={rental.title}
-                    style={{ outline: "1px solid #ccc", borderRadius: "5px" }}
+                    style={{ outline: '1px solid #ccc', borderRadius: '5px' }}
                 />
             </Box>
             <Box sx={{ ml: 5 }}>
                 <Typography variant="h5">{rental.title}</Typography>
                 <Typography variant="subtitle2"
                     sx={{
-                        fontSize: "0.8rem",
-                        color: "text.secondary",
-                        fontStyle: "italic",
+                        fontSize: '0.8rem',
+                        color: 'text.secondary',
+                        fontStyle: 'italic',
                         mt: 1,
                         mb: 1,
                         ml: 1,

@@ -1,25 +1,25 @@
-import React from "react";
+import React from 'react';
 
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { Typography } from "@mui/material";
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
-import propTypes from "prop-types";
+import propTypes from 'prop-types';
 import * as yup from 'yup';
 
 const editValidationSchema = yup.object().shape({
     username: yup.string()
-        .min(3, "Username must be at least 3 characters long")
-        .max(20, "Username must be at most 20 characters long")
+        .min(3, 'Username must be at least 3 characters long')
+        .max(20, 'Username must be at most 20 characters long')
         .required('Username is required'),
     name: yup.string()
-        .min(3, "Name must be at least 3 characters long")
+        .min(3, 'Name must be at least 3 characters long')
         .notRequired(),
     email: yup.string()
-        .email("Invalid email address")
+        .email('Invalid email address')
         .required('Email address is equired'),
     password: yup.string()
         .required('Password is required'),
@@ -28,7 +28,7 @@ const editValidationSchema = yup.object().shape({
 
 
 const TypographyProps = {
-    variant: "h5",
+    variant: 'h5',
     sx: {
         mr: 5,
     },
@@ -42,7 +42,7 @@ const Profile = ({ editMode = false }) => {
     const onSubmit = async (event) => {
         event.preventDefault();
         if (!editMode) {
-            navigate("/");
+            navigate('/');
         }
         const values = {
             email: event.target.email.value,
@@ -60,7 +60,7 @@ const Profile = ({ editMode = false }) => {
         }
     };
     if (!isLoggedIn) {
-        navigate("/login");
+        navigate('/login');
     }
     return (
         <div>
@@ -70,7 +70,7 @@ const Profile = ({ editMode = false }) => {
             }
             <h1>Profile</h1>
             <form onSubmit={onSubmit}>
-                <Typography {...{ ...TypographyProps, sx: { color: 'red' } }}>{errors.join(", ")}</Typography>
+                <Typography {...{ ...TypographyProps, sx: { color: 'red' } }}>{errors.join(', ')}</Typography>
                 <table>
                     <tbody>
                         <tr>
@@ -90,7 +90,7 @@ const Profile = ({ editMode = false }) => {
                             {
                                 !editMode &&
                                 <td>
-                                    <IconButton onClick={() => navigate("/profile/edit")}>
+                                    <IconButton onClick={() => navigate('/profile/edit')}>
                                         <EditIcon />
                                     </IconButton>
                                 </td>
@@ -113,7 +113,7 @@ const Profile = ({ editMode = false }) => {
                             {
                                 !editMode &&
                                 <td>
-                                    <IconButton onClick={() => navigate("/profile/edit")}>
+                                    <IconButton onClick={() => navigate('/profile/edit')}>
                                         <EditIcon />
                                     </IconButton>
                                 </td>
@@ -136,7 +136,7 @@ const Profile = ({ editMode = false }) => {
                             {
                                 !editMode &&
                                 <td>
-                                    <IconButton onClick={() => navigate("/profile/edit")}>
+                                    <IconButton onClick={() => navigate('/profile/edit')}>
                                         <EditIcon />
                                     </IconButton>
                                 </td>
@@ -166,7 +166,7 @@ const Profile = ({ editMode = false }) => {
                                     <Button variant="contained" type="submit">Save</Button>
                                 </td>
                                 <td>
-                                    <Button variant="contained" color="error" onClick={() => navigate("/profile")}>Cancel</Button>
+                                    <Button variant="contained" color="error" onClick={() => navigate('/profile')}>Cancel</Button>
                                 </td>
                             </tr>
                         </tbody>

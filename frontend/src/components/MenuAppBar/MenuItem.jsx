@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const typographyProps = {
-    variant: "h6",
-    color: "inherit",
+    variant: 'h6',
+    color: 'inherit',
     sx: { flexGrow: 1, mt: 1, ml: 2, mb: 1, mr: 1 }
 };
 

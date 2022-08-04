@@ -1,8 +1,8 @@
-import React from "react";
-import axios from "axios";
+import React from 'react';
+import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { setRentals } from "../../reducers/rentalReducer";
-import Rental from "./Rental";
+import { setRentals } from '../../reducers/rentalReducer';
+import Rental from './Rental';
 
 const RentPage = () => {
     const dispatch = useDispatch();
@@ -11,7 +11,7 @@ const RentPage = () => {
     React.useEffect(() => {
         const fetchData = async () => {
             if (rentals.length === 0) {
-                const { data } = await axios.get("/api/properties");
+                const { data } = await axios.get('/api/properties');
                 dispatch(setRentals(data));
             }
         };

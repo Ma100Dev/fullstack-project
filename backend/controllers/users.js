@@ -40,12 +40,27 @@ usersRouter.put('/:id', userExtractor, async (request, response) => {
       response.status(401).json({ error: 'Not authorized' });
       return;
     }
+    const passwordCorrect = user === null
+      ? false
+      : await bcrypt.compare(body.password, user.passwordHash);
+    if (!passwordCorrect) {
+      response.status(401).json({ error: 'Incorrect password confirmation' });
+      return;
+    }
     const updatedUser = await User.findByIdAndUpdate(id, {
         username: body.username,
         name: body.name,
         email: body.email,
     }, { new: true });
     response.json(updatedUser.toJSON());
+});
+
+usersRouter.get('/:id', async (request, response) => {
+    const { id } = request.params;
+    const user = await User.findById(id).populate('properties', {
+        id: 1, address: 1, price: 1, beds: 1, description: 1, petsAllowed: 1,
+    });
+    response.json(user.toJSON());
 });
 
 module.exports = usersRouter;

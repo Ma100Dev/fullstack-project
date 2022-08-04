@@ -2,7 +2,7 @@
 module.exports = {
   settings: {
     react: {
-      "version": "detect"
+      'version': 'detect'
     },
   },
   env: {
@@ -27,5 +27,6 @@ module.exports = {
     'no-control-regex': 'off',
     'comma-dangle': 'off',
     'semi': 'error',
+    'quotes': [2, 'single', 'avoid-escape'],
   },
 };

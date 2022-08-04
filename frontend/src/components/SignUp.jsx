@@ -37,7 +37,7 @@ const SignUpSchema = Yup.object().shape({
 const SignUp = () => {
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
-    const [error, setError] = React.useState("");
+    const [error, setError] = React.useState('');
     const navigate = useNavigate();
     const handleClose = () => {
         setOpen(false);
