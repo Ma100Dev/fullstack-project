@@ -9,7 +9,7 @@ import SignUp from './components/SignUp';
 import FrontPage from './components/FrontPage';
 import MenuAppBar from './components/MenuAppBar';
 import RentPage from './components/RentPage';
-import Profile from './Profile';
+import Profile from './components/Profile';
 
 const user = localStorage.getItem('user');
 

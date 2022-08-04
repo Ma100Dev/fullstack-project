@@ -1,5 +1,8 @@
 import React from 'react';
 
+//TODO implement profile picture, properties etc.
+//Backend changes also required
+
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Box, Typography } from '@mui/material';
@@ -11,6 +14,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import propTypes from 'prop-types';
 import * as yup from 'yup';
 import axios from 'axios';
+import Rental from './RentPage/Rental';
 
 const editValidationSchema = yup.object().shape({
     username: yup.string()
@@ -102,14 +106,9 @@ const Profile = ({ editMode = false }) => {
     }
     return (
         <div>
-            {
-                //TODO implement profile picture, properties, modifying profile etc.
-                //Backend changes also required.
-            }
-            <h1>Profile</h1>
+            <Typography variant='h4'>Profile</Typography>
             <form onSubmit={onSubmit}>
                 <Typography {...{ ...TypographyProps, sx: { color: 'red' } }}>{errors.join(', ')}</Typography>
-                <Typography>You may need to log out and log in again for changes to apply.</Typography>
                 <table>
                     <tbody>
                         <tr>
@@ -212,6 +211,10 @@ const Profile = ({ editMode = false }) => {
                     </table>
                 }
             </form>
+            <Typography variant='h4'>Your properties</Typography>
+            {user.properties.map(property => (
+                <Rental rental={property} key={property.id} />
+            ))}
         </div>
     );
 };

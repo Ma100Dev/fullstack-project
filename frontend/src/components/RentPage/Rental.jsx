@@ -3,6 +3,7 @@ import PetsIcon from '@mui/icons-material/Pets';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
+import { ReactComponent as DefaultImage } from './house.svg';
 
 const arrayBufferToBase64 = (buffer) => {
     let binary = '';
@@ -15,6 +16,16 @@ const arrayBufferToBase64 = (buffer) => {
 };
 
 const Rental = ({ rental }) => {
+    const imageProps = {
+        style: {
+            outline: '1px solid #ccc',
+            borderRadius: '5px',
+            padding: '5px',
+            maxWidth: 1280,
+            maxHeight: 720,
+        },
+        alt: rental.title,
+    };
     return (
         <Box
             sx={{
@@ -26,11 +37,12 @@ const Rental = ({ rental }) => {
             }}
         >
             <Box>
-                <img
-                    src={`data:${rental.image.contentType};base64,${arrayBufferToBase64(rental.image.data.data)}`}
-                    alt={rental.title}
-                    style={{ outline: '1px solid #ccc', borderRadius: '5px' }}
-                />
+                {rental.image ?
+                    <img
+                        src={`data:${rental.image.contentType};base64,${arrayBufferToBase64(rental.image.data.data)}`}
+                        {...imageProps}
+                    /> :
+                    <DefaultImage {...imageProps} />}
             </Box>
             <Box sx={{ ml: 5 }}>
                 <Typography variant="h5">{rental.title}</Typography>
