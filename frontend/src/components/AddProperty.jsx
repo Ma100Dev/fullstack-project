@@ -11,8 +11,25 @@ import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 //import { useNavigate } from 'react-router-dom';
 import FormikTextField from './FormikTextField';
-//import axios from 'axios';
+import axios from 'axios';
 import * as Yup from 'yup';
+import { useSelector } from 'react-redux';
+import Resizer from 'react-image-file-resizer';
+
+const resizeFile = (file) => new Promise(resolve => {
+    Resizer.imageFileResizer(
+        file,
+        1280,
+        720,
+        'WEBP',
+        100,
+        0,
+        uri => {
+            resolve(uri);
+        },
+        'file'
+    );
+});
 
 const PropertySchema = Yup.object().shape({
     title: Yup.string()
@@ -30,11 +47,18 @@ const PropertySchema = Yup.object().shape({
     petsAllowed: Yup.boolean()
         .required('Pets allowed is required'),
     image: Yup.mixed()
-        .required('Image is required'),
+        .required('Image is required')
+        .test('fileSize', 'The file is too large', (value) => {
+            if (!value.length) {
+                return false;
+            }
+            return value[0].size <= 10485760; // 10MB
+        }),
 });
 
 
 const AddProperty = () => {
+    let user = useSelector(state => state.user);
     const [open, setOpen] = React.useState(false);
     // eslint-disable-next-line no-unused-vars
     const [error, setError] = React.useState('');
@@ -73,8 +97,25 @@ const AddProperty = () => {
                 initialValues={{ title: '', address: '', price: '', description: '', beds: '', petsAllowed: false, image: null }}
                 validationSchema={PropertySchema}
                 onSubmit={async (values, { setSubmitting }) => {
-                    console.log(values.image);
+                    const formData = new FormData();
+                    const image = await resizeFile(values.image);
+                    formData.append('image', image);
+                    formData.append('title', values.title);
+                    formData.append('address', values.address);
+                    formData.append('price', values.price);
+                    formData.append('description', values.description);
+                    formData.append('beds', values.beds);
+                    formData.append('petsAllowed', values.petsAllowed);
+                    const { data } = await axios.post('/api/properties',
+                        formData,
+                        {
+                            headers: {
+                                'Authorization': `Bearer ${user.token}`
+                            }
+                        });
                     alert(JSON.stringify(values, null, 2));
+                    alert(data);
+                    console.log(data);
                     setSubmitting(false);
                 }}
             >

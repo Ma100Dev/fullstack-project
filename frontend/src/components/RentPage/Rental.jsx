@@ -21,8 +21,8 @@ const Rental = ({ rental }) => {
             outline: '1px solid #ccc',
             borderRadius: '5px',
             padding: '5px',
-            maxWidth: 1280,
-            maxHeight: 720,
+            maxWidth: 852,
+            maxHeight: 480,
         },
         alt: rental.title,
     };
