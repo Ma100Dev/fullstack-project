@@ -49,10 +49,10 @@ const PropertySchema = Yup.object().shape({
     image: Yup.mixed()
         .required('Image is required')
         .test('fileSize', 'The file is too large', (value) => {
-            if (!value.length) {
+            if (!value.size) {
                 return false;
             }
-            return value[0].size <= 10485760; // 10MB
+            return value.size < 10485760;
         }),
 });
 
@@ -106,17 +106,15 @@ const AddProperty = () => {
                     formData.append('description', values.description);
                     formData.append('beds', values.beds);
                     formData.append('petsAllowed', values.petsAllowed);
-                    const { data } = await axios.post('/api/properties',
+                    await axios.post('/api/properties',
                         formData,
                         {
                             headers: {
                                 'Authorization': `Bearer ${user.token}`
                             }
                         });
-                    alert(JSON.stringify(values, null, 2));
-                    alert(data);
-                    console.log(data);
                     setSubmitting(false);
+
                 }}
             >
                 {({

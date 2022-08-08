@@ -8,7 +8,6 @@ const logger = require('../utils/logger');
 
 propertyRouter.post('/', upload.single('image'), userExtractor, async (request, response) => {
     const { body } = request;
-    console.log(JSON.stringify(body, null, 2));
     logger.log(Number(body.beds));
     const property = new Property({
         title: body.title,
