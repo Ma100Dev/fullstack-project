@@ -29,6 +29,8 @@ const PropertySchema = Yup.object().shape({
         .required('Address is required'),
     petsAllowed: Yup.boolean()
         .required('Pets allowed is required'),
+    image: Yup.mixed()
+        .required('Image is required'),
 });
 
 
@@ -101,11 +103,11 @@ const AddProperty = () => {
                         }}
                     >
 
-                        <FormikTextField label="Title" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Title" />
-                        <FormikTextField label="Address" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Address" />
-                        <FormikTextField label="Price" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Price" />
-                        <FormikTextField label="Description" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Description" />
-                        <FormikTextField label="Beds" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Beds" />
+                        <FormikTextField label="title" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Title" />
+                        <FormikTextField label="address" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Address" />
+                        <FormikTextField label="price" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Price" />
+                        <FormikTextField label="description" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Description" />
+                        <FormikTextField label="beds" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Beds" />
 
                         <FormControlLabel control={
                             <Checkbox sx={{ mb: 0.5 }} name="petsAllowed" onChange={handleChange} onBlur={handleBlur} value={values.petsAllowed} />
@@ -119,7 +121,16 @@ const AddProperty = () => {
                             <input id="image" name="image" type="file" onChange={(event) => {
                                 setFieldValue('image', event.currentTarget.files[0]);
                             }} />
-                        } label={<Typography sx={{ mr: 1 }}>Image: </Typography>} sx={{ mr: 1, mt: 2, mb: 5 }} labelPlacement="start" />
+                        } label={<Typography sx={{ mr: 1 }}>Image: </Typography>} sx={{ mr: 1, mt: 2, mb: 1 }} labelPlacement="start" />
+                        <Typography
+                            sx={{
+                                color: 'red',
+                                mt: 1,
+                                mb: 2,
+                            }}
+                        >
+                            {(errors.image && touched.image && errors.image)}
+                        </Typography>
 
                         <Button variant="contained" type="submit" disabled={isSubmitting} sx={{ width: '100%' }}>
                             Submit
