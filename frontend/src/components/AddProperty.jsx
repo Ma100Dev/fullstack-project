@@ -1,24 +1,42 @@
-/* eslint-disable */
-
 import React from 'react';
-import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { Formik } from 'formik';
 import { Button, Grid, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+//import { useNavigate } from 'react-router-dom';
+import FormikTextField from './FormikTextField';
+//import axios from 'axios';
 import * as Yup from 'yup';
+
+const PropertySchema = Yup.object().shape({
+    title: Yup.string()
+        .required('Title is required'),
+    description: Yup.string()
+        .required('Description is required'),
+    price: Yup.number()
+        .required('Price is required')
+        .positive('Price must be a positive number'),
+    beds: Yup.number()
+        .required('"Beds" is required')
+        .min(1, '"Beds" must be at least 1'),
+    address: Yup.string()
+        .required('Address is required'),
+    petsAllowed: Yup.boolean()
+        .required('Pets allowed is required'),
+});
+
 
 const AddProperty = () => {
     const [open, setOpen] = React.useState(false);
+    // eslint-disable-next-line no-unused-vars
     const [error, setError] = React.useState('');
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
     const handleClose = () => {
         setOpen(false);
     };
@@ -51,7 +69,9 @@ const AddProperty = () => {
             </Dialog>
             <Formik
                 initialValues={{ title: '', address: '', price: '', description: '', beds: '', petsAllowed: false, image: null }}
+                validationSchema={PropertySchema}
                 onSubmit={async (values, { setSubmitting }) => {
+                    console.log(values.image);
                     alert(JSON.stringify(values, null, 2));
                     setSubmitting(false);
                 }}
@@ -64,6 +84,7 @@ const AddProperty = () => {
                     handleBlur,
                     handleSubmit,
                     isSubmitting,
+                    setFieldValue,
                 }) => (
                     <Box
                         component="form"
@@ -79,54 +100,30 @@ const AddProperty = () => {
                             borderRadius: 5,
                         }}
                     >
-                        <TextField
-                            type="username"
-                            name="username"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.username}
-                            placeholder="Username"
-                            sx={{ width: '100%' }}
+
+                        <FormikTextField label="Title" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Title" />
+                        <FormikTextField label="Address" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Address" />
+                        <FormikTextField label="Price" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Price" />
+                        <FormikTextField label="Description" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Description" />
+                        <FormikTextField label="Beds" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Beds" />
+
+                        <FormControlLabel control={
+                            <Checkbox sx={{ mb: 0.5 }} name="petsAllowed" onChange={handleChange} onBlur={handleBlur} value={values.petsAllowed} />
+                        }
+                            label="Pets allowed?"
+                            labelPlacement="start"
                         />
                         <br />
-                        <Typography
-                            sx={{
-                                color: 'red',
-                                mt: 1,
-                                mb: 1,
-                            }}
-                        >
-                            {(errors.username && touched.username && errors.username) || '⠀'}
-                        </Typography>
-                        <br />
-                        <TextField
-                            type="password"
-                            name="password"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.password}
-                            placeholder="Password"
-                            sx={{ width: '100%' }}
-                        />
-                        <br />
-                        <Typography sx={{
-                            color: 'red',
-                            mt: 1,
-                            mb: 1,
-                        }}
-                        >
-                            {(errors.password && touched.password && errors.password) || '⠀'}
-                        </Typography>
-                        <br />
+
+                        <FormControlLabel control={
+                            <input id="image" name="image" type="file" onChange={(event) => {
+                                setFieldValue('image', event.currentTarget.files[0]);
+                            }} />
+                        } label={<Typography sx={{ mr: 1 }}>Image: </Typography>} sx={{ mr: 1, mt: 2, mb: 5 }} labelPlacement="start" />
+
                         <Button variant="contained" type="submit" disabled={isSubmitting} sx={{ width: '100%' }}>
                             Submit
                         </Button>
-                        <Typography sx={{ mt: 1 }}>
-                            {'Don\'t have an account?'}
-                            <Link to="/signUp">
-                                <Button>Sign up</Button>
-                            </Link>
-                        </Typography>
                     </Box>
                 )}
             </Formik>
