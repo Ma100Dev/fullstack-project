@@ -1,0 +1,32 @@
+services:
+  backend:
+    image: backend
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/:/usr/src/app
+    container_name: backend
+  app:
+    image: frontend
+    environment:
+      - BACKEND_URL=http://localhost:8080/api
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend/:/usr/src/app
+    container_name: frontend
+    depends_on:
+      - backend
+  nginx:
+    image: nginx:1.20.1
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    container_name: reverse-proxy
+    depends_on:
+      - app
+  debug-helper:
+    image: busybox

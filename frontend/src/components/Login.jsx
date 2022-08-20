@@ -14,6 +14,7 @@ import axios from 'axios';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../reducers/userReducer';
+import { BACKEND_URL } from '../utils/config';
 
 const LoginSchema = Yup.object().shape({
     username: Yup.string()
@@ -62,7 +63,7 @@ const Login = () => {
                 validationSchema={LoginSchema}
                 onSubmit={async (values, { setSubmitting }) => {
                     let error = false;
-                    const { data } = await axios.post('http://localhost:3001/api/login', values)
+                    const { data } = await axios.post(`${BACKEND_URL}/login`, values)
                         .catch(error => {
                             setError(error.response?.data?.error);
                             setOpen(true);
