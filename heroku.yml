@@ -1,5 +1,0 @@
-build:
-  docker:
-    backend: backend/Dockerfile
-    app: frontend/Dockerfile
-    web: Dockerfile

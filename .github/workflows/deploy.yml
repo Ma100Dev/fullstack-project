@@ -1,0 +1,21 @@
+name: Deployment pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deployment_pipeline:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          length: 7
+      - uses: matiasnu/github-action-ssh-docker-compose@v2.0.1
+        with:
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ssh_host: ${{ secrets.SSH_HOST }}
+          ssh_user: ${{ secrets.SSH_USER }}
+          docker_compose_prefix: production
+          docker_compose_filename: docker-compose.yml
