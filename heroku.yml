@@ -1,5 +1,5 @@
 build:
   docker:
-    web: Dockerfile
     backend: backend/Dockerfile
-    frontend: frontend/Dockerfile
+    app: frontend/Dockerfile
+    web: Dockerfile
