@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node . .
 
-RUN yarn install --frozen-lockfile
+RUN yarn install
 
 USER node
 
