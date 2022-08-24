@@ -7,7 +7,7 @@ services:
     volumes:
       - ./backend/:/usr/src/app
     container_name: backend
-    mem_limit: "682m"
+    mem_limit: "333m"
     memswap_limit: "1024m"
     mem_swappiness: 60
   app:
@@ -20,7 +20,7 @@ services:
     volumes:
       - ./frontend/:/usr/src/app
     container_name: frontend
-    mem_limit: "628m"
+    mem_limit: "333m"
     memswap_limit: "1024m"
     mem_swappiness: 60
     depends_on:
@@ -32,7 +32,7 @@ services:
     ports:
       - 8080:80
     container_name: reverse-proxy
-    mem_limit: 512m
+    mem_limit: 200m
     memswap_limit: 1024m
     mem_swappiness: 60
     depends_on:
