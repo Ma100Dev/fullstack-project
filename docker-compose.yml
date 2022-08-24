@@ -32,8 +32,8 @@ services:
     ports:
       - 8080:80
     container_name: reverse-proxy
-    mem_limit: 628m
-    memswap_limit: 512m
+    mem_limit: 512m
+    memswap_limit: 1024m
     mem_swappiness: 60
     depends_on:
       - app
