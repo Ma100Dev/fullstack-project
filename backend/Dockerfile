@@ -9,11 +9,9 @@ ENV MONGODB_URI=$MONGODB_URI
 ARG JWT_SECRET
 ENV JWT_SECRET=$JWT_SECRET
 
-COPY package.json /usr/src/app/
+COPY --chown=node:node . .
 
 RUN rm -rf node_modules && yarn install --frozen-lockfile
-
-COPY . /usr/src/app
 
 RUN chown -R node:node /usr/src/app
 
