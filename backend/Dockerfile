@@ -1,5 +1,7 @@
 FROM node:16
 
+RUN mkdir -p /usr/src/app
+
 WORKDIR /usr/src/app
 
 ARG MONGODB_URI
@@ -12,7 +14,11 @@ ENV JWT_SECRET=$JWT_SECRET
 
 COPY --chown=node:node . .
 
-RUN npm install -g npm@8.15.0 && npm remove yarn -g && npm install -g yarn@1.22.19 --force && yarn install
+COPY package.json /usr/src/app/
+
+RUN yarn install
+
+COPY . /usr/src/app
 
 USER node
 
