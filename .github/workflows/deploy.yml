@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           length: 7
-      - uses: matiasnu/github-action-ssh-docker-compose@v2.0.1
+      - uses: Ma100Dev/github-action-ssh-docker-compose@master
         with:
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_host: ${{ secrets.SSH_HOST }}
