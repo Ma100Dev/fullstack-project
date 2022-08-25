@@ -11,7 +11,7 @@ ENV JWT_SECRET=$JWT_SECRET
 
 COPY package.json /usr/src/app/
 
-RUN yarn install
+RUN rm -rf node_modules && yarn install --frozen-lockfile
 
 COPY . /usr/src/app
 

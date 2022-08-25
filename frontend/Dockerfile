@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN yarn install
+RUN rm -rf node_modules && yarn install --frozen-lockfile
 
 RUN yarn run build
 
