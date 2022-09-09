@@ -16,7 +16,7 @@ jobs:
         run: |
           echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-      - uses: matiasnu/github-action-ssh-docker-compose@ad2e13949c92cb86a69ea36e83ebaa01d6d01de9c
+      - uses: matiasnu/github-action-ssh-docker-compose@master
         with:
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_host: ${{ secrets.SSH_HOST }}
