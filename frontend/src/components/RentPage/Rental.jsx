@@ -61,6 +61,8 @@ const Rental = ({ rental }) => {
                             mb: 1,
                             ml: 1,
                             mr: 2,
+                            maxWidth: '80%',
+                            overflowWrap: 'break-word',
                         }}
                     >{rental.description}</Typography>
                     <Typography>Price per night: {rental.price}</Typography>
