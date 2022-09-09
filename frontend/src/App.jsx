@@ -11,6 +11,7 @@ import MenuAppBar from './components/MenuAppBar';
 import RentPage from './components/RentPage';
 import Profile from './components/Profile';
 import AddProperty from './components/AddProperty';
+import SingleRental from './components/SingleRental';
 
 const user = localStorage.getItem('user');
 
@@ -27,6 +28,7 @@ const App = () => {
         <Route path='/signUp' element={<SignUp />} />
         <Route path='/login' element={<Login />} />
         <Route path='/rent' element={<RentPage />} />
+        <Route path='/rent/:id' element={<SingleRental />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/profile/edit' element={<Profile editMode={true} />} />
         <Route path='/add' element={<AddProperty />} />
