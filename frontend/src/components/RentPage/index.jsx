@@ -1,22 +1,9 @@
 import React from 'react';
-import axios from 'axios';
-import { useSelector, useDispatch } from 'react-redux';
-import { setRentals } from '../../reducers/rentalReducer';
 import Rental from './Rental';
+import useRentals from '../../utils/useRentals';
 
 const RentPage = () => {
-    const dispatch = useDispatch();
-    //const user = useSelector(state => state.user);
-    const rentals = useSelector(state => state.rentals);
-    React.useEffect(() => {
-        const fetchData = async () => {
-            if (rentals.length === 0) {
-                const { data } = await axios.get('/api/properties');
-                dispatch(setRentals(data));
-            }
-        };
-        fetchData();
-    }, [dispatch, rentals]);
+    const rentals = useRentals();
     return (
         <>
             {rentals.map(rental => (
