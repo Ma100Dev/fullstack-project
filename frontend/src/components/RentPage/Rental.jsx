@@ -57,6 +57,7 @@ const Rental = ({ rental }) => {
                             fontSize: '0.8rem',
                             color: 'text.secondary',
                             fontStyle: 'italic',
+                            textAlign: 'left',
                             mt: 1,
                             mb: 1,
                             ml: 1,
