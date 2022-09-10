@@ -16,7 +16,8 @@ messageRouter.post('/', userExtractor, async (request, response) => {
     if (!receiver) {
       return response.status(400).json({ error: 'Receiver does not exist' });
     }
-    if (receiver.properties.find((property) => property.id === body.property)) {
+    if ((receiver.toJSON().properties.filter((property) => property.id === body.property))
+      .length === 0) {
       return response.status(400).json({ error: 'Property does not exist or is not owned by receiver' });
     }
     const saved = await message.save();
@@ -25,7 +26,10 @@ messageRouter.post('/', userExtractor, async (request, response) => {
 
 messageRouter.get('/', userExtractor, async (request, response) => {
     response.json(
-      await Message.find({ $or: [{ receiver: request.user.id }, { sender: request.user.id }] }),
+      await Message.find({ $or: [{ receiver: request.user.id }, { sender: request.user.id }] })
+        .populate('sender', { username: 1, name: 1 })
+        .populate('receiver', { username: 1, name: 1 })
+        .populate('property', { title: 1 }),
     );
 });
 
