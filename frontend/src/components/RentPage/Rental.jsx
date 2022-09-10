@@ -65,7 +65,7 @@ const Content = ({ rental, showButtons = false }) => {
                     /> :
                     <DefaultImage {...imageProps} />}
             </Box>
-            <Box sx={{ ml: 5 }}>
+            <Box sx={{ ml: 5, maxWidth: '60%', }} >
                 <Typography variant="h5">{rental.title}</Typography>
                 <Typography variant="subtitle2"
                     sx={{
@@ -77,7 +77,7 @@ const Content = ({ rental, showButtons = false }) => {
                         mb: 1,
                         ml: 1,
                         mr: 2,
-                        maxWidth: '80%',
+                        maxWidth: '100%',
                         overflowWrap: 'break-word',
                     }}
                 >{rental.description}</Typography>
