@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { ReactComponent as DefaultImage } from './house.svg';
 import ButtonBase from '@mui/material/ButtonBase';
 import { useNavigate } from 'react-router-dom';
+import Button from '@mui/material/Button';
 
 const arrayBufferToBase64 = (buffer) => {
     let binary = '';
@@ -17,8 +18,32 @@ const arrayBufferToBase64 = (buffer) => {
     return window.btoa(binary);
 };
 
-const Rental = ({ rental }) => {
+const Rental = ({ rental, fullView = false }) => {
     const navigate = useNavigate();
+    return (
+        <Box
+            sx={{
+                outline: '1px solid #ccc',
+                p: 3,
+                borderRadius: '5px',
+                display: 'flex',
+                flexDirection: 'row',
+            }}
+        >
+            {
+                !fullView ?
+                    (
+                        <ButtonBase
+                            onClick={() => navigate(`/rent/${rental.id}`)}
+                        >
+                            <Content rental={rental} />
+                        </ButtonBase>
+                    ) : <Content rental={rental} showButtons={true} />
+            }
+        </Box >
+    );
+};
+const Content = ({ rental, showButtons = false }) => {
     const imageProps = {
         style: {
             outline: '1px solid #ccc',
@@ -30,68 +55,69 @@ const Rental = ({ rental }) => {
         alt: rental.title,
     };
     return (
-        <Box
-            sx={{
-                outline: '1px solid #ccc',
-                p: 3,
-                borderRadius: '5px',
-                display: 'flex',
-                flexDirection: 'row',
-            }}
-        >
-            <ButtonBase
-                onClick={() => navigate(`/rent/${rental.id}`)}
-            >
-                <Box>
-                    {rental.image ?
-                        <img
-                            src={`data:${rental.image.contentType};base64,${arrayBufferToBase64(rental.image.data.data)}`}
-                            {...imageProps}
-                        /> :
-                        <DefaultImage {...imageProps} />}
-                </Box>
-                <Box sx={{ ml: 5 }}>
-                    <Typography variant="h5">{rental.title}</Typography>
-                    <Typography variant="subtitle2"
-                        sx={{
-                            fontSize: '0.8rem',
-                            color: 'text.secondary',
-                            fontStyle: 'italic',
-                            textAlign: 'left',
-                            mt: 1,
-                            mb: 1,
-                            ml: 1,
-                            mr: 2,
-                            maxWidth: '80%',
-                            overflowWrap: 'break-word',
-                        }}
-                    >{rental.description}</Typography>
-                    <Typography>Price per night: {rental.price}</Typography>
-                    <Typography>Bed(s): {rental.beds}</Typography>
-                    <Typography>Address: {rental.address}</Typography>
-                    {rental.petsAllowed && <PetsIcon />}
-                </Box>
-            </ButtonBase>
-        </Box>
+        <>
+            <Box>
+                {rental.image ?
+                    <img
+                        src={`data:${rental.image.contentType};base64,${arrayBufferToBase64(rental.image.data.data)}`}
+                        {...imageProps}
+                    /> :
+                    <DefaultImage {...imageProps} />}
+            </Box>
+            <Box sx={{ ml: 5 }}>
+                <Typography variant="h5">{rental.title}</Typography>
+                <Typography variant="subtitle2"
+                    sx={{
+                        fontSize: '0.8rem',
+                        color: 'text.secondary',
+                        fontStyle: 'italic',
+                        textAlign: 'left',
+                        mt: 1,
+                        mb: 1,
+                        ml: 1,
+                        mr: 2,
+                        maxWidth: '80%',
+                        overflowWrap: 'break-word',
+                    }}
+                >{rental.description}</Typography>
+                <Typography>Price per night: {rental.price}€</Typography>
+                <Typography>Bed(s): {rental.beds}</Typography>
+                <Typography>Address: {rental.address}</Typography>
+                {rental.petsAllowed && <PetsIcon />}
+            </Box>
+            {showButtons && (
+                <>
+                    <Button />
+                </>
+            )}
+        </>
     );
 };
 
+const rentalPropType = PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    price: PropTypes.number.isRequired,
+    beds: PropTypes.number.isRequired,
+    address: PropTypes.string.isRequired,
+    petsAllowed: PropTypes.bool.isRequired,
+    image: PropTypes.shape({
+        contentType: PropTypes.string.isRequired,
+        data: PropTypes.shape({
+            data: PropTypes.array.isRequired,
+        }).isRequired,
+    })
+}).isRequired;
+
+Content.propTypes = {
+    rental: rentalPropType,
+    showButtons: PropTypes.bool,
+};
+
 Rental.propTypes = {
-    rental: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        description: PropTypes.string.isRequired,
-        price: PropTypes.number.isRequired,
-        beds: PropTypes.number.isRequired,
-        address: PropTypes.string.isRequired,
-        petsAllowed: PropTypes.bool.isRequired,
-        image: PropTypes.shape({
-            contentType: PropTypes.string.isRequired,
-            data: PropTypes.shape({
-                data: PropTypes.array.isRequired,
-            }).isRequired,
-        })
-    }).isRequired,
+    rental: rentalPropType,
+    fullView: PropTypes.bool,
 };
 
 export default Rental;

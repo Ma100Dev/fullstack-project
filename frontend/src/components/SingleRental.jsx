@@ -8,7 +8,7 @@ const SingleRental = () => {
     const rentals = useRentals();
     const rental = rentals.find((r) => r.id === id);
     return (
-        <Rental rental={rental} />
+        <Rental rental={rental} fullView={true} />
     );
 };
 
