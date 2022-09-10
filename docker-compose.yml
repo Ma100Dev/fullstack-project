@@ -9,7 +9,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./backend/:/usr/src/app
-      - /usr/src/app/node_modules
     container_name: backend
     mem_limit: "333m"
     memswap_limit: "1024m"
