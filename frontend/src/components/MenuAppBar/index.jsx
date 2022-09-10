@@ -27,6 +27,7 @@ const MenuAppBar = () => {
                 <>
                     <MenuItem text="List a new property" link="/add" />
                     <MenuItem text="Profile" link="/profile" />
+                    <MenuItem text="Messages" link="/messages" />
                     <MenuItem text="Log out" isButton={true} onClick={() => {
                         localStorage.removeItem('user');
                         dispatch(clearUser());
