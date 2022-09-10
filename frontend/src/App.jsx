@@ -12,7 +12,7 @@ import RentPage from './components/RentPage';
 import Profile from './components/Profile';
 import AddProperty from './components/AddProperty';
 import SingleRental from './components/SingleRental';
-import Messages from './components/Messages/Index';
+import Messages from './components/Messages/';
 
 const user = localStorage.getItem('user');
 
