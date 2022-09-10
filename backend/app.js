@@ -22,9 +22,9 @@ mongoose.connect(mongoUrl).then(() => {
 
 app.use(cors());
 app.use(express.json());
-app.use('/api/users', usersRouter);
-app.use('/api/login', loginRouter);
-app.use('/api/properties', propertyRouter);
+app.use('/users', usersRouter);
+app.use('/login', loginRouter);
+app.use('/properties', propertyRouter);
 
 app.use(middleware.errorHandler);
 

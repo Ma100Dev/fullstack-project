@@ -14,6 +14,7 @@ import axios from 'axios';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../reducers/userReducer';
+import { BACKEND_URL } from '../utils/config';
 
 const SignUpSchema = Yup.object().shape({
     username: Yup.string()
@@ -73,7 +74,7 @@ const SignUp = () => {
                 validationSchema={SignUpSchema}
                 onSubmit={async (values, { setSubmitting }) => {
                     let error = false;
-                    const { data } = await axios.post('http://localhost:3001/api/users', values)
+                    const { data } = await axios.post(`${BACKEND_URL}/users`, values)
                         .catch(error => {
                             setError(error.response?.data?.error);
                             setOpen(true);
@@ -81,7 +82,7 @@ const SignUp = () => {
                         });
                     const signUpData = { ...data };
                     if (!error) {
-                        const { data } = await axios.post('http://localhost:3001/api/login', { username: signUpData.username, password: values.password })
+                        const { data } = await axios.post(`${BACKEND_URL}/login`, { username: signUpData.username, password: values.password })
                             .catch(error => {
                                 setError(error.response?.data?.error);
                                 setOpen(true);

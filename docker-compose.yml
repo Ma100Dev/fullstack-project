@@ -15,6 +15,7 @@ services:
     image: frontend
     environment:
       - BACKEND_URL=http://localhost:8080/api
+      - NODE_ENV=production
     build:
       context: ./frontend/
       dockerfile: Dockerfile

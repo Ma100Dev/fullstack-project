@@ -2,6 +2,7 @@ import {useState, useEffect} from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRentals } from '../reducers/rentalReducer';
+import { BACKEND_URL } from './config';
 
 const useRentals = () => {
     const [rentalState, setRentalState] = useState([]);
@@ -10,7 +11,7 @@ const useRentals = () => {
     useEffect(() => {
         const fetchData = async () => {
             if (rentalState.length === 0) {
-                const { data } = await axios.get('/api/properties');
+                const { data } = await axios.get(`${BACKEND_URL}/properties`);
                 dispatch(setRentals(data));
                 setRentalState(data);
             }
