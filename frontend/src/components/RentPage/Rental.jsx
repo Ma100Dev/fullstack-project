@@ -19,6 +19,7 @@ const arrayBufferToBase64 = (buffer) => {
 };
 
 const Rental = ({ rental, fullView = false }) => {
+    if (!rental) return null;
     const navigate = useNavigate();
     return (
         <Box
@@ -86,9 +87,17 @@ const Content = ({ rental, showButtons = false }) => {
                 {rental.petsAllowed && <PetsIcon />}
             </Box>
             {showButtons && (
-                <>
-                    <Button />
-                </>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    height: '100%',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flex: 1,
+                }} >
+                    <Button variant="contained">Rent now</Button>
+                    <Button> Contact renter </Button>
+                </Box>
             )}
         </>
     );
@@ -108,7 +117,7 @@ const rentalPropType = PropTypes.shape({
             data: PropTypes.array.isRequired,
         }).isRequired,
     })
-}).isRequired;
+});
 
 Content.propTypes = {
     rental: rentalPropType,
