@@ -4,7 +4,6 @@ import React from 'react';
 //Backend changes also required
 
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { Box, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -15,6 +14,7 @@ import propTypes from 'prop-types';
 import * as yup from 'yup';
 import axios from 'axios';
 import Rental from './RentPage/Rental';
+import useUser from '../hooks/useUser';
 
 const editValidationSchema = yup.object().shape({
     username: yup.string()
@@ -41,15 +41,7 @@ const TypographyProps = {
 const Profile = ({ editMode = false }) => {
     const [errors, setErrors] = React.useState([]);
     const navigate = useNavigate();
-    let localUser = useSelector(state => state.user);
-    if (!localUser) {
-        localUser = {};
-    }
-    React.useEffect(() => {
-        if (Object.keys(localUser).length === 0) {
-            navigate('/login');
-        }
-    }, [localUser, navigate]);
+    let localUser = useUser();
     const [user, setUser] = React.useState({});
     React.useEffect(() => {
         if (Object.keys(user).length === 0) {

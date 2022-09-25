@@ -2,23 +2,14 @@ import React from 'react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { BACKEND_URL } from './utils/config';
-import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import useUser from './hooks/useUser';
 import format from 'date-fns/format';
 
 const Messages = () => {
     const [messages, setMessages] = useState([]);
-    const navigate = useNavigate();
     //TODO add a useUser hook
-    let localUser = useSelector(state => state.user);
-    if (!localUser) {
-        localUser = {};
-    }
-    useEffect(() => {
-        if (Object.keys(localUser).length === 0) {
-            navigate('/login');
-        }
-    }, [localUser, navigate]);
+    let localUser = useUser();
 
     useEffect(() => {
         axios.get(`${BACKEND_URL}/messages`,
