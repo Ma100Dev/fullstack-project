@@ -1,25 +1,10 @@
 import React from 'react';
-import axios from 'axios';
-import { useState, useEffect } from 'react';
-import { BACKEND_URL } from '../utils/config';
 import { Link } from 'react-router-dom';
-import useUser from '../hooks/useUser';
 import format from 'date-fns/format';
+import useMessages from '../hooks/useMessages';
 
 const Messages = () => {
-    const [messages, setMessages] = useState([]);
-    let localUser = useUser();
-    useEffect(() => {
-        axios.get(`${BACKEND_URL}/messages`,
-            {
-                headers: {
-                    'Authorization': `Bearer ${localUser.token}`
-                }
-            })
-            .then(res => {
-                setMessages(res.data);
-            });
-    }, []);
+    const messages = useMessages();
     const propertyIds = [...new Set(messages.map(m => m.property.id))];
     const messagesPerProperty = propertyIds.map(p => {
         return messages.filter(m => m.property.id === p).sort((a, b) => {
