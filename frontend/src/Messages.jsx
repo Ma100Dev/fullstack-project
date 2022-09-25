@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { BACKEND_URL } from '../../utils/config';
-import { useNavigate } from 'react-router-dom';
+import { BACKEND_URL } from './utils/config';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import format from 'date-fns/format';
 
@@ -43,8 +43,11 @@ const Messages = () => {
             <ul>
                 {messagesPerProperty.map(conversation => (
                     <li key={conversation[0].property.id}>
-                        {conversation[0].property.title} <br />
-                        {conversation[0].sender.username} at {format(new Date(conversation[0].createdAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")}: {conversation[0].content}
+                        <Link to={`/messages/${conversation[0].property.id}`}>
+                            {conversation[0].property.title} <br />
+                            {conversation[0].sender.username} at {format(new Date(conversation[0].createdAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")}:&nbsp;
+                            {conversation[0].content}
+                        </Link>
                     </li>
                 )
                 )}

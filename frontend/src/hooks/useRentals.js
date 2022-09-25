@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { setRentals } from '../reducers/rentalReducer';
-import { BACKEND_URL } from './config';
+import { BACKEND_URL } from '../utils/config';
 
 const useRentals = () => {
     const [rentalState, setRentalState] = useState([]);

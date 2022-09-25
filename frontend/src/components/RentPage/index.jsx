@@ -1,6 +1,6 @@
 import React from 'react';
 import Rental from './Rental';
-import useRentals from '../../utils/useRentals';
+import useRentals from '../../hooks/useRentals';
 
 const RentPage = () => {
     const rentals = useRentals();

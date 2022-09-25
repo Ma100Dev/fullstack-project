@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import useRentals from '../utils/useRentals';
+import useRentals from '../hooks/useRentals';
 import Rental from './RentPage/Rental';
 
 const SingleRental = () => {

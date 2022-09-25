@@ -12,7 +12,8 @@ import RentPage from './components/RentPage';
 import Profile from './components/Profile';
 import AddProperty from './components/AddProperty';
 import SingleRental from './components/SingleRental';
-import Messages from './components/Messages/';
+import Messages from './Messages';
+import Conversation from './components/Conversation';
 
 const user = localStorage.getItem('user');
 
@@ -34,6 +35,7 @@ const App = () => {
         <Route path='/profile/edit' element={<Profile editMode={true} />} />
         <Route path='/add' element={<AddProperty />} />
         <Route path='/messages' element={<Messages />} />
+        <Route path='/messages/:id' element={<Conversation />} />
       </Routes>
     </>
   );
