@@ -4,17 +4,17 @@ import React from 'react';
 //Backend changes also required
 
 import { useNavigate } from 'react-router-dom';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
-import CircularProgress from '@mui/material/CircularProgress';
 import propTypes from 'prop-types';
 import * as yup from 'yup';
 import axios from 'axios';
 import Rental from './RentPage/Rental';
 import useUser from '../hooks/useUser';
+import LoadingIndicator from './LoadingIndicator';
 
 const editValidationSchema = yup.object().shape({
     username: yup.string()
@@ -86,14 +86,7 @@ const Profile = ({ editMode = false }) => {
     };
     if (Object.keys(user).length === 0) {
         return (
-            <Box sx={{
-                'display': 'flex',
-                'justifyContent': 'center',
-                'alignItems': 'center',
-                'height': '100vh'
-            }}>
-                <CircularProgress />
-            </Box>
+            <LoadingIndicator />
         );
     }
     return (
