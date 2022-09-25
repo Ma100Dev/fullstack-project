@@ -8,7 +8,7 @@ RUN rm -rf node_modules && yarn install --immutable --immutable-cache --check-ca
 
 RUN yarn run build
 
-FROM nginx:1.20-alpine
+FROM nginx:1.23-alpine
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
