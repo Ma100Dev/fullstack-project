@@ -18,7 +18,7 @@ const useMessages = () => {
                 setMessages(res.data);
             });
     }, []);
-    return messages;
+    return messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 };
 
 export default useMessages;
