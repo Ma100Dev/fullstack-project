@@ -7,7 +7,7 @@ import useUser from './useUser';
 const useMessages = () => {
     const [messages, setMessages] = useState([]);
     let localUser = useUser();
-    useEffect(() => {
+    const refresh = () => {
         axios.get(`${BACKEND_URL}/messages`,
             {
                 headers: {
@@ -17,8 +17,11 @@ const useMessages = () => {
             .then(res => {
                 setMessages(res.data);
             });
+    };
+    useEffect(() => {
+        refresh();
     }, []);
-    return messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    return { messages: messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)), refresh };
 };
 
 export default useMessages;

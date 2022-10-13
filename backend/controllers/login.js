@@ -26,4 +26,6 @@ loginRouter.post('/', async (request, response) => {
       .send({ token, id: user.toJSON().id });
 });
 
+// TODO: Don't receive password as plain text
+
 module.exports = loginRouter;
