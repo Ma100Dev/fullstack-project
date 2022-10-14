@@ -15,6 +15,7 @@ import axios from 'axios';
 import * as Yup from 'yup';
 import { useSelector } from 'react-redux';
 import Resizer from 'react-image-file-resizer';
+import { BACKEND_URL } from '../utils/config';
 
 const resizeFile = (file) => new Promise(resolve => {
     Resizer.imageFileResizer(
@@ -106,7 +107,7 @@ const AddProperty = () => {
                     formData.append('description', values.description);
                     formData.append('beds', values.beds);
                     formData.append('petsAllowed', values.petsAllowed);
-                    await axios.post('/api/properties',
+                    await axios.post(`${BACKEND_URL}/properties`,
                         formData,
                         {
                             headers: {

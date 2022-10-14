@@ -6,6 +6,8 @@ import Message from './Message';
 import LoadingIndicator from '../LoadingIndicator';
 import SendIcon from '@mui/icons-material/Send';
 import { useState } from 'react';
+import axios from 'axios';
+import { BACKEND_URL } from '../../utils/config';
 
 const Conversation = () => {
     const { id } = useParams();
@@ -42,7 +44,14 @@ const Conversation = () => {
                 <Button sx={{ width: '10%', height: '100%', ml: 1 }} variant="contained" onClick={
                     async () => {
                         if (message.length > 0) {
-                            console.log(message);
+                            axios.post(`${BACKEND_URL}/messages`, {
+                                content: message,
+                                property: id
+                            }, {
+                                headers: {
+                                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                                }
+                            });
                             setMessage('');
                             refresh();
                         }
