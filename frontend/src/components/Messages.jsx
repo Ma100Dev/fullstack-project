@@ -4,7 +4,7 @@ import format from 'date-fns/format';
 import useMessages from '../hooks/useMessages';
 
 const Messages = () => {
-    const messages = useMessages();
+    const { messages } = useMessages();
     const propertyIds = [...new Set(messages.map(m => m.property.id))];
     const messagesPerProperty = propertyIds.map(p => {
         return messages.filter(m => m.property.id === p);
