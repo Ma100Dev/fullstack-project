@@ -6,7 +6,12 @@ const conversationSchema = mongoose.Schema({
         ref: 'Property',
         required: true,
     },
-    starter: {
+    starter: { // The user who started the conversation
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    receiver: { // Always the owner of the property
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
@@ -18,6 +23,8 @@ const conversationSchema = mongoose.Schema({
       },
     ],
 });
+
+conversationSchema.index({ property: 1, starter: 1 }, { unique: true });
 
 conversationSchema.set('toJSON', {
     transform: (document, returnedObject) => {

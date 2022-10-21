@@ -4,7 +4,7 @@ const Property = require('../models/property');
 require('express-async-errors');
 const { userExtractor } = require('../utils/middleware');
 
-messageRouter.post('/', userExtractor, async (request, response) => {
+messageRouter.post('/', userExtractor, async (request, response) => { // This is completely broken. I need to fix it.
     const { body } = request;
     const property = await Property.findById(body.property).populate('owner');
     if (!property) {
