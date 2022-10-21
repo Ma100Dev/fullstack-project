@@ -10,14 +10,16 @@ messageRouter.post('/', userExtractor, async (request, response) => {
     if (!property) {
       return response.status(400).json({ error: 'Receiver does not exist' });
     }
-    const receiver = property.owner;
+    let receiver;
     if (receiver._id.toString() === request.user._id.toString()) {
-      return response.status(400).json({ error: 'You cannot send a message to yourself' });
+      receiver = null; // TODO: This is a hack, fix it
+    } else {
+      receiver = property.owner;
     }
     const message = new Message({
         content: body.content,
         sender: request.user.id,
-        receiver: body.receiver,
+        receiver: receiver.id,
         property: body.property,
     });
     const saved = await message.save();
