@@ -5,6 +5,7 @@ import useMessages from '../hooks/useMessages';
 
 const Messages = () => {
     const { messages } = useMessages();
+    if (!messages) return null;
     const propertyIds = [...new Set(messages.map(m => m.property.id))];
     const messagesPerProperty = propertyIds.map(p => {
         return messages.filter(m => m.property.id === p);
