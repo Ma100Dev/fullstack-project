@@ -49,7 +49,7 @@ const Profile = ({ editMode = false }) => {
                 setUser(res.data);
             });
         }
-    }, [user, setUser]);
+    }, [user, setUser, localUser.id]);
     const onSubmit = async (event) => {
         event.preventDefault();
         if (!editMode) {

@@ -1,13 +1,13 @@
 //TODO Add messages to Redux store
 import { BACKEND_URL } from '../utils/config';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import useUser from './useUser';
 
 const useMessages = () => {
     const [conversations, setConversations] = useState([]);
     let localUser = useUser();
-    const refresh = () => {
+    const refresh = useCallback(() => {
         axios.get(`${BACKEND_URL}/conversations`,
             {
                 headers: {
@@ -17,18 +17,20 @@ const useMessages = () => {
             .then(res => {
                 setConversations(res.data);
             });
-    };
+    }, [localUser.token]);
     useEffect(() => {
         refresh();
         console.log('Conversations: ', conversations);
-    }, []);
+    }, [conversations, refresh]);
     return {
-        ...(conversations.map((conversation) => ({
-            ...conversation,
-            messages:
-                conversation.messages === undefined || conversation.messages === null ? null :
-                    conversation.messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        }))),
+        ...(
+            conversations.map((conversation) => ({
+                ...conversation,
+                messages:
+                    conversation.messages === undefined || conversation.messages === null ? null :
+                        conversation.messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            }))
+        ),
         refresh
     };
 };

@@ -19,8 +19,8 @@ const arrayBufferToBase64 = (buffer) => {
 };
 
 const Rental = ({ rental, fullView = false }) => {
-    if (!rental) return null;
     const navigate = useNavigate();
+    if (!rental) return null;
     return (
         <Box
             sx={{
