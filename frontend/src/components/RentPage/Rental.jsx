@@ -84,6 +84,8 @@ const Content = ({ rental, showButtons = false }) => {
                 <Typography>Price per night: {rental.price}€</Typography>
                 <Typography>Bed(s): {rental.beds}</Typography>
                 <Typography>Address: {rental.address}</Typography>
+                <br />
+                <Typography color="gray">Posted by: &quot;{rental.owner.username}&quot; ({rental.owner.name})</Typography>
                 {rental.petsAllowed && <PetsIcon />}
             </Box>
             {showButtons && (
@@ -111,6 +113,10 @@ const rentalPropType = PropTypes.shape({
     beds: PropTypes.number.isRequired,
     address: PropTypes.string.isRequired,
     petsAllowed: PropTypes.bool.isRequired,
+    owner: PropTypes.shape({
+        username: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+    }).isRequired,
     image: PropTypes.shape({
         contentType: PropTypes.string.isRequired,
         data: PropTypes.shape({
