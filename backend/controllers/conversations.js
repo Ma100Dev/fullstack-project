@@ -13,13 +13,31 @@ conversationRouter.get('/', userExtractor, async (request, response) => {
       .populate('messages'));
 });
 
+conversationRouter.get('/:property', userExtractor, async (request, response) => {
+    const property = await Property.findById(request.params.property);
+    const conversation = await Conversation.findOne({
+        $and: [
+          { property: property.id },
+          { starter: request.user.id },
+        ],
+    })
+      .populate('property')
+      .populate('starter')
+      .populate('receiver')
+      .populate('messages');
+    response.json(conversation);
+});
+
 conversationRouter.post('/', userExtractor, async (request, response) => {
     const { property } = request.body;
     const propertyObject = await Property.findById(property).populate('owner');
+    if (propertyObject.owner.id === request.user.id) {
+      return response.status(400).json({ error: 'You cannot message yourself' });
+    }
     const conversation = new Conversation({
         starter: request.user.id,
         receiver: propertyObject.owner.id,
-        property: property.id,
+        property: propertyObject.toJSON().id,
         messages: [],
     });
     const savedConversation = await conversation.save();

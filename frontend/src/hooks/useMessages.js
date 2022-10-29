@@ -21,7 +21,7 @@ const useMessages = () => {
     useEffect(() => {
         refresh();
         console.log('Conversations: ', conversations);
-    }, [conversations, refresh]);
+    }, [refresh]);
     return {
         ...(
             conversations.map((conversation) => ({

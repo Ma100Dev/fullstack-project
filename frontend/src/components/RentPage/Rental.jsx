@@ -7,6 +7,9 @@ import { ReactComponent as DefaultImage } from './house.svg';
 import ButtonBase from '@mui/material/ButtonBase';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
+import axios from 'axios';
+import { BACKEND_URL } from '../../utils/config';
+import useUser from '../../hooks/useUser';
 
 const arrayBufferToBase64 = (buffer) => {
     let binary = '';
@@ -20,6 +23,7 @@ const arrayBufferToBase64 = (buffer) => {
 
 const Rental = ({ rental, fullView = false }) => {
     const navigate = useNavigate();
+    const user = useUser();
     if (!rental) return null;
     return (
         <Box
@@ -39,12 +43,12 @@ const Rental = ({ rental, fullView = false }) => {
                         >
                             <Content rental={rental} />
                         </ButtonBase>
-                    ) : <Content rental={rental} showButtons={true} />
+                    ) : <Content rental={rental} showButtons={true} user={user} navigate={navigate} />
             }
         </Box >
     );
 };
-const Content = ({ rental, showButtons = false }) => {
+const Content = ({ rental, showButtons = false, user, navigate }) => {
     const imageProps = {
         style: {
             outline: '1px solid #ccc',
@@ -98,7 +102,31 @@ const Content = ({ rental, showButtons = false }) => {
                     flex: 1,
                 }} >
                     <Button variant="contained">Rent now</Button>
-                    <Button> Contact renter </Button>
+                    <Button onClick={async () => {
+                        const { data } = await axios.get(`${BACKEND_URL}/conversations/${rental.id}`,
+                            {
+                                headers: {
+                                    'Authorization': `Bearer ${user.token}`
+                                }
+                            });
+                        if (data !== null) {
+                            navigate(`/messages/${data.id}`);
+                        } else {
+                            const { data } = await axios.post(`${BACKEND_URL}/conversations`,
+                                {
+                                    property: rental.id,
+                                },
+                                {
+                                    headers: {
+                                        'Authorization': `Bearer ${user.token}`
+                                    }
+                                }).catch((err) => {
+                                    console.log(err.response.data.error);
+                                });
+                            navigate(`/messages/${data.id}`);
+                        }
+
+                    }}> Contact renter </Button>
                 </Box>
             )}
         </>
@@ -126,8 +154,10 @@ const rentalPropType = PropTypes.shape({
 });
 
 Content.propTypes = {
-    rental: rentalPropType,
+    rental: rentalPropType.isRequired,
     showButtons: PropTypes.bool,
+    user: PropTypes.object,
+    navigate: PropTypes.func,
 };
 
 Rental.propTypes = {
