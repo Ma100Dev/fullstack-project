@@ -7,7 +7,6 @@ import LoadingIndicator from './LoadingIndicator';
 const Messages = () => {
     const { conversations } = useMessages();
     if (!conversations) return <LoadingIndicator />;
-    console.log(conversations);
     return (
         <div>
             <h1>Messages</h1>

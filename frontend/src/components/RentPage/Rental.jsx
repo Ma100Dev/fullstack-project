@@ -120,8 +120,9 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                                     headers: {
                                         'Authorization': `Bearer ${user.token}`
                                     }
+                                    // eslint-disable-next-line no-unused-vars
                                 }).catch((err) => {
-                                    console.log(err.response.data.error); // TODO: handle error, global error handler
+                                    // console.error(err.response.data.error); // TODO: handle error, global error handler
                                 });
                             navigate(`/messages/${data.id}`);
                         }
