@@ -35,5 +35,6 @@ module.exports = {
     'no-multiple-empty-lines': 'error',
     'no-console': 'warn',
     'no-alert': 'warn',
+    'spaced-comment': 'error',
   },
 };

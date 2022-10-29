@@ -1,9 +1,10 @@
-//TODO Add messages to Redux store
+// TODO Add messages to Redux store
 import { BACKEND_URL } from '../utils/config';
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 import useUser from './useUser';
 
+// TODO rename to useConversations
 const useMessages = () => {
     const [conversations, setConversations] = useState([]);
     let localUser = useUser();
@@ -20,7 +21,7 @@ const useMessages = () => {
         refresh();
     }, [refresh]);
     return {
-        ...(
+        conversations: (
             conversations.map((conversation) => ({
                 ...conversation,
                 messages:

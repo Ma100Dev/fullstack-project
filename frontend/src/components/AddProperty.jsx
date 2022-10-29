@@ -9,7 +9,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-//import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import FormikTextField from './FormikTextField';
 import axios from 'axios';
 import * as Yup from 'yup';
@@ -63,7 +63,7 @@ const AddProperty = () => {
     const [open, setOpen] = React.useState(false);
     // eslint-disable-next-line no-unused-vars
     const [error, setError] = React.useState('');
-    //const navigate = useNavigate();
+    // const navigate = useNavigate();
     const handleClose = () => {
         setOpen(false);
     };

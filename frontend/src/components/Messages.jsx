@@ -1,31 +1,23 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import format from 'date-fns/format';
 import useMessages from '../hooks/useMessages';
+import LoadingIndicator from './LoadingIndicator';
 
 const Messages = () => {
-    const { messages, refresh } = useMessages();
-    useEffect(() => {
-        refresh();
-    }, [refresh]);
-    useEffect(() => {
-        console.log(messages);
-    }, [messages]);
-    if (!messages) return null;
-    const propertyIds = [...new Set(messages.map(m => m.property.id))];
-    const messagesPerProperty = propertyIds.map(p => {
-        return messages.filter(m => m.property.id === p);
-    });
+    const { conversations } = useMessages();
+    if (!conversations) return <LoadingIndicator />;
+    console.log(conversations);
     return (
         <div>
             <h1>Messages</h1>
             <ul>
-                {messagesPerProperty.map(conversation => (
-                    <li key={conversation[0].id}>
-                        <Link to={`/messages/${conversation[0].property.id}`}>
-                            {conversation[0].property.title} <br />
-                            {conversation[0].sender.username} at {format(new Date(conversation[0].createdAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")}:&nbsp;
-                            {conversation[0].content}
+                {conversations.map(conversation => (
+                    <li key={conversation.id}>
+                        <Link to={`/messages/${conversation.property.id}`}>
+                            {conversation.property.title} <br />
+                            {conversation.messages[0] && `${conversation.messages[0].sender.username} at ${format(new Date(conversation[0].createdAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")} `}
+                            {conversation.content}
                         </Link>
                     </li>
                 )

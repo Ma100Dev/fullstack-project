@@ -1,7 +1,7 @@
 import React from 'react';
 
-//TODO implement profile picture
-//Backend changes also required
+// TODO implement profile picture
+// Backend changes also required
 
 import { useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
