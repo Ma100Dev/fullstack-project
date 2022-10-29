@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import format from 'date-fns/format';
 import useMessages from '../hooks/useMessages';
 
 const Messages = () => {
-    const { messages } = useMessages();
+    const { messages, refresh } = useMessages();
+    useEffect(() => {
+        refresh();
+    }, [refresh]);
+    useEffect(() => {
+        console.log(messages);
+    }, [messages]);
     if (!messages) return null;
     const propertyIds = [...new Set(messages.map(m => m.property.id))];
     const messagesPerProperty = propertyIds.map(p => {

@@ -7,20 +7,17 @@ import useUser from './useUser';
 const useMessages = () => {
     const [conversations, setConversations] = useState([]);
     let localUser = useUser();
-    const refresh = useCallback(() => {
-        axios.get(`${BACKEND_URL}/conversations`,
+    const refresh = useCallback(async () => {
+        const { data } = await axios.get(`${BACKEND_URL}/conversations`,
             {
                 headers: {
                     'Authorization': `Bearer ${localUser.token}`
                 }
-            })
-            .then(res => {
-                setConversations(res.data);
             });
+        setConversations(data);
     }, [localUser.token]);
     useEffect(() => {
         refresh();
-        console.log('Conversations: ', conversations);
     }, [refresh]);
     return {
         ...(

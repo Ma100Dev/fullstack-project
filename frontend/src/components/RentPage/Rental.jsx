@@ -121,7 +121,7 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                                         'Authorization': `Bearer ${user.token}`
                                     }
                                 }).catch((err) => {
-                                    console.log(err.response.data.error);
+                                    console.log(err.response.data.error); //TODO: handle error, global error handler
                                 });
                             navigate(`/messages/${data.id}`);
                         }
