@@ -3,11 +3,10 @@ import Rental from './Rental';
 import useRentals from '../../hooks/useRentals';
 
 const RentPage = () => {
-    const rentals = useRentals();
-    const finalRentals = rentals.map(rental => ({ ...rental, owner: { name: '[Deleted user]', username: '[Deleted user]' } })); //TODO: remove this line when backend is fixed
+    const rentals = useRentals();  //TODO: Fix for when account is deleted
     return (
         <>
-            {finalRentals.map(rental => (
+            {rentals.map(rental => (
                 <Rental rental={rental} key={rental.id} />
             ))}
         </>
