@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import format from 'date-fns/format';
-import useMessages from '../hooks/useMessages';
 import LoadingIndicator from './LoadingIndicator';
+import useConversations from '../hooks/useConversations';
 
 const Messages = () => {
-    const { conversations } = useMessages();
+    const { conversations } = useConversations();
     if (!conversations) return <LoadingIndicator />;
     return (
         <div>
@@ -13,7 +13,7 @@ const Messages = () => {
             <ul>
                 {conversations.map(conversation => (
                     <li key={conversation.id}>
-                        <Link to={`/messages/${conversation.property.id}`}>
+                        <Link to={`/messages/${conversation.id}`}>
                             {conversation.property.title} <br />
                             {conversation.messages[0] && `${conversation.messages[0].sender.username} at ${format(new Date(conversation[0].createdAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")} `}
                             {conversation.content}

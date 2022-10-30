@@ -4,8 +4,7 @@ import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 import useUser from './useUser';
 
-// TODO rename to useConversations
-const useMessages = () => {
+const useConversations = () => {
     const [conversations, setConversations] = useState([]);
     let localUser = useUser();
     const refresh = useCallback(async () => {
@@ -33,4 +32,4 @@ const useMessages = () => {
     };
 };
 
-export default useMessages;
+export default useConversations;

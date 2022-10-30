@@ -15,7 +15,7 @@ messageRouter.post('/', userExtractor, async (request, response) => {
     const message = new Message({
         content: body.content,
         sender: request.user.id,
-        receiver: receiver.id,
+        receiver,
         conversation: conversation.id,
     });
     const saved = await message.save();
