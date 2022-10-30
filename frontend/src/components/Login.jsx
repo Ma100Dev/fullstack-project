@@ -15,6 +15,7 @@ import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../reducers/userReducer';
 import { BACKEND_URL } from '../utils/config';
+import useCrypt from '../hooks/useCrypt';
 
 const LoginSchema = Yup.object().shape({
     username: Yup.string()
@@ -28,6 +29,7 @@ const Login = () => {
     const [open, setOpen] = React.useState(false);
     const [error, setError] = React.useState('');
     const navigate = useNavigate();
+    const [crypt, publicKey] = useCrypt();
     const handleClose = () => {
         setOpen(false);
     };
@@ -63,6 +65,8 @@ const Login = () => {
                 validationSchema={LoginSchema}
                 onSubmit={async (values, { setSubmitting }) => {
                     let error = false;
+                    values.password = crypt.encrypt(publicKey, values.password);
+                    console.log(values);
                     const { data } = await axios.post(`${BACKEND_URL}/login`, values)
                         .catch(error => {
                             setError(error.response?.data?.error);

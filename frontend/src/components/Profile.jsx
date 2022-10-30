@@ -3,6 +3,8 @@ import React from 'react';
 // TODO implement profile picture
 // Backend changes also required
 
+// TODO Fix this
+
 import { useNavigate } from 'react-router-dom';
 import { Typography } from '@mui/material';
 import Button from '@mui/material/Button';

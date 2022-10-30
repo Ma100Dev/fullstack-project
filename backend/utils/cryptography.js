@@ -1,5 +1,4 @@
-const { RSA } = require('hybrid-crypto-js');
-const { Crypt } = require('hybrid-crypto-js');
+const { RSA, Crypt } = require('hybrid-crypto-js');
 const { Entropy } = require('entropy-string');
 const fs = require('fs');
 
