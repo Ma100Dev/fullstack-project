@@ -7,6 +7,7 @@ const loginRouter = require('./controllers/login');
 const propertyRouter = require('./controllers/properties');
 const messageRouter = require('./controllers/messages');
 const conversationRouter = require('./controllers/conversations');
+const cryptoRouter = require('./controllers/crypto');
 
 const config = require('./utils/config');
 const logger = require('./utils/logger');
@@ -31,6 +32,7 @@ app.use('/login', loginRouter);
 app.use('/properties', propertyRouter);
 app.use('/messages', messageRouter);
 app.use('/conversations', conversationRouter);
+app.use('/crypto', cryptoRouter);
 
 app.use(middleware.errorHandler);
 

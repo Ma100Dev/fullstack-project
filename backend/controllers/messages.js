@@ -4,6 +4,8 @@ const Conversation = require('../models/conversation');
 require('express-async-errors');
 const { userExtractor } = require('../utils/middleware');
 
+// TODO: Message encryption?
+
 messageRouter.post('/', userExtractor, async (request, response) => {
     const { body } = request;
     const conversation = await Conversation.findById(body.conversation).populate('property')

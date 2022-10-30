@@ -21,10 +21,10 @@ const encrypt = (data) => crypt.encrypt(publicKey, data);
 
 const decrypt = (data) => crypt.decrypt(privateKey, data);
 
-const getPulicKey = () => publicKey;
+const getPublicKey = () => publicKey;
 
 module.exports = {
     encrypt,
     decrypt,
-    getPulicKey,
+    getPublicKey,
 };
