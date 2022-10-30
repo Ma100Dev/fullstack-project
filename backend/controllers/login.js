@@ -3,13 +3,16 @@ const bcrypt = require('bcrypt');
 const loginRouter = require('express').Router();
 const User = require('../models/user');
 const config = require('../utils/config');
+const { decrypt, getPrivateKey } = require('../utils/cryptography');
 
 loginRouter.post('/', async (request, response) => {
     const { body } = request;
     const user = await User.findOne({ username: body.username });
+    console.log(body.password);
+    const password = decrypt(getPrivateKey(), body.password).message;
     const passwordCorrect = user === null
       ? false
-      : await bcrypt.compare(body.password, user.passwordHash);
+      : await bcrypt.compare(password, user.passwordHash);
 
     if (!(user && passwordCorrect)) {
       return response.status(401).json({
@@ -25,8 +28,6 @@ loginRouter.post('/', async (request, response) => {
       .status(200)
       .send({ token, id: user.toJSON().id });
 });
-
-// TODO: Don't receive password as plain text
 
 // TODO: Server-side session management
 

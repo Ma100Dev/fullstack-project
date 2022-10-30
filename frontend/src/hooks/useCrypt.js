@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { BACKEND_URL } from '../utils/config';
-import { Crypt } from 'hybrid-crypto.js';
 
 // Is this optimal? I have no idea.
 const useCrypt = () => {
@@ -9,10 +8,7 @@ const useCrypt = () => {
     axios.get(`${BACKEND_URL}/crypto`).then((response) => {
         setPublicKey(response.data);
     });
-    const crypt = new Crypt();
-    if (!publicKey) {
-        return [null, null];
-    }
+    const crypt = new window.Crypt();
     return [crypt, publicKey];
 };
 
