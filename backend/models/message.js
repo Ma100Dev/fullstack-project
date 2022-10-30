@@ -16,11 +16,6 @@ const messageSchema = mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    property: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Property',
-        required: true,
-    },
     createdAt: {
         type: Date,
         default: Date.now,

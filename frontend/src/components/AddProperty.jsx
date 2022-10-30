@@ -9,12 +9,13 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-//import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import FormikTextField from './FormikTextField';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { useSelector } from 'react-redux';
 import Resizer from 'react-image-file-resizer';
+import { BACKEND_URL } from '../utils/config';
 
 const resizeFile = (file) => new Promise(resolve => {
     Resizer.imageFileResizer(
@@ -62,7 +63,7 @@ const AddProperty = () => {
     const [open, setOpen] = React.useState(false);
     // eslint-disable-next-line no-unused-vars
     const [error, setError] = React.useState('');
-    //const navigate = useNavigate();
+    // const navigate = useNavigate();
     const handleClose = () => {
         setOpen(false);
     };
@@ -106,7 +107,7 @@ const AddProperty = () => {
                     formData.append('description', values.description);
                     formData.append('beds', values.beds);
                     formData.append('petsAllowed', values.petsAllowed);
-                    await axios.post('/api/properties',
+                    await axios.post(`${BACKEND_URL}/properties`,
                         formData,
                         {
                             headers: {

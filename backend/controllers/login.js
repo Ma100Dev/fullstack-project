@@ -28,4 +28,6 @@ loginRouter.post('/', async (request, response) => {
 
 // TODO: Don't receive password as plain text
 
+// TODO: Server-side session management
+
 module.exports = loginRouter;

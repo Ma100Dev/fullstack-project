@@ -26,7 +26,7 @@ propertyRouter.post('/', upload.single('image'), userExtractor, async (request, 
 });
 
 propertyRouter.get('/', async (request, response) => {
-    response.json(await Property.find({}));
+    response.json(await Property.find({}).populate('owner', { username: 1, name: 1 }));
 });
 
 module.exports = propertyRouter;

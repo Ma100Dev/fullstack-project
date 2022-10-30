@@ -7,6 +7,9 @@ import { ReactComponent as DefaultImage } from './house.svg';
 import ButtonBase from '@mui/material/ButtonBase';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
+import axios from 'axios';
+import { BACKEND_URL } from '../../utils/config';
+import useUser from '../../hooks/useUser';
 
 const arrayBufferToBase64 = (buffer) => {
     let binary = '';
@@ -19,8 +22,9 @@ const arrayBufferToBase64 = (buffer) => {
 };
 
 const Rental = ({ rental, fullView = false }) => {
-    if (!rental) return null;
     const navigate = useNavigate();
+    const user = useUser();
+    if (!rental) return null;
     return (
         <Box
             sx={{
@@ -39,12 +43,12 @@ const Rental = ({ rental, fullView = false }) => {
                         >
                             <Content rental={rental} />
                         </ButtonBase>
-                    ) : <Content rental={rental} showButtons={true} />
+                    ) : <Content rental={rental} showButtons={true} user={user} navigate={navigate} />
             }
         </Box >
     );
 };
-const Content = ({ rental, showButtons = false }) => {
+const Content = ({ rental, showButtons = false, user, navigate }) => {
     const imageProps = {
         style: {
             outline: '1px solid #ccc',
@@ -84,6 +88,8 @@ const Content = ({ rental, showButtons = false }) => {
                 <Typography>Price per night: {rental.price}€</Typography>
                 <Typography>Bed(s): {rental.beds}</Typography>
                 <Typography>Address: {rental.address}</Typography>
+                <br />
+                <Typography color="gray">Posted by: &quot;{rental.owner.username}&quot; ({rental.owner.name})</Typography>
                 {rental.petsAllowed && <PetsIcon />}
             </Box>
             {showButtons && (
@@ -96,7 +102,32 @@ const Content = ({ rental, showButtons = false }) => {
                     flex: 1,
                 }} >
                     <Button variant="contained">Rent now</Button>
-                    <Button> Contact renter </Button>
+                    <Button onClick={async () => {
+                        const { data } = await axios.get(`${BACKEND_URL}/conversations/${rental.id}`,
+                            {
+                                headers: {
+                                    'Authorization': `Bearer ${user.token}`
+                                }
+                            });
+                        if (data !== null) {
+                            navigate(`/messages/${data.id}`);
+                        } else {
+                            const { data } = await axios.post(`${BACKEND_URL}/conversations`,
+                                {
+                                    property: rental.id,
+                                },
+                                {
+                                    headers: {
+                                        'Authorization': `Bearer ${user.token}`
+                                    }
+                                    // eslint-disable-next-line no-unused-vars
+                                }).catch((err) => {
+                                    // console.error(err.response.data.error); // TODO: handle error, global error handler
+                                });
+                            navigate(`/messages/${data.id}`);
+                        }
+
+                    }}> Contact renter </Button>
                 </Box>
             )}
         </>
@@ -111,6 +142,10 @@ const rentalPropType = PropTypes.shape({
     beds: PropTypes.number.isRequired,
     address: PropTypes.string.isRequired,
     petsAllowed: PropTypes.bool.isRequired,
+    owner: PropTypes.shape({
+        username: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+    }).isRequired,
     image: PropTypes.shape({
         contentType: PropTypes.string.isRequired,
         data: PropTypes.shape({
@@ -120,8 +155,10 @@ const rentalPropType = PropTypes.shape({
 });
 
 Content.propTypes = {
-    rental: rentalPropType,
+    rental: rentalPropType.isRequired,
     showButtons: PropTypes.bool,
+    user: PropTypes.object,
+    navigate: PropTypes.func,
 };
 
 Rental.propTypes = {
