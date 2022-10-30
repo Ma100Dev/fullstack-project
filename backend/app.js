@@ -16,6 +16,8 @@ require('express-async-errors');
 const app = express();
 const mongoUrl = config.MONGODB_URI;
 logger.log(`Connecting to ${mongoUrl}`);
+// TODO: Add dev and test databases and populate them with test data,
+// maybe using faker.js?
 mongoose.connect(mongoUrl).then(() => {
     logger.log('Connected to MongoDB');
 }).catch((error) => {

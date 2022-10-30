@@ -34,5 +34,9 @@ conversationSchema.set('toJSON', {
     },
 });
 
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
+
+conversationSchema.plugin(deepPopulate);
+
 const Conversation = mongoose.model('Conversation', conversationSchema);
 module.exports = Conversation;

@@ -1502,6 +1502,11 @@ mongodb@4.8.1:
   optionalDependencies:
     saslprep "^1.0.3"
 
+mongoose-deep-populate@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/mongoose-deep-populate/-/mongoose-deep-populate-3.2.0.tgz#3abbdf42f63460f7c4a830da5ed31e1e4fd07abd"
+  integrity sha512-MD77o0Wo1e+s8sipP9xRytDdEBX5mfJGRfGGLA1D378+o9mXgCES3+SZxKyhPe+xyLc30abxAX5CK36l9TdpJg==
+
 mongoose-unique-validator@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/mongoose-unique-validator/-/mongoose-unique-validator-3.1.0.tgz#10d6fa10ccf5515461e3b5693f193d227546d60b"

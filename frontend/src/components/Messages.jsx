@@ -7,6 +7,7 @@ import useConversations from '../hooks/useConversations';
 const Messages = () => {
     const { conversations } = useConversations();
     if (!conversations) return <LoadingIndicator />;
+    console.log(conversations);
     return (
         <div>
             <h1>Messages</h1>
@@ -15,7 +16,7 @@ const Messages = () => {
                     <li key={conversation.id}>
                         <Link to={`/messages/${conversation.id}`}>
                             {conversation.property.title} <br />
-                            {conversation.messages[0] && `${conversation.messages[0].sender.username} at ${format(new Date(conversation[0].createdAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")} `}
+                            {conversation.messages[0] && `${conversation.messages[0].sender.username} at ${format(new Date(conversation.messages[0].createdAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")} `}
                             {conversation.content}
                         </Link>
                     </li>

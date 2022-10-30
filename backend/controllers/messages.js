@@ -19,6 +19,8 @@ messageRouter.post('/', userExtractor, async (request, response) => {
         conversation: conversation.id,
     });
     const saved = await message.save();
+    conversation.messages = conversation.messages.concat(message.id);
+    await conversation.save();
     response.json(saved);
 });
 

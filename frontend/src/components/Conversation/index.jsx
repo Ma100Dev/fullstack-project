@@ -42,7 +42,7 @@ const Conversation = () => {
                 <Button sx={{ width: '10%', height: '100%', ml: 1, mr: '1rem' }} variant="contained" onClick={
                     async () => {
                         if (message.length > 0) {
-                            axios.post(`${BACKEND_URL}/messages`, {
+                            await axios.post(`${BACKEND_URL}/messages`, {
                                 content: message,
                                 conversation: id
                             }, {
