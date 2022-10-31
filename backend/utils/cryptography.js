@@ -22,11 +22,9 @@ const decrypt = (data) => crypt.decrypt(privateKey, data);
 
 const getPublicKey = () => publicKey;
 
-const getPrivateKey = () => privateKey;
 
 module.exports = {
     encrypt,
     decrypt,
     getPublicKey,
-    getPrivateKey,
 };
