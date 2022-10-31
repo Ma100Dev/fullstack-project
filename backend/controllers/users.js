@@ -58,8 +58,15 @@ usersRouter.put('/:id', userExtractor, async (request, response) => {
 usersRouter.get('/:id', async (request, response) => {
     const { id } = request.params;
     const user = await User.findById(id).populate('properties', {
-        id: 1, address: 1, price: 1, beds: 1, description: 1, petsAllowed: 1, title: 1, image: 1,
-    });
+        id: 1,
+        address: 1,
+        price: 1,
+        beds: 1,
+        description: 1,
+        petsAllowed: 1,
+        title: 1,
+        image: 1,
+    }).deepPopulate('properties.owner');
     response.json(user.toJSON());
 });
 

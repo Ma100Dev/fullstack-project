@@ -11,7 +11,7 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../utils/config';
 import useUser from '../../hooks/useUser';
 
-const arrayBufferToBase64 = (buffer) => {
+const arrayBufferToBase64 = (buffer) => { // Probably not the best way to do this
     let binary = '';
     let bytes = new Uint8Array(buffer);
     let len = bytes.byteLength;

@@ -19,7 +19,7 @@ jobs:
           node-version: 16
       - uses: actions/cache@v3
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install Yarn
         run: npm install -g yarn
@@ -39,10 +39,12 @@ jobs:
         run: |
           rm -rf backend/node_modules
           rm -rf frontend/node_modules
-      - name: Add .env for deployment
+      - name: Add secrets for deployment
         run: |
           echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "${{ secrets.ID_RSA }}" > backend/id_rsa
+          echo "${{ secrets.ID_RSA_PUB }}" > backend/id_rsa.pub
       - name: Deploy to server
         uses: matiasnu/github-action-ssh-docker-compose@master
         with:

@@ -39,5 +39,9 @@ userSchema.set('toJSON', {
     },
 });
 
+const deepPopulate = require('mongoose-deep-populate')(mongoose);
+
+userSchema.plugin(deepPopulate);
+
 const User = mongoose.model('User', userSchema);
 module.exports = User;
