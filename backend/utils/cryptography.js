@@ -22,7 +22,6 @@ const decrypt = (data) => crypt.decrypt(privateKey, data);
 
 const getPublicKey = () => publicKey;
 
-
 module.exports = {
     encrypt,
     decrypt,
