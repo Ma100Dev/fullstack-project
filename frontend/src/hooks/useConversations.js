@@ -1,11 +1,14 @@
-// TODO Add messages to Redux store
 import { BACKEND_URL } from '../utils/config';
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 import useUser from './useUser';
+import { useSelector, useDispatch } from 'react-redux';
+import { setConversations } from '../reducers/conversationReducer';
 
 const useConversations = () => {
-    const [conversations, setConversations] = useState([]);
+    const dispatch = useDispatch();
+    let storedConversations = useSelector(state => state.conversations);
+    const [conversations, setLocalConversations] = useState([]);
     let localUser = useUser();
     const refresh = useCallback(async () => {
         const { data } = await axios.get(`${BACKEND_URL}/conversations`,
@@ -14,11 +17,16 @@ const useConversations = () => {
                     'Authorization': `Bearer ${localUser.token}`
                 }
             });
-        setConversations(data);
-    }, [localUser.token]);
+        setLocalConversations(data);
+        dispatch(setConversations(data));
+    }, [localUser.token, dispatch]);
     useEffect(() => {
-        refresh();
-    }, [refresh]);
+        if (storedConversations.length === 0) {
+            refresh();
+        } else {
+            setLocalConversations(storedConversations);
+        }
+    }, [refresh, storedConversations]);
     return {
         conversations: (
             conversations.map((conversation) => ({
