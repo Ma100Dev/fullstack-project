@@ -4,17 +4,22 @@ require('../models/property');
 const User = require('../models/user');
 require('express-async-errors');
 const { userExtractor } = require('../utils/middleware');
+const { decrypt } = require('../utils/cryptography');
 
+// TODO: Email verification
 usersRouter.post('/', async (request, response) => {
     const { body } = request;
-    if (!body.password) {
+    const password = decrypt(
+      body.password,
+    ).message;
+    if (password) {
       response.status(400).json({ error: 'User validation failed: password: Path `password` is required.' });
       return;
-    } if (body.password.length < 3) {
-      response.status(400).json({ error: `User validation failed: username: Path \`password\` (\`${body.password ?? ''}\`) is shorter than the minimum allowed length (3).` });
+    } if (password.length < 3) {
+      response.status(400).json({ error: 'User validation failed: username: Path `password` is shorter than the minimum allowed length (3).' });
       return;
     }
-    const passwordHash = await bcrypt.hash(body.password, 10);
+    const passwordHash = await bcrypt.hash(password, 10);
     const user = new User({
         username: body.username,
         name: body.name,
@@ -40,9 +45,12 @@ usersRouter.put('/:id', userExtractor, async (request, response) => {
       response.status(401).json({ error: 'Not authorized' });
       return;
     }
+    const password = decrypt(
+      body.password,
+    ).message;
     const passwordCorrect = user === null
       ? false
-      : await bcrypt.compare(body.password, user.passwordHash);
+      : await bcrypt.compare(password, user.passwordHash);
     if (!passwordCorrect) {
       response.status(401).json({ error: 'Incorrect password confirmation' });
       return;

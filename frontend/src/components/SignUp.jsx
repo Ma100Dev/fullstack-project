@@ -15,6 +15,7 @@ import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../reducers/userReducer';
 import { BACKEND_URL } from '../utils/config';
+import useCrypt from '../hooks/useCrypt';
 
 const SignUpSchema = Yup.object().shape({
     username: Yup.string()
@@ -39,6 +40,7 @@ const SignUp = () => {
     const [open, setOpen] = React.useState(false);
     const [error, setError] = React.useState('');
     const navigate = useNavigate();
+    const [crypt, publicKey] = useCrypt();
     const handleClose = () => {
         setOpen(false);
     };
@@ -82,7 +84,7 @@ const SignUp = () => {
                         });
                     const signUpData = { ...data };
                     if (!error) {
-                        const { data } = await axios.post(`${BACKEND_URL}/login`, { username: signUpData.username, password: values.password })
+                        const { data } = await axios.post(`${BACKEND_URL}/login`, { username: signUpData.username, password: crypt.encrypt(publicKey, values.password) })
                             .catch(error => {
                                 setError(error.response?.data?.error);
                                 setOpen(true);
