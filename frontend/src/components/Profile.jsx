@@ -15,6 +15,7 @@ import axios from 'axios';
 import Rental from './RentPage/Rental';
 import useUser from '../hooks/useUser';
 import LoadingIndicator from './LoadingIndicator';
+import useCrypt from '../hooks/useCrypt';
 
 const editValidationSchema = yup.object().shape({
     username: yup.string()
@@ -43,6 +44,7 @@ const Profile = ({ editMode = false }) => {
     const navigate = useNavigate();
     let localUser = useUser();
     const [user, setUser] = React.useState({});
+    const [crypt, publicKey] = useCrypt();
     React.useEffect(() => {
         if (Object.keys(user).length === 0) {
             axios.get('/api/users/' + localUser.id).then(res => {
@@ -57,7 +59,7 @@ const Profile = ({ editMode = false }) => {
         }
         const values = {
             email: event.target.email.value,
-            password: event.target.password.value,
+            password: crypt.encrypt(publicKey, event.target.password.value),
             username: event.target.username.value,
             name: event.target.name.value
         };
