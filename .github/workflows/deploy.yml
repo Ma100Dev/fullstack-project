@@ -17,24 +17,6 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - uses: actions/cache@v3
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - name: Install Yarn
-        run: npm install -g yarn
-      - name: Lint backend
-        run: |
-          cd backend
-          rm -rf node_modules
-          yarn install --immutable --immutable-cache --check-cache
-          yarn run lint
-      - name: Lint frontend
-        run: |
-          cd frontend
-          rm -rf node_modules
-          yarn install --immutable --immutable-cache --check-cache
-          yarn run lint
       - name: Clean up
         run: |
           rm -rf backend/node_modules

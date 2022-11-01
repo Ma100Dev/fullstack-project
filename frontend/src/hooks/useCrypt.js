@@ -3,6 +3,8 @@ import axios from 'axios';
 import { BACKEND_URL } from '../utils/config';
 
 // Is this optimal? I have no idea.
+
+// TODO: Add public key to Redux store.
 const useCrypt = () => {
     const [publicKey, setPublicKey] = useState(null);
     axios.get(`${BACKEND_URL}/crypto`).then((response) => {

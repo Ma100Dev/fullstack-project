@@ -3,11 +3,15 @@ import { Link } from 'react-router-dom';
 import format from 'date-fns/format';
 import LoadingIndicator from './LoadingIndicator';
 import useConversations from '../hooks/useConversations';
+import Button from '@mui/material/Button';
+import { useCallback } from 'react';
+import * as _ from 'lodash';
 
 const Messages = () => {
-    const { conversations } = useConversations();
+    const { conversations, refresh } = useConversations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
+    const throttledRefresh = useCallback(_.throttle(() => { refresh(); }, 1000), []);
     if (!conversations) return <LoadingIndicator />;
-    console.log(conversations);
     return (
         <div>
             <h1>Messages</h1>
@@ -23,6 +27,7 @@ const Messages = () => {
                 )
                 )}
             </ul>
+            <Button onClick={throttledRefresh}>Refresh</Button>
         </div>
     );
 };
