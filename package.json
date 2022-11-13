@@ -7,5 +7,6 @@
     "root": "cd $(git rev-parse --show-toplevel)",
     "lint": "yarn run root && cd backend && yarn run lint --fix && cd ../frontend && yarn run lint --fix"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "private": true
 }
