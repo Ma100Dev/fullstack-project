@@ -23,7 +23,7 @@ const arrayBufferToBase64 = (buffer) => { // Probably not the best way to do thi
 
 const Rental = ({ rental, fullView = false }) => {
     const navigate = useNavigate();
-    const user = useUser();
+    const user = useUser({ noRedirect: true });
     if (!rental) return null;
     return (
         <Box
@@ -92,7 +92,7 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                 <Typography color="gray">Posted by: &quot;{rental.owner.username}&quot; ({rental.owner.name})</Typography>
                 {rental.petsAllowed && <PetsIcon />}
             </Box>
-            {showButtons && (
+            {(showButtons && Object.keys(user).length !== 0) && (
                 <Box sx={{
                     display: 'flex',
                     flexDirection: 'column',
