@@ -8,6 +8,7 @@ const propertyRouter = require('./controllers/properties');
 const messageRouter = require('./controllers/messages');
 const conversationRouter = require('./controllers/conversations');
 const cryptoRouter = require('./controllers/crypto');
+const verificationRouter = require('./controllers/verification');
 
 const config = require('./utils/config');
 const logger = require('./utils/logger');
@@ -33,6 +34,7 @@ app.use('/properties', propertyRouter);
 app.use('/messages', messageRouter);
 app.use('/conversations', conversationRouter);
 app.use('/crypto', cryptoRouter);
+app.use('/verification', verificationRouter);
 
 app.use(middleware.errorHandler);
 
