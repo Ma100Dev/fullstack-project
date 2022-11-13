@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import useUser from '../hooks/useUser';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
@@ -7,9 +7,11 @@ import Typography from '@mui/material/Typography';
 const NeedEmailVerification = () => {
     const navigate = useNavigate();
     const user = useUser();
-    if (user.emailVerified) {
-        navigate('/');
-    }
+    useEffect(() => {
+        if (user.emailVerified) {
+            navigate('/');
+        }
+    }, [user, navigate]);
     return (
         <div style={{
             display: 'flex',

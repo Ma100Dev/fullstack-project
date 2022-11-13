@@ -6,13 +6,14 @@ const User = require('../models/user');
 require('express-async-errors');
 const { userExtractor } = require('../utils/middleware');
 const { decrypt } = require('../utils/cryptography');
+const { sendVerificationEmail } = require('../utils/email');
 
 usersRouter.post('/', async (request, response) => {
     const { body } = request;
     const password = decrypt(
       body.password,
     ).message;
-    if (password) {
+    if (!password) {
       response.status(400).json({ error: 'User validation failed: password: Path `password` is required.' });
       return;
     } if (password.length < 3) {
@@ -28,8 +29,8 @@ usersRouter.post('/', async (request, response) => {
         verified: false,
         verificationCode: crypto.randomBytes(25).toString('hex'),
     });
-
     const savedUser = await user.save();
+    sendVerificationEmail(savedUser.email, savedUser.verificationCode);
     response.json(savedUser);
 });
 
