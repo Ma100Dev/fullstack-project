@@ -25,13 +25,10 @@ jobs:
           rm -rf node_modules
           yarn install --immutable --immutable-cache --check-cache
           yarn run lint
-      - name: Lint frontend
+      - name: Lint and build frontend
         run: |
           cd frontend
           rm -rf node_modules
           yarn install --immutable --immutable-cache --check-cache
           yarn run lint
-      - name: Build frontend
-        run: |
-          cd frontend
           yarn run build
