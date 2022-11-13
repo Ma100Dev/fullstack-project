@@ -9,15 +9,26 @@ import { useState } from 'react';
 import axios from 'axios';
 import { BACKEND_URL } from '../../utils/config';
 import useUser from '../../hooks/useUser';
+import { useLocation } from 'react-router-dom';
 
 const Conversation = () => {
     const { id } = useParams();
     const { conversations, refresh } = useConversations();
     const [message, setMessage] = useState('');
     const user = useUser();
+    const location = useLocation();
+
+    const [newRefreshed, setNewRefreshed] = useState(false);
+    const isNew = new URLSearchParams(location.search).get('new') === 'true';
+
+    if (isNew && !newRefreshed) {
+        refresh();
+        setNewRefreshed(true);
+    }
 
     if (conversations.length === 0) return <LoadingIndicator />;
     const conversation = conversations.find(c => c.id === id);
+    if (!conversation) return <LoadingIndicator />;
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%', alignSelf: 'center', marginLeft: 'auto', marginRight: 'auto' }}>

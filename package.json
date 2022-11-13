@@ -1,0 +1,12 @@
+{
+  "devDependencies": {
+    "husky": "^8.0.2"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "root": "cd $(git rev-parse --show-toplevel)",
+    "lint": "yarn run root && cd backend && yarn run lint --fix && cd ../frontend && yarn run lint --fix"
+  },
+  "license": "MIT",
+  "private": true
+}

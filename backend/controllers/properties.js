@@ -25,8 +25,10 @@ propertyRouter.post('/', upload.single('image'), userExtractor, async (request, 
     response.json(saved);
 });
 
-propertyRouter.get('/', async (request, response) => {
-    response.json(await Property.find({}).populate('owner', { username: 1, name: 1 }));
+propertyRouter.get('/', userExtractor, async (request, response) => {
+    response.json(await Property.find({
+        owner: { $ne: request?.user?.id || null },
+    }).populate('owner', { username: 1, name: 1 }));
 });
 
 module.exports = propertyRouter;
