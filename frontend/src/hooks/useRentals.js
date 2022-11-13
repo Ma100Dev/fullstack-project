@@ -27,7 +27,7 @@ const useRentals = () => {
             }
         };
         fetchData();
-    }, [dispatch, rentalState, setRentalState, user]);
+    }, [dispatch, rentalState, setRentalState, user, success]);
     return rentalState;
 };
 

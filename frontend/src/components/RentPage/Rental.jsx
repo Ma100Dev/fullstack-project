@@ -23,7 +23,7 @@ const arrayBufferToBase64 = (buffer) => { // Probably not the best way to do thi
 
 const Rental = ({ rental, fullView = false }) => {
     const navigate = useNavigate();
-    const user = useUser({ noRedirect: true });
+    const user = useUser(true);
     if (!rental) return null;
     return (
         <Box
@@ -124,7 +124,7 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                                 }).catch((err) => {
                                     // console.error(err.response.data.error); // TODO: handle error, global error handler
                                 });
-                            navigate(`/messages/${data.id}`);
+                            navigate(`/messages/${data.id}?new=true`);
                         }
 
                     }}> Contact renter </Button>
