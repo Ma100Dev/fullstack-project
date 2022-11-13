@@ -94,7 +94,7 @@ const SignUp = () => {
                             localStorage.setItem('user', JSON.stringify(data));
                             dispatch(setUser(data));
                             setSubmitting(false);
-                            navigate('/');
+                            navigate('/verify');
                         }
                     }
                     setSubmitting(false);

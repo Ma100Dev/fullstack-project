@@ -14,6 +14,7 @@ import AddProperty from './components/AddProperty';
 import SingleRental from './components/SingleRental';
 import Messages from './components/Messages';
 import Conversation from './components/Conversation';
+import NeedEmailVerification from './components/NeedEmailVerification';
 
 const user = localStorage.getItem('user');
 // TODO: Add 404 page
@@ -36,6 +37,7 @@ const App = () => {
         <Route path='/add' element={<AddProperty />} />
         <Route path='/messages' element={<Messages />} />
         <Route path='/messages/:id' element={<Conversation />} />
+        <Route path='/verify' element={<NeedEmailVerification />} />
       </Routes>
     </>
   );

@@ -1,12 +1,12 @@
 const bcrypt = require('bcrypt');
 const usersRouter = require('express').Router();
 require('../models/property');
+const crypto = require('crypto');
 const User = require('../models/user');
 require('express-async-errors');
 const { userExtractor } = require('../utils/middleware');
 const { decrypt } = require('../utils/cryptography');
 
-// TODO: Email verification
 usersRouter.post('/', async (request, response) => {
     const { body } = request;
     const password = decrypt(
@@ -25,7 +25,10 @@ usersRouter.post('/', async (request, response) => {
         name: body.name,
         email: body.email,
         passwordHash,
+        verified: false,
+        verificationCode: crypto.randomBytes(25).toString('hex'),
     });
+
     const savedUser = await user.save();
     response.json(savedUser);
 });

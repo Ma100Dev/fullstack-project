@@ -27,7 +27,7 @@ loginRouter.post('/', async (request, response) => {
     const token = jwt.sign(userForToken, config.JWT_SECRET);
     response
       .status(200)
-      .send({ token, id: user.toJSON().id });
+      .send({ token, id: user.toJSON().id, verified: user.toJSON().verified });
 });
 
 // TODO: Server-side session management
