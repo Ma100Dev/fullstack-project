@@ -16,7 +16,7 @@ import Messages from './components/Messages';
 import Conversation from './components/Conversation';
 
 const user = localStorage.getItem('user');
-
+// TODO: Add 404 page
 const App = () => {
   const dispatch = useDispatch();
   if (user) {
