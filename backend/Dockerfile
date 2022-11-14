@@ -11,7 +11,7 @@ ENV JWT_SECRET=$JWT_SECRET
 
 COPY --chown=node:node . .
 
-RUN rm -rf node_modules && yarn install --immutable --immutable-cache --check-cache
+RUN rm -rf node_modules && yarn install --immutable --immutable-cache --check-cache --prod
 
 RUN chown -R node:node /usr/src/app
 

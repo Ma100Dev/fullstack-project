@@ -15,5 +15,6 @@ module.exports = {
         'no-underscore-dangle': 'off',
         'no-param-reassign': 'off',
         'consistent-return': 'off',
+        'no-plusplus': 'off',
     },
 };
