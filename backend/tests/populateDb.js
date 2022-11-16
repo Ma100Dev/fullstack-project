@@ -1,6 +1,6 @@
 const { faker } = require('@faker-js/faker');
 
-const { User } = require('../models/user');
+const User = require('../models/user');
 
 const populateUsers = async (count) => {
     const users = [];

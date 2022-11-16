@@ -1,24 +1,16 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 
-const db = new MongoMemoryServer();
-
-const connect = async () => {
-    const uri = await db.getConnectionString();
+const connect = async (mongod) => {
+    const uri = mongod.getUri();
     console.log('DB URI: ', uri);
-    const mongooseOpts = {
-        useNewUrlParser: true,
-        autoReconnect: true,
-        reconnectTries: Number.MAX_VALUE,
-        reconnectInterval: 1000,
-    };
-    mongoose.connect(uri, mongooseOpts);
+    mongoose.connect(uri);
 };
 
-const close = async () => {
+const close = async (mongod) => {
     await mongoose.connection.dropDatabase();
     await mongoose.connection.close();
-    await db.stop();
+    await mongod.stop();
 };
 
 const clear = async () => {
@@ -28,7 +20,15 @@ const clear = async () => {
     });
 };
 
+const init = async () => {
+    const mongod = await MongoMemoryServer.create({});
+    console.log(mongod);
+    await connect(mongod);
+    return mongod;
+};
+
 module.exports = {
+    init,
     connect,
     close,
     clear,

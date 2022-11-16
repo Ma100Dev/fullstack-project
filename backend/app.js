@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const { connect } = require('./tests/db');
+const { init } = require('./tests/db');
 const { populateUsers } = require('./tests/populateDb');
 
 const usersRouter = require('./controllers/users');
@@ -17,14 +17,14 @@ const middleware = require('./utils/middleware');
 require('express-async-errors');
 
 const app = express();
-if (config.ENV === 'development' || config.NODE_ENV === 'test') {
-  connect().then(() => {
-      logger.info('Connected to database');
+if (config.ENV === 'development' || config.ENV === 'test') {
+  init().then(() => {
+      logger.log('Connected to database');
   });
   if (config.POPULATE_DB) {
     const populate = async () => {
         const users = await populateUsers(10);
-        logger.info('Populated database with users: ', users);
+        logger.log('Populated database with users: ', users);
     };
     populate();
   }
