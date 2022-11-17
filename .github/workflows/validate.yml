@@ -48,4 +48,5 @@ jobs:
           export MONGOMS_DOWNLOAD_URL=https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-6.0.3.tgz
           export POPULATE_DB=true
           export NO_RUN=true
+          yarn
           yarn start
