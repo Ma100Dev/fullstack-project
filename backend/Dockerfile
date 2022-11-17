@@ -9,6 +9,8 @@ ENV MONGODB_URI=$MONGODB_URI
 ARG JWT_SECRET
 ENV JWT_SECRET=$JWT_SECRET
 
+ENV NODE_ENV=production
+
 COPY --chown=node:node . .
 
 RUN rm -rf node_modules && yarn install --immutable --immutable-cache --check-cache --prod

@@ -1,8 +1,8 @@
+/* eslint-disable global-require */
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const { init } = require('./tests/db');
-const { populateUsers } = require('./tests/populateDb');
 
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
@@ -16,8 +16,12 @@ const logger = require('./utils/logger');
 const middleware = require('./utils/middleware');
 require('express-async-errors');
 
+logger.log('Environment:', config.ENV);
+
 const app = express();
 if (config.ENV === 'development' || config.ENV === 'test') {
+  const { init } = require('./tests/db');
+  const { populateUsers } = require('./tests/populateDb');
   init().then(() => {
       logger.log('Connected to database');
   });
