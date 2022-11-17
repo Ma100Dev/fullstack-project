@@ -64,7 +64,6 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
     return (
         <>
             <Box>
-                {console.log(rental.image, Boolean(rental.image))}
                 {rental.image ?
                     <img
                         src={`data:${rental.image.contentType};base64,${arrayBufferToBase64(rental.image.data.data)}`}
