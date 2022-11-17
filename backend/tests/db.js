@@ -22,7 +22,6 @@ const clear = async () => {
 
 const init = async () => {
     const mongod = await MongoMemoryServer.create({});
-    console.log(mongod);
     await connect(mongod);
     return mongod;
 };
