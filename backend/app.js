@@ -37,6 +37,11 @@ if (config.ENV === 'development' || config.ENV === 'test') {
       logger.error(`Error connection to MongoDB: ${error.message}`);
   });
 }
+
+if (config.NO_RUN) {
+  process.exit();
+}
+
 app.use(cors());
 app.use(express.json());
 app.use('/users', usersRouter);
