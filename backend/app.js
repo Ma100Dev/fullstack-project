@@ -31,14 +31,17 @@ const createApp = async () => {
     const app = express();
     if (config.ENV === 'development' || config.ENV === 'test') { // If test or development, use in-memory database
       const { init } = require('./tests/db');
-      const { populateUsers } = require('./tests/populateDb');
+      const { populateUsers, populateProperties } = require('./tests/populateDb');
+
       init().then(() => {
           logger.log('Connected to database');
       });
       if (config.POPULATE_DB) { // If POPULATE_DB is true, populate the database with test data
         const populate = async () => {
-            const users = await populateUsers(10000);
+            const users = await populateUsers(100);
             logger.log('Populated database with users (', users.length, ')');
+            const properties = await populateProperties(100);
+            logger.log('Populated database with properties (', properties.length, ')');
         };
         await populate();
       }
