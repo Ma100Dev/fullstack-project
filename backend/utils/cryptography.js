@@ -1,16 +1,6 @@
 const { RSA, Crypt } = require('hybrid-crypto-js');
 const { Entropy } = require('entropy-string');
 const fs = require('fs');
-const { NO_RUN } = require('./config');
-
-if (NO_RUN) {
-  const func = () => null;
-  module.exports = {
-      encrypt: func,
-      decrypt: func,
-      getPublicKey: func,
-  };
-}
 
 const entropy = new Entropy();
 const crypt = new Crypt({ entropy: entropy.string() });

@@ -4,17 +4,26 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-const usersRouter = require('./controllers/users');
-const loginRouter = require('./controllers/login');
-const propertyRouter = require('./controllers/properties');
-const messageRouter = require('./controllers/messages');
-const conversationRouter = require('./controllers/conversations');
-const cryptoRouter = require('./controllers/crypto');
-
 const config = require('./utils/config');
 const logger = require('./utils/logger');
 const middleware = require('./utils/middleware');
 require('express-async-errors');
+
+let usersRouter;
+let loginRouter;
+let propertyRouter;
+let messageRouter;
+let conversationRouter;
+let cryptoRouter;
+
+if (!config.NO_RUN) {
+  usersRouter = require('./controllers/users');
+  loginRouter = require('./controllers/login');
+  propertyRouter = require('./controllers/properties');
+  messageRouter = require('./controllers/messages');
+  conversationRouter = require('./controllers/conversations');
+  cryptoRouter = require('./controllers/crypto');
+}
 
 logger.log('Environment:', config.ENV);
 
