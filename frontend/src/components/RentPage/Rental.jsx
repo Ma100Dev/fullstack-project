@@ -56,12 +56,15 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
             padding: '5px',
             maxWidth: 852,
             maxHeight: 480,
+            width: '100%',
+            height: '100%',
         },
         alt: rental.title,
     };
     return (
         <>
             <Box>
+                {console.log(rental.image, Boolean(rental.image))}
                 {rental.image ?
                     <img
                         src={`data:${rental.image.contentType};base64,${arrayBufferToBase64(rental.image.data.data)}`}
