@@ -39,6 +39,7 @@ const createApp = async () => {
         const populate = async () => {
             const users = await populateUsers(10000);
             logger.log('Populated database with users (', users.length, ')');
+            logger.log(users); // Only for testing purposes, to be removed
         };
         await populate();
       }
