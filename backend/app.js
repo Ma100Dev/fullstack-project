@@ -24,7 +24,7 @@ if (config.ENV === 'development' || config.ENV === 'test') {
   if (config.POPULATE_DB) {
     const populate = async () => {
         const users = await populateUsers(10000);
-        logger.log('Populated database with users: ', users);
+        logger.log('Populated database with users (', users.length, ')');
     };
     populate();
   }

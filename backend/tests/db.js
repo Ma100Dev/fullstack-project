@@ -14,10 +14,13 @@ const close = async (mongod) => {
 };
 
 const clear = async () => {
-    const { collections } = mongoose.connection;
-    collections.map(async (collection) => {
-        await collection.deleteMany();
-    });
+    const { db } = mongoose.connection;
+    const collections = await db.listCollections().toArray();
+    collections
+      .map((collection) => collection.name)
+      .forEach(async (collectionName) => {
+          db.dropCollection(collectionName);
+      });
 };
 
 const init = async () => {
