@@ -30,12 +30,14 @@ usersRouter.post('/', async (request, response) => {
     response.json(savedUser);
 });
 
-usersRouter.get('/', async (request, response) => {
-    const users = await User.find({}).populate('properties', {
-        id: 1, address: 1, price: 1, beds: 1, description: 1, petsAllowed: 1, title: 1, image: 1,
-    });
-    response.json(users.map((user) => user.toJSON()));
-});
+// Should only be allowed for admins
+// TODO: Add admins
+// usersRouter.get('/', async (request, response) => {
+//     const users = await User.find({}).populate('properties', {
+//         id: 1, address: 1, price: 1, beds: 1, description: 1, petsAllowed: 1, title: 1, image: 1,
+//     });
+//     response.json(users.map((user) => user.toJSON()));
+// });
 
 usersRouter.put('/:id', userExtractor, async (request, response) => {
     const { body } = request;

@@ -5,7 +5,7 @@ import LoadingIndicator from './LoadingIndicator';
 import useConversations from '../hooks/useConversations';
 import Button from '@mui/material/Button';
 import { useCallback } from 'react';
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 const Messages = () => {
     const { conversations, refresh } = useConversations();

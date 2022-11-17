@@ -1,39 +1,75 @@
+/* eslint-disable global-require */
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-
-const usersRouter = require('./controllers/users');
-const loginRouter = require('./controllers/login');
-const propertyRouter = require('./controllers/properties');
-const messageRouter = require('./controllers/messages');
-const conversationRouter = require('./controllers/conversations');
-const cryptoRouter = require('./controllers/crypto');
 
 const config = require('./utils/config');
 const logger = require('./utils/logger');
 const middleware = require('./utils/middleware');
 require('express-async-errors');
 
-const app = express();
-const mongoUrl = config.MONGODB_URI;
-logger.log(`Connecting to ${mongoUrl}`);
-// TODO: Add dev and test databases and populate them with test data,
-// maybe using faker.js?
-mongoose.connect(mongoUrl).then(() => {
-    logger.log('Connected to MongoDB');
-}).catch((error) => {
-    logger.error(`Error connection to MongoDB: ${error.message}`);
-});
+let usersRouter;
+let loginRouter;
+let propertyRouter;
+let messageRouter;
+let conversationRouter;
+let cryptoRouter;
 
-app.use(cors());
-app.use(express.json());
-app.use('/users', usersRouter);
-app.use('/login', loginRouter);
-app.use('/properties', propertyRouter);
-app.use('/messages', messageRouter);
-app.use('/conversations', conversationRouter);
-app.use('/crypto', cryptoRouter);
+if (!config.NO_RUN) {
+  usersRouter = require('./controllers/users');
+  loginRouter = require('./controllers/login');
+  propertyRouter = require('./controllers/properties');
+  messageRouter = require('./controllers/messages');
+  conversationRouter = require('./controllers/conversations');
+  cryptoRouter = require('./controllers/crypto');
+}
 
-app.use(middleware.errorHandler);
+const createApp = async () => {
+    logger.log('Environment:', config.ENV);
 
-module.exports = app;
+    const app = express();
+    if (config.ENV === 'development' || config.ENV === 'test') { // If test or development, use in-memory database
+      const { init } = require('./tests/db');
+      const { populateUsers, populateProperties } = require('./tests/populateDb');
+
+      init().then(() => {
+          logger.log('Connected to database');
+      });
+      if (config.POPULATE_DB) { // If POPULATE_DB is true, populate the database with test data
+        const populate = async () => {
+            const users = await populateUsers(100);
+            logger.log('Populated database with users (', users.length, ')');
+            const properties = await populateProperties(100);
+            logger.log('Populated database with properties (', properties.length, ')');
+        };
+        await populate();
+      }
+    } else { // If production, use MongoDB
+      const mongoUrl = config.MONGODB_URI;
+      logger.log(`Connecting to ${mongoUrl}`);
+      mongoose.connect(mongoUrl).then(() => {
+          logger.log('Connected to MongoDB');
+      }).catch((error) => {
+          logger.error(`Error connection to MongoDB: ${error.message}`);
+      });
+    }
+
+    if (config.NO_RUN) { // If NO_RUN is true, don't run the server and exit
+      process.exit();
+    }
+
+    app.use(cors());
+    app.use(express.json());
+    app.use('/users', usersRouter);
+    app.use('/login', loginRouter);
+    app.use('/properties', propertyRouter);
+    app.use('/messages', messageRouter);
+    app.use('/conversations', conversationRouter);
+    app.use('/crypto', cryptoRouter);
+
+    app.use(middleware.errorHandler);
+
+    return app;
+};
+module.exports = createApp;

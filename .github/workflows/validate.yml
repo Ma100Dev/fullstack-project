@@ -19,16 +19,34 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install Yarn
         run: npm install -g yarn
-      - name: Lint backend
+      - name: Prepare backend
         run: |
           cd backend
           rm -rf node_modules
           yarn install --immutable --immutable-cache --check-cache
-          yarn run lint
-      - name: Lint and build frontend
+      - name: Prepare frontend
         run: |
           cd frontend
           rm -rf node_modules
           yarn install --immutable --immutable-cache --check-cache
+      - name: Lint frontend
+        run: |
+          cd frontend
           yarn run lint
+      - name: Build frontend
+        run: |
+          cd frontend
           yarn run build
+      - name: Lint backend
+        run: |
+          cd backend
+          yarn run lint
+      - name: Test backend db
+        run: |
+          cd backend
+          export MONGOMS_VERSION=6.0.3
+          export MONGOMS_DOWNLOAD_URL=https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-6.0.3.tgz
+          export POPULATE_DB=true
+          export NO_RUN=true
+          yarn
+          yarn start

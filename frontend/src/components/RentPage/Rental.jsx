@@ -56,6 +56,8 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
             padding: '5px',
             maxWidth: 852,
             maxHeight: 480,
+            width: '100%',
+            height: '100%',
         },
         alt: rental.title,
     };
