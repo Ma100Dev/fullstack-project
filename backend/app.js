@@ -30,8 +30,14 @@ const createApp = async () => {
 
     const app = express();
     if (config.ENV === 'development' || config.ENV === 'test') { // If test or development, use in-memory database
-      const { init } = require('./tests/db');
-      const { populateUsers, populateProperties } = require('./tests/populateDb');
+      const { init } = require('./tests/utils/db');
+      const {
+          populateUsers,
+          populateProperties,
+          populateConversations,
+          populateMessages,
+          generateDefaultUser,
+      } = require('./tests/utils/populateDb');
 
       init().then(() => {
           logger.log('Connected to database');
@@ -42,6 +48,12 @@ const createApp = async () => {
             logger.log('Populated database with users (', users.length, ')');
             const properties = await populateProperties(100);
             logger.log('Populated database with properties (', properties.length, ')');
+            const conversations = await populateConversations(100);
+            logger.log('Populated database with conversations (', conversations.length, ')');
+            const messages = await populateMessages(1000);
+            logger.log('Populated database with messages (', messages.length, ')');
+            const defaultUser = await generateDefaultUser();
+            logger.log('Generated default user (', defaultUser.username, ')');
         };
         await populate();
       }
