@@ -1,10 +1,10 @@
 const { RSA, Crypt } = require('hybrid-crypto-js');
-const { Entropy } = require('entropy-string');
 const fs = require('fs');
+const crypto = require('crypto');
 
-const entropy = new Entropy();
-const crypt = new Crypt({ entropy: entropy.string() });
-const rsa = new RSA({ entropy: entropy.string() });
+const entropy = crypto.randomBytes(32).toString('hex');
+const crypt = new Crypt({ entropy });
+const rsa = new RSA({ entropy });
 
 if (process.env.GENERATE_KEY_PAIR === 'true') {
   rsa.generateKeyPairAsync().then((keyPair) => {
