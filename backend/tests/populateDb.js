@@ -2,6 +2,7 @@ const { faker } = require('@faker-js/faker');
 
 const User = require('../models/user');
 const Property = require('../models/property');
+const Conversation = require('../models/conversation');
 
 const populateUsers = async (count) => {
     const users = [];
@@ -34,8 +35,8 @@ const populateUsers = async (count) => {
 
 const populateProperties = async (count) => {
     const properties = [];
+    const users = (await User.find({}).select('_id')).map((user) => user._id.toString());
     for (let i = 0; i < count; i++) {
-      const users = (await User.find({}).select('_id')).map((user) => user._id.toString());
       const property = new Property({
           title: faker.helpers.unique(faker.lorem.words),
           address: faker.address.streetAddress(),
@@ -60,7 +61,30 @@ const populateProperties = async (count) => {
     return properties;
 };
 
+const populateConversations = async (count) => {
+    const conversations = [];
+    const properties = await Property.find({}).select('_id').populate('owner');
+    const users = (await User.find({}).select('_id')).map((user) => user._id.toString());
+    for (let i = 0; i < count; i++) {
+      const property = faker.helpers.arrayElement(properties);
+      const conversation = new Conversation({
+          property: property._id,
+          starter: faker.helpers.arrayElement(users, {
+              options: {
+                  exclude: [property.owner._id.toString()],
+              },
+          }),
+          receiver: property.owner._id,
+          messages: [],
+      });
+      await conversation.save();
+      conversations.push(conversation);
+    }
+    return conversations;
+};
+
 module.exports = {
     populateUsers,
     populateProperties,
+    populateConversations,
 };
