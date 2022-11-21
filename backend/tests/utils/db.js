@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
-// TODO: Add a way to get a static port for testing
+const { MEMORYDB_PORT } = require('../../utils/config');
+
 const connect = async (mongod) => {
     const uri = mongod.getUri();
     console.log('DB URI: ', uri);
@@ -24,7 +25,11 @@ const clear = async () => {
 };
 
 const init = async () => {
-    const mongod = await MongoMemoryServer.create({});
+    const mongod = await MongoMemoryServer.create({
+        instance: {
+            port: MEMORYDB_PORT,
+        },
+    });
     await connect(mongod);
     return mongod;
 };
