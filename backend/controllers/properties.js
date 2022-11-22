@@ -41,7 +41,6 @@ propertyRouter.get('/', userExtractor, async (request, response) => {
           populate: { path: 'owner', select: { username: 1, name: 1 } },
       },
     );
-    console.log(properties);
     response.json(properties);
 });
 

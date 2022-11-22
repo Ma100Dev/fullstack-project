@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '@mui/material';
 
-const PageSelector = ({ page, setPage, pageCount }) => {
+const PageSelector = ({ pageCount, rentals }) => {
+    const [page, setPage] = useState(1);
     const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
     return (
         <Box className="page-selector" sx={{
@@ -21,7 +22,11 @@ const PageSelector = ({ page, setPage, pageCount }) => {
                         padding: '0.5rem',
                         margin: '0.5rem',
                     }}
-                    onClick={() => setPage(p)}
+                    onClick={async () => {
+                        setPage(p);
+                        await rentals.fetchData(page);
+                        window.scrollTo(0, 0);
+                    }}
                 >
                     {p}
                 </button>
@@ -31,9 +36,8 @@ const PageSelector = ({ page, setPage, pageCount }) => {
 };
 
 PageSelector.propTypes = {
-    page: PropTypes.number.isRequired,
-    setPage: PropTypes.func.isRequired,
     pageCount: PropTypes.number,
+    rentals: PropTypes.object,
 };
 
 export default PageSelector;

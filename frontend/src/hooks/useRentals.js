@@ -15,7 +15,6 @@ const useRentals = (limit = 10) => {
         const headers = user ? {
             'Authorization': `Bearer ${user?.token}`
         } : {};
-        if (rentalState.length === 0 && !success) {
             const { data, status } = await axios.get(`${BACKEND_URL}/properties?page=${page}&limit=${limit}`, {
                 headers
             });
@@ -25,11 +24,12 @@ const useRentals = (limit = 10) => {
             dispatch(setRentals(data));
             setRentalState(data);
             return data;
-        }
-    }, [rentalState, success, user, dispatch, limit]);
+    }, [user, dispatch, limit]);
 
-    useEffect(() => {
+useEffect(() => {
+    if (rentalState.length === 0 && !success) {
         fetchData();
+    }
     }, [dispatch, rentalState, setRentalState, user, success, fetchData]);
     return { ...rentalState, fetchData };
 };
