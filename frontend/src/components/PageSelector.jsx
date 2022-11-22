@@ -33,7 +33,7 @@ const PageSelector = ({ page, setPage, pageCount }) => {
 PageSelector.propTypes = {
     page: PropTypes.number.isRequired,
     setPage: PropTypes.func.isRequired,
-    pageCount: PropTypes.number.isRequired,
+    pageCount: PropTypes.number,
 };
 
 export default PageSelector;
