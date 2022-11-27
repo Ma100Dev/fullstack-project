@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const propertySchema = mongoose.Schema({
     title: {
@@ -51,6 +52,8 @@ propertySchema.set('toJSON', {
         delete returnedObject.__v;
     },
 });
+
+propertySchema.plugin(mongoosePaginate);
 
 const Property = mongoose.model('Property', propertySchema);
 module.exports = Property;

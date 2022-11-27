@@ -26,9 +26,31 @@ propertyRouter.post('/', upload.single('image'), userExtractor, async (request, 
 });
 
 propertyRouter.get('/', userExtractor, async (request, response) => {
-    response.json(await Property.find({
-        owner: { $ne: request?.user?.id || null },
-    }).populate('owner', { username: 1, name: 1 }));
+    const page = request.query.page || 1;
+    const limit = request.query.limit || 10;
+    if (limit > 100) {
+      return response.status(400).json({ error: 'limit must be less than or equal 100' });
+    }
+    const properties = await Property.paginate(
+      {
+          owner: { $ne: request?.user?.id || null },
+      },
+      {
+          page,
+          limit,
+          populate: { path: 'owner', select: { username: 1, name: 1 } },
+      },
+    );
+    response.json(properties);
+});
+
+propertyRouter.get('/:id', async (request, response) => {
+    const property = await Property.findById(request.params.id).populate('owner', { username: 1, name: 1 });
+    if (property) {
+      response.json(property);
+    } else {
+      response.status(404).end();
+    }
 });
 
 module.exports = propertyRouter;
