@@ -16,6 +16,8 @@ import Rental from './RentPage/Rental';
 import useUser from '../hooks/useUser';
 import LoadingIndicator from './LoadingIndicator';
 import useCrypt from '../hooks/useCrypt';
+import { useDispatch } from 'react-redux';
+import { clearUser } from '../reducers/userReducer';
 
 const editValidationSchema = yup.object().shape({
     username: yup.string()
@@ -45,6 +47,7 @@ const Profile = ({ editMode = false }) => {
     let localUser = useUser();
     const [user, setUser] = React.useState({});
     const [crypt, publicKey] = useCrypt();
+    const dispatch = useDispatch();
     React.useEffect(() => {
         if (Object.keys(user).length === 0) {
             axios.get('/api/users/' + localUser.id).then(res => {
@@ -94,7 +97,10 @@ const Profile = ({ editMode = false }) => {
     return (
         <div>
             <Typography variant='h4'>Profile</Typography>
-            <form onSubmit={onSubmit}>
+            <form onSubmit={onSubmit} style={{
+                marginTop: '1rem',
+                marginBottom: '1rem'
+            }}>
                 <Typography {...{ ...TypographyProps, sx: { color: 'red' } }}>{errors.join(', ')}</Typography>
                 <table>
                     <tbody>
@@ -198,6 +204,27 @@ const Profile = ({ editMode = false }) => {
                     </table>
                 }
             </form>
+            <Button variant="contained" color="error" sx={{
+                position: 'absolute',
+                top: '10em',
+                right: 5
+
+            }} onClick={() => {
+                // TODO: Add confirmation dialog for account deletion
+                const confirmation = confirm('Are you sure you want to delete your account?');
+                if (confirmation) {
+                    axios.delete(`/api/users/${localUser.id}`, {
+                        headers: {
+                            authorization: `Bearer ${localUser.token}`
+                        }
+                    }).then(() => {
+                        localStorage.removeItem('user');
+                        dispatch(clearUser());
+                        navigate('/');
+                    }
+                    );
+                }
+            }}>Delete account</Button>
             <Typography variant='h4'>Your properties</Typography>
             {user.properties.map(property => (
                 <Rental rental={property} key={property.id} />

@@ -2,6 +2,9 @@ const bcrypt = require('bcrypt');
 const usersRouter = require('express').Router();
 require('../models/property');
 const User = require('../models/user');
+const Message = require('../models/message');
+const Conversation = require('../models/conversation');
+const Property = require('../models/property');
 require('express-async-errors');
 const { userExtractor } = require('../utils/middleware');
 const { decrypt } = require('../utils/cryptography');
@@ -63,6 +66,34 @@ usersRouter.put('/:id', userExtractor, async (request, response) => {
         email: body.email,
     }, { new: true });
     response.json(updatedUser.toJSON());
+});
+
+usersRouter.delete('/:id', userExtractor, async (request, response) => {
+    const { user } = request;
+    const { id } = request.params;
+    if (id !== user.id) {
+      response.status(401).json({ error: 'Not authorized' });
+      return;
+    }
+    // TODO: Add password confirmation to delete
+    // const { body } = request;
+    // const password = decrypt(
+    // body.password,
+    // ).message;
+    // const passwordCorrect = user === null
+    // ? false
+    // : await bcrypt.compare(password, user.passwordHash);
+    // if (!passwordCorrect) {
+    // response.status(401).json({ error: 'Incorrect password confirmation' });
+    // return;
+    // }
+    await Message.find({ $or: [{ sender: id }, { receiver: id }] }).deleteMany();
+    await Conversation.find({ $or: [{ starter: id }, { receiver: id }] }).deleteMany();
+    await Property.find({ owner: id }).deleteMany();
+    await User.findByIdAndRemove(id);
+    // TODO: Should probably keep the user in the database, but mark it as deleted
+    // This contributes to abuse prevention and ux for other users
+    response.status(204).end();
 });
 
 usersRouter.get('/:id', async (request, response) => {
