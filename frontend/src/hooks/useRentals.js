@@ -4,6 +4,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setRentals } from '../reducers/rentalReducer';
 import { BACKEND_URL } from '../utils/config';
 
+
+// TODO: Add redux store for rentals again if it makes sense
+
 const useRentals = (limit = 10) => {
     const user = useSelector(state => state.user);
     const [rentalState, setRentalState] = useState([]);
@@ -21,17 +24,17 @@ const useRentals = (limit = 10) => {
             if (status === 200) {
                 setSuccess(true);
             }
-            dispatch(setRentals(data));
-            setRentalState(data);
             return data;
-    }, [user, dispatch, limit]);
+    }, [user, limit]);
 
 useEffect(() => {
     if (rentalState.length === 0 && !success) {
-        fetchData();
+        fetchData().then(data => {
+            setRentalState(data);
+        });
     }
     }, [dispatch, rentalState, setRentalState, user, success, fetchData]);
-    return { ...rentalState, fetchData };
+    return { ...rentalState, setRentalState, fetchData };
 };
 
 export default useRentals;

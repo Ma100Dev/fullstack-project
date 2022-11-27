@@ -26,7 +26,7 @@ const RentPage = () => {
             {rentals.docs?.map(rental => (
                 <Rental rental={rental} key={rental.id} />
             ))}
-            < PageSelector rentals={rentals} pageCount={rentals.totalPages} onChange={setPage} />
+            <PageSelector rentals={rentals} pageCount={rentals.totalPages} onChange={setPage} />
             <ScrollToTop />
         </>
     );

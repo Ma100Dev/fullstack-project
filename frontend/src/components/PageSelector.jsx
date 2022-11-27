@@ -23,9 +23,10 @@ const PageSelector = ({ pageCount, rentals, onChange }) => {
                         margin: '0.5rem',
                     }}
                     onClick={async () => {
-                        setPage(p);
                         onChange && onChange(p);
-                        await rentals.fetchData(p);
+                        const data = await rentals.fetchData(p);
+                        await rentals.setRentalState(data);
+                        setPage(p);
                         window.scrollTo(0, 0);
                     }}
                 >

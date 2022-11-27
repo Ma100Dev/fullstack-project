@@ -44,4 +44,13 @@ propertyRouter.get('/', userExtractor, async (request, response) => {
     response.json(properties);
 });
 
+propertyRouter.get('/:id', async (request, response) => {
+    const property = await Property.findById(request.params.id).populate('owner', { username: 1, name: 1 });
+    if (property) {
+      response.json(property);
+    } else {
+      response.status(404).end();
+    }
+});
+
 module.exports = propertyRouter;
