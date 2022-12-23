@@ -16,6 +16,7 @@ import AddProperty from './components/AddProperty';
 import SingleRental from './components/SingleRental';
 import Messages from './components/Messages';
 import Conversation from './components/Conversation';
+import NotFound from './components/NotFound';
 
 const user = localStorage.getItem('user');
 
@@ -34,7 +35,6 @@ ErrorFallback.propTypes = {
   resetErrorBoundary: PropTypes.func.isRequired,
 };
 
-// TODO: Add 404 page
 const App = () => {
   const dispatch = useDispatch();
   if (user) {
@@ -60,6 +60,7 @@ const App = () => {
           <Route path='/add' element={<AddProperty />} />
           <Route path='/messages' element={<Messages />} />
           <Route path='/messages/:id' element={<Conversation />} />
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </ErrorBoundary>
     </>

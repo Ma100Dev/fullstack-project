@@ -7,7 +7,7 @@ on:
 
 jobs:
   deployment_pipeline:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -24,7 +24,7 @@ jobs:
           echo "${{ secrets.ID_RSA }}" > backend/id_rsa
           echo "${{ secrets.ID_RSA_PUB }}" > backend/id_rsa.pub
       - name: Deploy to server
-        uses: matiasnu/github-action-ssh-docker-compose@master
+        uses: Ma100Dev/github-action-ssh-docker-compose@master # Not recommended to use master
         with:
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_host: ${{ secrets.SSH_HOST }}
@@ -40,7 +40,7 @@ jobs:
           retry-delay: 10s
           retry-all: true
       - name: TODO to Issue
-        uses: alstr/todo-to-issue-action@v4
+        uses: alstr/todo-to-issue-action@master # Not recommended to use master
         with:
           CLOSE_ISSUES: true
           AUTO_ASSIGN: true
