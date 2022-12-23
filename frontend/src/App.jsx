@@ -16,6 +16,7 @@ import AddProperty from './components/AddProperty';
 import SingleRental from './components/SingleRental';
 import Messages from './components/Messages';
 import Conversation from './components/Conversation';
+import NotFound from './components/NotFound';
 
 const user = localStorage.getItem('user');
 
@@ -60,6 +61,7 @@ const App = () => {
           <Route path='/add' element={<AddProperty />} />
           <Route path='/messages' element={<Messages />} />
           <Route path='/messages/:id' element={<Conversation />} />
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </ErrorBoundary>
     </>

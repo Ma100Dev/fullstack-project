@@ -10,9 +10,12 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../utils/config';
 import useUser from '../../hooks/useUser';
 import { useLocation } from 'react-router-dom';
+import NotFound from '../NotFound';
 
 const Conversation = () => {
     const { id } = useParams();
+    // Should only fetch the conversation with the given id, not all of them
+    // This is not happening right now, but it should
     const { conversations, refresh } = useConversations();
     const [message, setMessage] = useState('');
     const user = useUser();
@@ -28,7 +31,7 @@ const Conversation = () => {
 
     if (conversations.length === 0) return <LoadingIndicator />;
     const conversation = conversations.find(c => c.id === id);
-    if (!conversation) return <LoadingIndicator />;
+    if (!conversation) return <NotFound />;
     conversations.forEach(conversation => {
         conversation.messages = conversation.messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     });
