@@ -1,7 +1,5 @@
 require('dotenv').config();
 
-// TODO: Document this
-
 const { MONGODB_URI, JWT_SECRET } = process.env;
 const PORT = process.env.PORT || 3001;
 const ENV = process.env.NODE_ENV || 'development';
