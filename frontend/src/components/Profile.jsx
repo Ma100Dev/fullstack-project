@@ -211,6 +211,7 @@ const Profile = ({ editMode = false }) => {
 
             }} onClick={() => {
                 // TODO: Add confirmation dialog for account deletion
+                // eslint-disable-next-line no-alert
                 const confirmation = confirm('Are you sure you want to delete your account?');
                 if (confirmation) {
                     axios.delete(`/api/users/${localUser.id}`, {
