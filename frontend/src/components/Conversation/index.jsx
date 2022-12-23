@@ -29,6 +29,9 @@ const Conversation = () => {
     if (conversations.length === 0) return <LoadingIndicator />;
     const conversation = conversations.find(c => c.id === id);
     if (!conversation) return <LoadingIndicator />;
+    conversations.forEach(conversation => {
+        conversation.messages = conversation.messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    });
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%', alignSelf: 'center', marginLeft: 'auto', marginRight: 'auto' }}>
