@@ -36,5 +36,6 @@ module.exports = {
     'no-console': 'warn',
     'no-alert': 'warn',
     'spaced-comment': 'error',
+    'eol-last': 'error',
   },
 };
