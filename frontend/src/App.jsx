@@ -35,7 +35,6 @@ ErrorFallback.propTypes = {
   resetErrorBoundary: PropTypes.func.isRequired,
 };
 
-// TODO: Add 404 page
 const App = () => {
   const dispatch = useDispatch();
   if (user) {
