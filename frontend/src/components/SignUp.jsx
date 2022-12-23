@@ -76,7 +76,8 @@ const SignUp = () => {
                 validationSchema={SignUpSchema}
                 onSubmit={async (values, { setSubmitting }) => {
                     let error = false;
-                    const { data } = await axios.post(`${BACKEND_URL}/users`, values)
+                    const newValues = { ...values, password: crypt.encrypt(publicKey, values.password) };
+                    const { data } = await axios.post(`${BACKEND_URL}/users`, newValues)
                         .catch(error => {
                             setError(error.response?.data?.error);
                             setOpen(true);
@@ -94,7 +95,7 @@ const SignUp = () => {
                             localStorage.setItem('user', JSON.stringify(data));
                             dispatch(setUser(data));
                             setSubmitting(false);
-                            navigate('/');
+                            navigate('/verify');
                         }
                     }
                     setSubmitting(false);

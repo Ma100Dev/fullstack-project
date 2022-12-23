@@ -8,6 +8,9 @@ const useUser = (noRedirect) => {
     if (!localUser) {
         localUser = {};
     }
+    if (!localUser.verified) {
+        navigate('/verify', { replace: true });
+    }
     useEffect(() => {
         if (Object.keys(localUser).length === 0 && !noRedirect) {
             navigate('/login');

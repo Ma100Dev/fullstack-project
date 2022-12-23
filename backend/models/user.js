@@ -23,6 +23,13 @@ const userSchema = mongoose.Schema({
           ref: 'Property',
       },
     ],
+    verified: {
+        type: Boolean,
+        default: false,
+    },
+    verificationCode: {
+        type: String,
+    },
 });
 userSchema.plugin(uniqueValidator);
 
