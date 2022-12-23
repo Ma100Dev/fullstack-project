@@ -23,6 +23,7 @@ const PageSelector = ({ pageCount, rentals, onChange }) => {
                         margin: '0.5rem',
                     }}
                     onClick={async () => {
+                        if (p === page) return;
                         onChange && onChange(p);
                         const data = await rentals.fetchData(p);
                         await rentals.setRentalState(data);
