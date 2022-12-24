@@ -62,6 +62,7 @@ const App = () => {
           <Route path='/messages' element={<Messages />} />
           <Route path='/messages/:id' element={<Conversation />} />
           <Route path='/verify' element={<NeedEmailVerification />} />
+          <Route path='/verify' element={<NeedEmailVerification />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
       </ErrorBoundary>
