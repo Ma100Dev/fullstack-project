@@ -56,6 +56,8 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
             padding: '5px',
             maxWidth: 852,
             maxHeight: 480,
+            width: '100%',
+            height: '100%',
         },
         alt: rental.title,
     };
@@ -70,7 +72,7 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                     <DefaultImage {...imageProps} />}
             </Box>
             <Box sx={{ ml: 5, maxWidth: '60%', }} >
-                <Typography variant="h5">{rental.title}</Typography>
+                <Typography variant="h5" sx={{ textTransform: 'capitalize' }}>{rental.title}</Typography>
                 <Typography variant="subtitle2"
                     sx={{
                         fontSize: '0.8rem',

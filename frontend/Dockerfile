@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 
-RUN rm -rf node_modules && yarn install --immutable --immutable-cache --check-cache
+RUN rm -rf node_modules && yarn install --immutable --immutable-cache --check-cache --prod
 
 RUN yarn run build
 

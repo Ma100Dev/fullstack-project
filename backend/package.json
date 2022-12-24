@@ -22,21 +22,23 @@
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
-    "entropy-string": "^4.2.0",
     "express": "^4.18.1",
     "express-async-errors": "^3.1.1",
     "hybrid-crypto-js": "^0.2.4",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.0",
     "mongoose-deep-populate": "^3.2.0",
+    "mongoose-paginate-v2": "^1.7.1",
     "mongoose-unique-validator": "^3.1.0",
     "multer": "^1.4.5-lts.1",
     "sendmail": "^1.6.1"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
     "eslint": "8.25.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.26.0",
+    "mongodb-memory-server": "^8.10.0",
     "nodemon": "2.0.20"
   }
 }
