@@ -8,7 +8,7 @@ const FormikTextField = ({ label, errors, handleChange, handleBlur, values, type
         name={label}
         onChange={handleChange}
         onBlur={handleBlur}
-        value={values.username}
+        value={values.username} // Seems weird, somehow it works
         placeholder={placeholder}
         sx={{ width: '100%' }}
     />

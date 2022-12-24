@@ -1,14 +1,14 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import { Formik } from 'formik';
-import { Button, Grid, Typography } from '@mui/material';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
+
+import {
+    Button, Grid, Typography, Dialog,
+    DialogActions, DialogContent, DialogContentText, DialogTitle,
+    Checkbox, FormControlLabel, Select, MenuItem,
+    InputLabel, FormControl
+} from '@mui/material';
+
 // import { useNavigate } from 'react-router-dom';
 import FormikTextField from './FormikTextField';
 import axios from 'axios';
@@ -40,6 +40,8 @@ const PropertySchema = Yup.object().shape({
     price: Yup.number()
         .required('Price is required')
         .positive('Price must be a positive number'),
+    pricePer: Yup.string()
+        .required('Price per is required'),
     beds: Yup.number()
         .required('"Beds" is required')
         .min(1, '"Beds" must be at least 1'),
@@ -53,7 +55,7 @@ const PropertySchema = Yup.object().shape({
             if (!value.size) {
                 return false;
             }
-            return value.size < 10485760;
+            return value.size < 10485760; // 10MiB
         }),
 });
 
@@ -95,15 +97,17 @@ const AddProperty = () => {
                 </DialogActions>
             </Dialog>
             <Formik
-                initialValues={{ title: '', address: '', price: '', description: '', beds: '', petsAllowed: false, image: null }}
+                initialValues={{ title: '', address: '', price: '', pricePer: '', description: '', beds: '', petsAllowed: false, image: null }}
                 validationSchema={PropertySchema}
                 onSubmit={async (values, { setSubmitting }) => {
+                    console.log(values);
                     const formData = new FormData();
                     const image = await resizeFile(values.image);
                     formData.append('image', image);
                     formData.append('title', values.title);
                     formData.append('address', values.address);
                     formData.append('price', values.price);
+                    formData.append('pricePer', values.pricePer);
                     formData.append('description', values.description);
                     formData.append('beds', values.beds);
                     formData.append('petsAllowed', values.petsAllowed);
@@ -145,7 +149,24 @@ const AddProperty = () => {
 
                         <FormikTextField label="title" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Title" />
                         <FormikTextField label="address" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Address" />
-                        <FormikTextField label="price" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Price" />
+                        <FormikTextField label="price" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Price (€)" />
+                        <FormControl fullWidth sx={{ mb: '2.5rem' }}>
+                            <InputLabel id="price-per-label">Price per</InputLabel>
+                            <Select
+                                label="Price per"
+                                labelId="price-per-label"
+                                required
+                                value={values.pricePer}
+                            >
+                                <MenuItem value="night">Night</MenuItem>
+                                <MenuItem value="week">Week</MenuItem>
+                                <MenuItem value="month">Month</MenuItem>
+                                <MenuItem value="year">Year</MenuItem>
+                                <MenuItem value="day">Day</MenuItem>
+                                <MenuItem value="hour">Hour</MenuItem>
+                                <MenuItem value="weekend">Weekend</MenuItem>
+                            </Select>
+                        </FormControl>
                         <FormikTextField label="description" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Description" />
                         <FormikTextField label="beds" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Beds" />
 
