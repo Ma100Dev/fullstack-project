@@ -65,6 +65,7 @@ const Login = () => {
                 validationSchema={LoginSchema}
                 onSubmit={async (values, { setSubmitting }) => {
                     let error = false;
+                    console.log(publicKey, values.password);
                     const newValues = { username: values.username, password: crypt.encrypt(publicKey, values.password) };
                     const { data } = await axios.post(`${BACKEND_URL}/login`, newValues)
                         .catch(error => {
