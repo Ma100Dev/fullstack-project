@@ -87,8 +87,8 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                         overflowWrap: 'break-word',
                     }}
                 >{rental.description}</Typography>
-                <Typography>Price per night: {rental.price}€</Typography>
-                <Typography>Bed(s): {rental.beds}</Typography>
+                <Typography>Price: {rental.price}€ per { rental.pricePer }</Typography>
+                <Typography>Count (e.g. beds): {rental.beds}</Typography>
                 <Typography>Address: {rental.address}</Typography>
                 <br />
                 <Typography color="gray">Posted by: &quot;{rental.owner.username}&quot; ({rental.owner.name})</Typography>
@@ -141,6 +141,7 @@ const rentalPropType = PropTypes.shape({
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
+    pricePer: PropTypes.string.isRequired,
     beds: PropTypes.number.isRequired,
     address: PropTypes.string.isRequired,
     petsAllowed: PropTypes.bool.isRequired,

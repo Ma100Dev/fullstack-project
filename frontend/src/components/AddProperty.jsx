@@ -18,7 +18,8 @@ import Resizer from 'react-image-file-resizer';
 import { BACKEND_URL } from '../utils/config';
 
 const resizeFile = (file) => new Promise(resolve => {
-    Resizer.imageFileResizer(
+    // TODO: Add timeout to scaling to avoid freezing
+    Resizer.imageFileResizer( 
         file,
         1280,
         720,
@@ -101,7 +102,9 @@ const AddProperty = () => {
                 validationSchema={PropertySchema}
                 onSubmit={async (values, { setSubmitting }) => {
                     const formData = new FormData();
+                    console.log(values);
                     const image = await resizeFile(values.image);
+                    console.log(image);
                     formData.append('image', image);
                     formData.append('title', values.title);
                     formData.append('address', values.address);

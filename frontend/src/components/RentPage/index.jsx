@@ -23,9 +23,9 @@ const RentPage = () => {
                     ml: '1rem',
                 }}>Page {page}</Typography>
             </Box>
-            {rentals.docs?.map(rental => (
-                <Rental rental={rental} key={rental.id} />
-            ))}
+                {rentals.docs?.map(rental => (
+                    <Rental rental={rental} key={rental.id} />
+                ))}
             <PageSelector rentals={rentals} pageCount={rentals.totalPages} onChange={setPage} />
             <ScrollToTop />
         </>
