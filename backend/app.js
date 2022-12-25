@@ -7,7 +7,6 @@ const mongoose = require('mongoose');
 const config = require('./utils/config');
 const logger = require('./utils/logger');
 const middleware = require('./utils/middleware');
-const { checkKeyPair } = require('./utils/cryptography');
 require('express-async-errors');
 
 let usersRouter;
@@ -25,8 +24,6 @@ if (!config.NO_RUN) {
   conversationRouter = require('./controllers/conversations');
   cryptoRouter = require('./controllers/crypto');
 }
-
-checkKeyPair();
 
 const createApp = async () => {
     logger.log('Environment:', config.ENV);

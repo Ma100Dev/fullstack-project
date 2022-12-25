@@ -6,14 +6,12 @@ const entropy = crypto.randomBytes(32).toString('hex');
 const crypt = new Crypt({ entropy });
 const rsa = new RSA({ entropy });
 
-const checkKeyPair = () => {
-    if (process.env.GENERATE_KEY_PAIR === 'true') {
-      rsa.generateKeyPairAsync().then((keyPair) => {
-          fs.writeFileSync('id_rsa.pub', keyPair.publicKey);
-          fs.writeFileSync('id_rsa', keyPair.privateKey);
-      });
-    }
-};
+if (process.env.GENERATE_KEY_PAIR === 'true') {
+  rsa.generateKeyPairAsync().then((keyPair) => {
+      fs.writeFileSync('id_rsa.pub', keyPair.publicKey);
+      fs.writeFileSync('id_rsa', keyPair.privateKey);
+  });
+}
 
 const publicKey = fs.readFileSync('id_rsa.pub', 'utf8');
 const privateKey = fs.readFileSync('id_rsa', 'utf8');
@@ -28,5 +26,4 @@ module.exports = {
     encrypt,
     decrypt,
     getPublicKey,
-    checkKeyPair,
 };
