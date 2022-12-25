@@ -9,9 +9,12 @@ import {
 } from '@mui/material';
 import RentalImage from './RentPage/RentalImage';
 import _ from 'lodash';
+import useUser from '../hooks/useUser';
 
 const Messages = () => {
     const { conversations, refresh } = useConversations();
+    const user = useUser();
+    console.log(user);
     // eslint-disable-next-line react-hooks/exhaustive-deps 
     const throttledRefresh = useCallback(_.throttle(() => { refresh(); }, 1000), []);
     if (!conversations) return <LoadingIndicator />;
@@ -59,7 +62,7 @@ const Messages = () => {
                                         height: '100%',
                                     }
                                 }} />
-                                {conversation.property.title} <br /> {/* TODO: Check if own property */}
+                                {conversation.property.title} {(conversation.property.owner.id === user.id) && '(Owned by you)'}<br />
                                 {conversation.messages[0] ?
                                     `Latest: ${conversation.messages[0].sender.username} at ${format(new Date(conversation.messages[0].createdAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")} `
                                     : `No messages yet. Created on ${format(new Date(conversation.startedAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")}`}
