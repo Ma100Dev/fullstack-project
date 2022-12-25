@@ -10,3 +10,5 @@ Variable | Description
 `POPULATE_DB` | Whether to populate the database with dummy data. Defaults to `false`, set to `true` to enable.
 `NO_RUN` | Disables the backend from running for CI/CD, etc. Defaults to `false`.
 `MEMORYDB_PORT` | The port the memory database will listen on. Defaults to a random port. Only used in development mode.
+
+Files id_rsa and id_rsa.pub are required and must provide a valid RSA key pair. 

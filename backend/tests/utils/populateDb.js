@@ -36,6 +36,7 @@ const populateProperties = async (count) => {
               min: 100,
               max: 1000000,
           }),
+          priceType: faker.helpers.arrayElement(['night', 'week', 'month', 'year', 'day', 'hour', 'weekend']),
           beds: faker.datatype.number({
               min: 1,
               max: 10,
@@ -121,6 +122,7 @@ const generateDefaultUser = async () => { // Contains repeated code from other f
               min: 100,
               max: 1000000,
           }),
+          priceType: faker.helpers.arrayElement(['night', 'week', 'month', 'year', 'day', 'hour', 'weekend']),
           beds: faker.datatype.number({
               min: 1,
               max: 10,
