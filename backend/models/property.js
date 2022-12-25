@@ -18,7 +18,7 @@ const propertySchema = mongoose.Schema({
         required: true,
         min: 1,
     },
-    priceType: {
+    pricePer: {
         type: String,
         required: true,
         enum: ['night', 'week', 'month', 'year', 'day', 'hour', 'weekend'],

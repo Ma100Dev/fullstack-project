@@ -100,7 +100,6 @@ const AddProperty = () => {
                 initialValues={{ title: '', address: '', price: '', pricePer: '', description: '', beds: '', petsAllowed: false, image: null }}
                 validationSchema={PropertySchema}
                 onSubmit={async (values, { setSubmitting }) => {
-                    console.log(values);
                     const formData = new FormData();
                     const image = await resizeFile(values.image);
                     formData.append('image', image);
@@ -154,9 +153,11 @@ const AddProperty = () => {
                             <InputLabel id="price-per-label">Price per</InputLabel>
                             <Select
                                 label="Price per"
+                                name="pricePer"
                                 labelId="price-per-label"
                                 required
                                 value={values.pricePer}
+                                onChange={handleChange}
                             >
                                 <MenuItem value="night">Night</MenuItem>
                                 <MenuItem value="week">Week</MenuItem>

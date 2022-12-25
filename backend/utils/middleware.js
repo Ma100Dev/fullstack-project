@@ -12,7 +12,7 @@ const errorHandler = (error, request, response, next) => {
     next(error);
 };
 
-const userExtractor = async (request, response, next) => {
+const userExtractor = async (request, response, next) => { // Session check should be done here
     const authorization = request.get('authorization');
     let token = null;
     if (authorization && authorization.toLowerCase().startsWith('bearer ')) {

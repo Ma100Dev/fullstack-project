@@ -5,7 +5,7 @@ const Property = require('../../models/property');
 const Conversation = require('../../models/conversation');
 const Message = require('../../models/message');
 
-const passwordHash = '$2a$10$BWybLp0dsP/XzUOoMIeUY.Mv.K15jkkx2/q1F1vwf3/gBgr00WP2y'; // password
+const passwordHash = '$2a$10$BWybLp0dsP/XzUOoMIeUY.Mv.K15jkkx2/q1F1vwf3/gBgr00WP2y'; // "password" with bcrypt. The password is password for all users.
 const populateUsers = async (count) => {
     const users = [];
 
@@ -36,7 +36,7 @@ const populateProperties = async (count) => {
               min: 100,
               max: 1000000,
           }),
-          priceType: faker.helpers.arrayElement(['night', 'week', 'month', 'year', 'day', 'hour', 'weekend']),
+          pricePer: faker.helpers.arrayElement(['night', 'week', 'month', 'year', 'day', 'hour', 'weekend']),
           beds: faker.datatype.number({
               min: 1,
               max: 10,
@@ -122,7 +122,7 @@ const generateDefaultUser = async () => { // Contains repeated code from other f
               min: 100,
               max: 1000000,
           }),
-          priceType: faker.helpers.arrayElement(['night', 'week', 'month', 'year', 'day', 'hour', 'weekend']),
+          pricePer: faker.helpers.arrayElement(['night', 'week', 'month', 'year', 'day', 'hour', 'weekend']),
           beds: faker.datatype.number({
               min: 1,
               max: 10,

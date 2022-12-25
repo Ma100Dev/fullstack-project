@@ -35,6 +35,7 @@ ErrorFallback.propTypes = {
   resetErrorBoundary: PropTypes.func.isRequired,
 };
 
+// TODO: Feedback.
 const App = () => {
   const dispatch = useDispatch();
   if (user) {
