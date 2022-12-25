@@ -43,8 +43,8 @@ const PropertySchema = Yup.object().shape({
     pricePer: Yup.string()
         .required('Price per is required'),
     beds: Yup.number()
-        .required('"Beds" is required')
-        .min(1, '"Beds" must be at least 1'),
+        .required('"Count" is required')
+        .min(1, '"Count" must be at least 1'),
     address: Yup.string()
         .required('Address is required'),
     petsAllowed: Yup.boolean()
@@ -52,7 +52,7 @@ const PropertySchema = Yup.object().shape({
     image: Yup.mixed()
         .required('Image is required')
         .test('fileSize', 'The file is too large', (value) => {
-            if (!value.size) {
+            if (!value?.size) {
                 return false;
             }
             return value.size < 10485760; // 10MiB
@@ -168,7 +168,7 @@ const AddProperty = () => {
                             </Select>
                         </FormControl>
                         <FormikTextField label="description" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Description" />
-                        <FormikTextField label="beds" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Beds" />
+                        <FormikTextField label="beds" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Count (Beds, etc.)" />
 
                         <FormControlLabel control={
                             <Checkbox sx={{ mb: 0.5 }} name="petsAllowed" onChange={handleChange} onBlur={handleBlur} value={values.petsAllowed} />
