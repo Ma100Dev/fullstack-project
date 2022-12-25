@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import format from 'date-fns/format';
 import LoadingIndicator from './LoadingIndicator';
 import useConversations from '../hooks/useConversations';
-import Button from '@mui/material/Button';
-import { useCallback } from 'react';
+import {
+    Button, Box, Typography,
+    List, ListItem, Divider
+} from '@mui/material';
+import RentalImage from './RentPage/RentalImage';
 import _ from 'lodash';
 
 const Messages = () => {
@@ -15,34 +18,61 @@ const Messages = () => {
     conversations.forEach(conversation => {
         conversation.messages = conversation.messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     });
-    // Sort conversations by the date of the last message.
-    // If there are no messages, set as last in the list.
+    // Sort conversations by latest message (latest first)
+    // If no messages, sort by createdAt vs latest message
     conversations.sort((a, b) => {
-        if (a.messages.length === 0) return 1;
-        if (b.messages.length === 0) return -1;
-        return new Date(b.messages[0].createdAt) - new Date(a.messages[0].createdAt);
+        if (a.messages[0] && b.messages[0]) {
+            return new Date(b.messages[0].createdAt) - new Date(a.messages[0].createdAt);
+        } else if (a.messages[0] && !b.messages[0]) {
+            return new Date(b.startedAt) - new Date(a.messages[0].createdAt);
+        } else if (!a.messages[0] && b.messages[0]) {
+            return new Date(b.messages[0].createdAt) - new Date(a.startedAt);
+        } else {
+            return new Date(b.startedAt) - new Date(a.startedAt);
+        }
     });
-    return ( // TODO: Make not ugly
-        <div>
-            <h1>Messages</h1>
-            <ul>
+    return (
+        <Box>
+            <Typography variant='h2'>Messages</Typography>
+            <List>
                 {conversations.map(conversation => (
-                    <div key={conversation.id}>
-                        <li style={{ marginBottom: 10 }}>
-                            <Link to={`/messages/${conversation.id}`}>
-                                {conversation.property.title} <br />
+                    < Box key={conversation.id} >
+                        <ListItem style={{ marginBottom: 10 }}>
+                            <Link style={{
+                                textDecoration: 'none',
+                                color: 'black',
+                                width: '100%',
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'flex-start',
+                                alignItems: 'center',
+                            }} to={`/messages/${conversation.id}`}>
+                                <RentalImage rental={conversation.property} imageProps={{
+                                    style: {
+                                        outline: '1px solid #ccc',
+                                        borderRadius: '5px',
+                                        padding: '5px',
+                                        marginRight: '2.5rem',
+                                        maxWidth: '5rem',
+                                        maxHeight: '4rem',
+                                        width: '100%',
+                                        height: '100%',
+                                    }
+                                }} />
+                                {conversation.property.title} <br /> {/* TODO: Check if own property */}
                                 {conversation.messages[0] ?
                                     `Latest: ${conversation.messages[0].sender.username} at ${format(new Date(conversation.messages[0].createdAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")} `
-                                    : 'No messages yet'}
+                                    : `No messages yet. Created on ${format(new Date(conversation.startedAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")}`}
                                 {conversation.content}
                             </Link>
-                        </li>
-                    </div>
+                        </ListItem>
+                        <Divider />
+                    </Box>
                 )
                 )}
-            </ul>
+            </List >
             <Button onClick={throttledRefresh}>Refresh</Button>
-        </div>
+        </Box >
     );
 };
 

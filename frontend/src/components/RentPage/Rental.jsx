@@ -3,23 +3,13 @@ import PetsIcon from '@mui/icons-material/Pets';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { ReactComponent as DefaultImage } from './house.svg';
 import ButtonBase from '@mui/material/ButtonBase';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import { BACKEND_URL } from '../../utils/config';
 import useUser from '../../hooks/useUser';
-
-const arrayBufferToBase64 = (buffer) => { // Probably not the best way to do this
-    let binary = '';
-    let bytes = new Uint8Array(buffer);
-    let len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-        binary += String.fromCharCode(bytes[i]);
-    }
-    return window.btoa(binary);
-};
+import RentalImage from './RentalImage';
 
 const Rental = ({ rental, fullView = false }) => {
     const navigate = useNavigate();
@@ -63,14 +53,7 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
     };
     return (
         <>
-            <Box>
-                {rental.image ?
-                    <img
-                        src={`data:${rental.image.contentType};base64,${arrayBufferToBase64(rental.image.data.data)}`}
-                        {...imageProps}
-                    /> :
-                    <DefaultImage {...imageProps} />}
-            </Box>
+            <RentalImage rental={rental} imageProps={imageProps} />
             <Box sx={{ ml: 5, maxWidth: '60%', }} >
                 <Typography variant="h5" sx={{ textTransform: 'capitalize' }}>{rental.title}</Typography>
                 <Typography variant="subtitle2"

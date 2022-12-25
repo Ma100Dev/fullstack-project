@@ -102,9 +102,7 @@ const AddProperty = () => {
                 validationSchema={PropertySchema}
                 onSubmit={async (values, { setSubmitting }) => {
                     const formData = new FormData();
-                    console.log(values);
                     const image = await resizeFile(values.image);
-                    console.log(image);
                     formData.append('image', image);
                     formData.append('title', values.title);
                     formData.append('address', values.address);

@@ -38,6 +38,7 @@ conversationRouter.post('/', userExtractor, async (request, response) => {
         starter: request.user.id,
         receiver: propertyObject.owner.id,
         property: propertyObject.toJSON().id,
+        startedAt: Date.now(),
         messages: [],
     });
     const savedConversation = await conversation.save();
