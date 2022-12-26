@@ -62,14 +62,11 @@ const Conversation = () => {
     if (conversations.length === 0) return <LoadingIndicator />;
     const conversation = conversations.find(c => c.id === id);
     if (!conversation) return <NotFound />;
-    conversations.forEach(conversation => {
-        conversation.messages = conversation.messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    });
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', width: '50%', alignSelf: 'center', marginLeft: 'auto', marginRight: 'auto' }}>
             <Box>
-                <Typography variant="h4" component="h1">
+                <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
                     {conversation.property.title}
                 </Typography>
             </Box>
@@ -79,13 +76,13 @@ const Conversation = () => {
                 ))}
             </Box>
 
-            <Box sx={{ flexDirection: 'row', position: 'fixed', bottom: '1rem', left: '1rem', right: 0, width: '103%', backgroundColor: 'white' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', position: 'fixed', bottom: '1rem', left: '1rem', right: 0, width: '103%', backgroundColor: 'white' }}>
                 <TextField sx={{ width: '85%', alignSelf: 'flex-start' }} value={message} multiline
                     placeholder='Type your message here... Press Ctrl+Enter or the send button to send'
                     onChange={(event) => {
                         setMessage(event.target.value);
                     }} />
-                <Button sx={{ width: '10%', height: '100%', ml: 1, mr: '1rem' }} variant="contained" onClick={() => sendMessage({ message, id, user, setMessage, refresh })}><SendIcon /></Button>
+                <Button sx={{ ml: 1, mr: '5%', flex: 'auto' }} variant="contained" onClick={() => sendMessage({ message, id, user, setMessage, refresh })}><SendIcon /></Button>
             </Box>
         </Box >
     );

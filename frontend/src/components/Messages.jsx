@@ -17,9 +17,6 @@ const Messages = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps 
     const throttledRefresh = useCallback(_.throttle(() => { refresh(); }, 1000), []);
     if (!conversations) return <LoadingIndicator />;
-    conversations.forEach(conversation => {
-        conversation.messages = conversation.messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    });
     // Sort conversations by latest message (latest first)
     // If no messages, sort by createdAt vs latest message
     conversations.sort((a, b) => {
