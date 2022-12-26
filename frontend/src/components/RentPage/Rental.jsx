@@ -42,6 +42,7 @@ const Rental = ({ rental, fullView = false }) => {
 };
 const Content = ({ rental, showButtons = false, user, navigate }) => {
     const [showCalendar, setShowCalendar] = useState(false);
+    const [dates, setDates] = useState([]);
     const imageProps = {
         style: {
             outline: '1px solid #ccc',
@@ -94,7 +95,25 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                             {rental.allowCalendarBooking &&
                                 <Button variant="contained" onClick={() => setShowCalendar(!showCalendar)} sx={{ mb: 2 }}>Rent now</Button>
                             }
-                            {showCalendar && <Calendar />}
+                            {showCalendar && <>
+                                <Typography variant='body2'>Choose dates.<br />
+                                    Click once to select start date and again to select end date.
+                                </Typography>
+                                <Calendar
+                                    minDate={new Date()}
+                                    selectRange={true}
+                                    showWeekNumbers={true}
+                                    returnValue="range"
+                                    onChange={(dates) => {
+                                        setDates(dates);
+                                    }}
+                                />
+                                {dates[0] &&
+                                    <Button sx={{ mt: 2 }} variant="contained">
+                                        Rent from {dates[0].toLocaleDateString()} to {dates[1].toLocaleDateString()}
+                                    </Button>
+                                }
+                            </>}
                             <Button sx={{ mt: 2 }} onClick={async () => {
                                 const { data } = await axios.get(`${BACKEND_URL}/conversations/${rental.id}`,
                                     {
