@@ -66,18 +66,24 @@ const Messages = () => {
                                     display: 'flex',
                                     flexDirection: 'column',
                                 }}>
-                                    {conversation.property.title} {(conversation.property.owner.id === user.id) && '(Owned by you)'}<br />
+                                    <Typography variant='h5'>{conversation.property.title} {(conversation.property.owner.id === user.id) && '(Owned by you)'}<br /></Typography>
                                     {conversation.messages[0] ?
-                                        <div>
-                                            <i>{
-                                                conversation.messages[0].content.length > 20 ?
-                                                    `${conversation.messages[0].content.substring(0, 20)}...`
-                                                    : conversation.messages[0].content
-                                            }
-                                            </i>&nbsp;
-                                            {`by ${conversation.messages[0].sender.username} at ${format(new Date(conversation.messages[0].createdAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")} `}
-                                        </div>
-                                        : `No messages yet. Created on ${format(new Date(conversation.startedAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")}`}
+                                        <Box>
+                                            <Typography
+                                                fontStyle="italic"
+                                                color="text.secondary"
+                                            >{
+                                                    conversation.messages[0].content.length > 20 ?
+                                                        `${conversation.messages[0].content.substring(0, 50)}...`
+                                                        : conversation.messages[0].content
+                                                }
+                                            </Typography>
+                                            <Typography>
+                                                {`by ${conversation.messages[0].sender.username} on ${format(new Date(conversation.messages[0].createdAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")} `}
+                                            </Typography>
+                                        </Box>
+                                        : <Typography>{`No messages yet. Created on ${format(new Date(conversation.startedAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")}`}</Typography>
+                                    }
                                 </Box>
                             </Link>
                         </ListItem>

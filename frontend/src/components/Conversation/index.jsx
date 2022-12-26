@@ -1,5 +1,5 @@
+import React, { useEffect } from 'react';
 import { Box, TextField, Typography, Button } from '@mui/material';
-import React from 'react';
 import { useParams } from 'react-router-dom';
 import useConversations from '../../hooks/useConversations';
 import Message from './Message';
@@ -12,8 +12,43 @@ import useUser from '../../hooks/useUser';
 import { useLocation } from 'react-router-dom';
 import NotFound from '../NotFound';
 
+
 const Conversation = () => {
     const { id } = useParams();
+
+    const sendMessage = async () => {
+        console.log('Sending message...');
+        const msg = message.trim();
+        if (msg.length > 0) {
+            await axios.post(`${BACKEND_URL}/messages`, {
+                content: msg,
+                conversation: id
+            }, {
+                headers: {
+                    Authorization: `Bearer ${user.token}`
+                }
+            });
+            setMessage('');
+            refresh();
+        }
+    };
+
+    useEffect(() => {
+        const keydownHandler = (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Sending message?');
+                sendMessage();
+            }
+        };
+        document.addEventListener('keydown', keydownHandler);
+        return () => {
+            document.removeEventListener('keydown', keydownHandler);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     // Should only fetch the conversation with the given id, not all of them
     // This is not happening right now, but it should
     const { conversations, refresh } = useConversations();
@@ -53,23 +88,7 @@ const Conversation = () => {
                 <TextField sx={{ width: '85%', alignSelf: 'flex-start' }} value={message} multiline onChange={(event) => {
                     setMessage(event.target.value);
                 }} />
-                <Button sx={{ width: '10%', height: '100%', ml: 1, mr: '1rem' }} variant="contained" onClick={
-                    async () => {
-                        const msg = message.trim();
-                        if (msg.length > 0) {
-                            await axios.post(`${BACKEND_URL}/messages`, {
-                                content: msg,
-                                conversation: id
-                            }, {
-                                headers: {
-                                    Authorization: `Bearer ${user.token}`
-                                }
-                            });
-                            setMessage('');
-                            refresh();
-                        }
-                    }
-                }><SendIcon /></Button>
+                <Button sx={{ width: '10%', height: '100%', ml: 1, mr: '1rem' }} variant="contained" onClick={() => sendMessage()}><SendIcon /></Button>
             </Box>
         </Box>
     );
