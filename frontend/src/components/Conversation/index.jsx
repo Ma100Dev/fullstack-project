@@ -12,43 +12,24 @@ import useUser from '../../hooks/useUser';
 import { useLocation } from 'react-router-dom';
 import NotFound from '../NotFound';
 
+const sendMessage = async ({ message, id, user, setMessage, refresh }) => {
+    const msg = message.trim();
+    if (msg.length > 0) {
+        await axios.post(`${BACKEND_URL}/messages`, {
+            content: msg,
+            conversation: id
+        }, {
+            headers: {
+                Authorization: `Bearer ${user.token}`
+            }
+        });
+        setMessage('');
+        refresh();
+    }
+};
 
 const Conversation = () => {
     const { id } = useParams();
-
-    const sendMessage = async () => {
-        console.log('Sending message...');
-        const msg = message.trim();
-        if (msg.length > 0) {
-            await axios.post(`${BACKEND_URL}/messages`, {
-                content: msg,
-                conversation: id
-            }, {
-                headers: {
-                    Authorization: `Bearer ${user.token}`
-                }
-            });
-            setMessage('');
-            refresh();
-        }
-    };
-
-    useEffect(() => {
-        const keydownHandler = (e) => {
-            if (e.key === 'Enter' && e.ctrlKey) {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('Sending message?');
-                sendMessage();
-            }
-        };
-        document.addEventListener('keydown', keydownHandler);
-        return () => {
-            document.removeEventListener('keydown', keydownHandler);
-        };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     // Should only fetch the conversation with the given id, not all of them
     // This is not happening right now, but it should
     const { conversations, refresh } = useConversations();
@@ -59,6 +40,20 @@ const Conversation = () => {
     const [newRefreshed, setNewRefreshed] = useState(false);
     const isNew = new URLSearchParams(location.search).get('new') === 'true';
 
+    useEffect(() => {
+        const keydownHandler = (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                e.preventDefault();
+                e.stopPropagation();
+                sendMessage({ message, id, user, setMessage, refresh });
+            }
+        };
+        document.addEventListener('keydown', keydownHandler);
+        return () => {
+            document.removeEventListener('keydown', keydownHandler);
+        };
+    }, [id, message, refresh, user]);
+
     if (isNew && !newRefreshed) {
         refresh();
         setNewRefreshed(true);
@@ -68,7 +63,7 @@ const Conversation = () => {
     const conversation = conversations.find(c => c.id === id);
     if (!conversation) return <NotFound />;
     conversations.forEach(conversation => {
-        conversation.messages = conversation.messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        conversation.messages = conversation.messages.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     });
 
     return (
@@ -78,19 +73,21 @@ const Conversation = () => {
                     {conversation.property.title}
                 </Typography>
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', margin: 'auto' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', margin: 'auto', mb: '5rem' }}>
                 {conversation.messages.map(m => (
                     <Message message={m} key={m.id} />
                 ))}
             </Box>
 
-            <Box sx={{ flexDirection: 'row', position: 'fixed', bottom: '1rem', left: '1rem', right: 0, width: '103%' }}>
-                <TextField sx={{ width: '85%', alignSelf: 'flex-start' }} value={message} multiline onChange={(event) => {
-                    setMessage(event.target.value);
-                }} />
-                <Button sx={{ width: '10%', height: '100%', ml: 1, mr: '1rem' }} variant="contained" onClick={() => sendMessage()}><SendIcon /></Button>
+            <Box sx={{ flexDirection: 'row', position: 'fixed', bottom: '1rem', left: '1rem', right: 0, width: '103%', backgroundColor: 'white' }}>
+                <TextField sx={{ width: '85%', alignSelf: 'flex-start' }} value={message} multiline
+                    placeholder='Type your message here... Press Ctrl+Enter or the send button to send'
+                    onChange={(event) => {
+                        setMessage(event.target.value);
+                    }} />
+                <Button sx={{ width: '10%', height: '100%', ml: 1, mr: '1rem' }} variant="contained" onClick={() => sendMessage({ message, id, user, setMessage, refresh })}><SendIcon /></Button>
             </Box>
-        </Box>
+        </Box >
     );
 };
 
