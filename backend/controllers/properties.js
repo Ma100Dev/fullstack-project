@@ -18,6 +18,7 @@ propertyRouter.post('/', upload.single('image'), userExtractor, async (request, 
         description: body.description,
         petsAllowed: body.petsAllowed === 'true',
         owner: request.user.id,
+        allowCalendarBooking: body.allowCalendarBooking === 'true',
         // eslint-disable-next-line new-cap
         image: { data: new Buffer.from(request.file.buffer, 'base64'), contentType: request.file.mimetype },
     });

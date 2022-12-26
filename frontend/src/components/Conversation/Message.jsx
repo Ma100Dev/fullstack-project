@@ -4,7 +4,6 @@ import useUser from '../../hooks/useUser';
 import { Box, Typography } from '@mui/material';
 import { format } from 'date-fns';
 
-
 const Message = ({ message }) => {
     const user = useUser();
     const isSender = user.id === message.sender.id;
@@ -30,7 +29,7 @@ const Message = ({ message }) => {
                 position: 'relative',
                 alignSelf: isSender ? 'flex-end' : 'flex-start',
                 right: isSender ? -9 : 9,
-                bottom: isSender ? 30 : 30,
+                bottom: 30,
             }}>
                 <polygon points="50 15, 100 100, 0 100" fill={isSender ? 'DodgerBlue' : 'LightGray'} />
             </svg>

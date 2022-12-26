@@ -19,7 +19,7 @@ import { BACKEND_URL } from '../utils/config';
 
 const resizeFile = (file) => new Promise(resolve => {
     // TODO: Add timeout to scaling to avoid freezing
-    Resizer.imageFileResizer( 
+    Resizer.imageFileResizer(
         file,
         1280,
         720,
@@ -111,6 +111,7 @@ const AddProperty = () => {
                     formData.append('description', values.description);
                     formData.append('beds', values.beds);
                     formData.append('petsAllowed', values.petsAllowed);
+                    formData.append('allowCalendarBooking', values.allowCalendarBooking);
                     await axios.post(`${BACKEND_URL}/properties`,
                         formData,
                         {
@@ -176,6 +177,14 @@ const AddProperty = () => {
                             <Checkbox sx={{ mb: 0.5 }} name="petsAllowed" onChange={handleChange} onBlur={handleBlur} value={values.petsAllowed} />
                         }
                             label="Pets allowed?"
+                            labelPlacement="start"
+                        />
+                        <br />
+
+                        <FormControlLabel control={
+                            <Checkbox sx={{ mb: 0.5 }} name="allowCalendarBooking" onChange={handleChange} onBlur={handleBlur} value={values.allowCalendarBooking} />
+                        }
+                            label="Allow guests to book using the calendar? (If not, you will have to manually approve each booking and set the dates)"
                             labelPlacement="start"
                         />
                         <br />

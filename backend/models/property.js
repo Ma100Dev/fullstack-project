@@ -48,6 +48,11 @@ const propertySchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    allowCalendarBooking: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
 });
 propertySchema.plugin(uniqueValidator);
 

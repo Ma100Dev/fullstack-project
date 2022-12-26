@@ -44,6 +44,7 @@ const populateProperties = async (count) => {
           description: faker.lorem.paragraph(),
           petsAllowed: faker.datatype.boolean(),
           owner: faker.helpers.arrayElement(users),
+          allowCalendarBooking: faker.datatype.boolean(),
           // Including an image would be unnecessary, slow down everything and use a lot of RAM
           image: null,
       });

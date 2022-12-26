@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PetsIcon from '@mui/icons-material/Pets';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -10,6 +10,8 @@ import axios from 'axios';
 import { BACKEND_URL } from '../../utils/config';
 import useUser from '../../hooks/useUser';
 import RentalImage from './RentalImage';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 
 const Rental = ({ rental, fullView = false }) => {
     const navigate = useNavigate();
@@ -39,6 +41,7 @@ const Rental = ({ rental, fullView = false }) => {
     );
 };
 const Content = ({ rental, showButtons = false, user, navigate }) => {
+    const [showCalendar, setShowCalendar] = useState(false);
     const imageProps = {
         style: {
             outline: '1px solid #ccc',
@@ -70,51 +73,59 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                         overflowWrap: 'break-word',
                     }}
                 >{rental.description}</Typography>
-                <Typography>Price: {rental.price}€ per { rental.pricePer }</Typography>
+                <Typography>Price: {rental.price}€ per {rental.pricePer}</Typography>
                 <Typography>Count (e.g. beds): {rental.beds}</Typography>
                 <Typography>Address: {rental.address}</Typography>
                 <br />
                 <Typography color="gray">Posted by: &quot;{rental.owner.username}&quot; ({rental.owner.name})</Typography>
                 {rental.petsAllowed && <PetsIcon />}
             </Box>
-            {(showButtons && Object.keys(user).length !== 0) && (
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flex: 1,
-                }} >
-                    <Button variant="contained">Rent now</Button>
-                    <Button onClick={async () => {
-                        const { data } = await axios.get(`${BACKEND_URL}/conversations/${rental.id}`,
-                            {
-                                headers: {
-                                    'Authorization': `Bearer ${user.token}`
+            {
+                showButtons && <>
+                    {Object.keys(user).length !== 0 ? (
+                        <Box sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            height: '100%',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flex: 1,
+                        }} >
+                            {rental.allowCalendarBooking &&
+                                <Button variant="contained" onClick={() => setShowCalendar(!showCalendar)} sx={{ mb: 2 }}>Rent now</Button>
+                            }
+                            {showCalendar && <Calendar />}
+                            <Button sx={{ mt: 2 }} onClick={async () => {
+                                const { data } = await axios.get(`${BACKEND_URL}/conversations/${rental.id}`,
+                                    {
+                                        headers: {
+                                            'Authorization': `Bearer ${user.token}`
+                                        }
+                                    });
+                                if (data !== null) {
+                                    navigate(`/messages/${data.id}`);
+                                } else {
+                                    const { data } = await axios.post(`${BACKEND_URL}/conversations`,
+                                        {
+                                            property: rental.id,
+                                        },
+                                        {
+                                            headers: {
+                                                'Authorization': `Bearer ${user.token}`
+                                            }
+                                            // eslint-disable-next-line no-unused-vars
+                                        }).catch((err) => {
+                                            // console.error(err.response.data.error); // TODO: handle error, global error handler
+                                        });
+                                    navigate(`/messages/${data.id}?new=true`);
                                 }
-                            });
-                        if (data !== null) {
-                            navigate(`/messages/${data.id}`);
-                        } else {
-                            const { data } = await axios.post(`${BACKEND_URL}/conversations`,
-                                {
-                                    property: rental.id,
-                                },
-                                {
-                                    headers: {
-                                        'Authorization': `Bearer ${user.token}`
-                                    }
-                                    // eslint-disable-next-line no-unused-vars
-                                }).catch((err) => {
-                                    // console.error(err.response.data.error); // TODO: handle error, global error handler
-                                });
-                            navigate(`/messages/${data.id}?new=true`);
-                        }
 
-                    }}> Contact renter </Button>
-                </Box>
-            )}
+                            }}> Contact renter </Button>
+                        </Box>
+                    ) : <Typography>You need to log in order to rent.</Typography>
+                    }
+                </>
+            }
         </>
     );
 };
@@ -128,6 +139,7 @@ const rentalPropType = PropTypes.shape({
     beds: PropTypes.number.isRequired,
     address: PropTypes.string.isRequired,
     petsAllowed: PropTypes.bool.isRequired,
+    allowCalendarBooking: PropTypes.bool.isRequired,
     owner: PropTypes.shape({
         username: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
