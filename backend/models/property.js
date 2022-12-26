@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const mongoosePaginate = require('mongoose-paginate-v2');
 
+// TODO: Add createdAt and updatedAt fields
 const propertySchema = mongoose.Schema({
     title: {
         type: String,

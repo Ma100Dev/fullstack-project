@@ -66,7 +66,7 @@ const Messages = () => {
                                     display: 'flex',
                                     flexDirection: 'column',
                                 }}>
-                                    {conversation.property.title} {(conversation.property.owner.id === user.id) && '(Owned by you)'}<br /> {/* Might need fixing */}
+                                    {conversation.property.title} {(conversation.property.owner.id === user.id) && '(Owned by you)'}<br />
                                     {conversation.messages[0] ?
                                         <div>
                                             <i>{
