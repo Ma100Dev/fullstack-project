@@ -23,8 +23,7 @@ conversationRouter.get('/:property', userExtractor, async (request, response) =>
       .populate('property')
       .populate('starter')
       .populate('receiver')
-      .deepPopulate('messages.sender')
-      .deepPopulate('property.owner');
+      .deepPopulate('messages.sender property.owner');
     response.json(conversation);
 });
 

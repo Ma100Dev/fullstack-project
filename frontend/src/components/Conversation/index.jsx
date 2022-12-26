@@ -50,17 +50,15 @@ const Conversation = () => {
             </Box>
 
             <Box sx={{ flexDirection: 'row', position: 'fixed', bottom: '1rem', left: '1rem', right: 0, width: '103%' }}>
-                <TextField sx={{ width: '85%', alignSelf: 'flex-start' }} value={message} onChange={(event) => {
-                    let content = event.target.value.trim();
-                    if (content.length > 0) {
-                        setMessage(content);
-                    }
+                <TextField sx={{ width: '85%', alignSelf: 'flex-start' }} value={message} multiline onChange={(event) => {
+                    setMessage(event.target.value);
                 }} />
                 <Button sx={{ width: '10%', height: '100%', ml: 1, mr: '1rem' }} variant="contained" onClick={
                     async () => {
-                        if (message.length > 0) {
+                        const msg = message.trim();
+                        if (msg.length > 0) {
                             await axios.post(`${BACKEND_URL}/messages`, {
-                                content: message,
+                                content: msg,
                                 conversation: id
                             }, {
                                 headers: {

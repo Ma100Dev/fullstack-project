@@ -14,7 +14,6 @@ import useUser from '../hooks/useUser';
 const Messages = () => {
     const { conversations, refresh } = useConversations();
     const user = useUser();
-    console.log(user);
     // eslint-disable-next-line react-hooks/exhaustive-deps 
     const throttledRefresh = useCallback(_.throttle(() => { refresh(); }, 1000), []);
     if (!conversations) return <LoadingIndicator />;
@@ -62,11 +61,24 @@ const Messages = () => {
                                         height: '100%',
                                     }
                                 }} />
-                                {conversation.property.title} {(conversation.property.owner.id === user.id) && '(Owned by you)'}<br />
-                                {conversation.messages[0] ?
-                                    `Latest: ${conversation.messages[0].sender.username} at ${format(new Date(conversation.messages[0].createdAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")} `
-                                    : `No messages yet. Created on ${format(new Date(conversation.startedAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")}`}
-                                {conversation.content}
+                                <Box sx={{
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                }}>
+                                    {conversation.property.title} {(conversation.property.owner.id === user.id) && '(Owned by you)'}<br /> {/* Might need fixing */}
+                                    {conversation.messages[0] ?
+                                        <div>
+                                            <i>{
+                                                conversation.messages[0].content.length > 20 ?
+                                                    `${conversation.messages[0].content.substring(0, 20)}...`
+                                                    : conversation.messages[0].content
+                                            }
+                                            </i>&nbsp;
+                                            {`by ${conversation.messages[0].sender.username} at ${format(new Date(conversation.messages[0].createdAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")} `}
+                                        </div>
+                                        : `No messages yet. Created on ${format(new Date(conversation.startedAt), "dd.MM.yyyy '('EEEE')' 'at' HH:mm")}`}
+                                </Box>
                             </Link>
                         </ListItem>
                         <Divider />
