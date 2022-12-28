@@ -1,6 +1,7 @@
 /* eslint-disable global-require */
 
 const express = require('express');
+const morgan = require('morgan');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
@@ -75,6 +76,13 @@ const createApp = async () => {
 
     app.use(cors());
     app.use(express.json());
+    if (config.LOG_REQUESTS) {
+      if (config.ENV === 'development') {
+        app.use(morgan('dev'));
+      } else {
+        app.use(morgan('tiny'));
+      }
+    }
     app.use('/users', usersRouter);
     app.use('/login', loginRouter);
     app.use('/properties', propertyRouter);
