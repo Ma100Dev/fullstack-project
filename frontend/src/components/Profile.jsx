@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 
 // TODO implement profile picture
 // Backend changes also required
@@ -43,13 +43,13 @@ const TypographyProps = {
 };
 
 const Profile = ({ editMode = false }) => {
-    const [errors, setErrors] = React.useState([]);
+    const [errors, setErrors] = useState([]);
     const navigate = useNavigate();
     let localUser = useUser();
-    const [user, setUser] = React.useState({});
+    const [user, setUser] = useState({});
     const [crypt, publicKey] = useCrypt();
     const dispatch = useDispatch();
-    React.useEffect(() => {
+    useEffect(() => {
         if (Object.keys(user).length === 0) {
             axios.get('/api/users/' + localUser.id).then(res => {
                 setUser(res.data);
@@ -229,6 +229,7 @@ const Profile = ({ editMode = false }) => {
             }}>Delete account</Button>
             <Collapsible title="Your bookings" titleVariant='h4' id="reservations">
                 {/* TODO: Reservations here */}
+                Soon™
             </Collapsible>
             {user.properties &&
                 <Collapsible title="Your properties" titleVariant="h4" id="properties">

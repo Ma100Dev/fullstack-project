@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import { Formik } from 'formik';
 
@@ -63,9 +63,9 @@ const PropertySchema = Yup.object().shape({
 
 const AddProperty = () => {
     let user = useSelector(state => state.user);
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     // eslint-disable-next-line no-unused-vars
-    const [error, setError] = React.useState('');
+    const [error, setError] = useState('');
     // const navigate = useNavigate();
     const handleClose = () => {
         setOpen(false);

@@ -1,4 +1,3 @@
-import React from 'react';
 import Box from '@mui/material/Box';
 import { useSelector, useDispatch } from 'react-redux';
 import { clearUser } from '../../reducers/userReducer';

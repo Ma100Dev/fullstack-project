@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PetsIcon from '@mui/icons-material/Pets';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';

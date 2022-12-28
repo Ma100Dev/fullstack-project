@@ -1,4 +1,3 @@
-import React from 'react';
 import Login from './components/Login';
 import { Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';

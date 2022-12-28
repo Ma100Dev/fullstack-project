@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Box, TextField, Typography, Button } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import useConversations from '../../hooks/useConversations';

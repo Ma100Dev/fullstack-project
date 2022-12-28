@@ -1,4 +1,3 @@
-import React from 'react';
 import { ReactComponent as DefaultImage } from './house.svg';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -27,12 +26,12 @@ const RentalImage = ({ rental, imageProps }) => {
 };
 
 const rentalPropType = PropTypes.shape({
-    image: PropTypes.shape({
-        contentType: PropTypes.string.isRequired,
-        data: PropTypes.shape({
-            data: PropTypes.array.isRequired,
-        }).isRequired,
-    })
+	image: PropTypes.shape({
+		contentType: PropTypes.string.isRequired,
+		data: PropTypes.shape({
+			data: PropTypes.array.isRequired,
+		}).isRequired,
+	})
 });
 
 RentalImage.propTypes = {

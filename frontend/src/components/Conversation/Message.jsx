@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import useUser from '../../hooks/useUser';
 import { Box, Typography } from '@mui/material';

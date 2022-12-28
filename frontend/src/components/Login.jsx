@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { Formik } from 'formik';
@@ -26,8 +26,8 @@ const LoginSchema = Yup.object().shape({
 
 const Login = () => {
     const dispatch = useDispatch();
-    const [open, setOpen] = React.useState(false);
-    const [error, setError] = React.useState('');
+    const [open, setOpen] = useState(false);
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const [crypt, publicKey] = useCrypt();
     const handleClose = () => {
