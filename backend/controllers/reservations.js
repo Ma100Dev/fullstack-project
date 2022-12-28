@@ -5,7 +5,8 @@ const Property = require('../models/property');
 const { userExtractor } = require('../utils/middleware');
 
 reservationRouter.get('/', userExtractor, async (request, response) => {
-    const reservations = await Reservation.find({ user: request.user.id });
+    const reservations = await Reservation.find({ user: request.user.id })
+      .populate('property');
     response.json(reservations);
 });
 

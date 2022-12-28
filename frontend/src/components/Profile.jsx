@@ -19,6 +19,9 @@ import useCrypt from '../hooks/useCrypt';
 import { useDispatch } from 'react-redux';
 import { clearUser } from '../reducers/userReducer';
 import Collapsible from './Collapsible';
+import { BACKEND_URL } from '../utils/config';
+import { Box } from '@mui/system';
+import format from 'date-fns/format';
 
 const editValidationSchema = yup.object().shape({
     username: yup.string()
@@ -46,16 +49,31 @@ const Profile = ({ editMode = false }) => {
     const [errors, setErrors] = useState([]);
     const navigate = useNavigate();
     let localUser = useUser();
-    const [user, setUser] = useState({});
     const [crypt, publicKey] = useCrypt();
     const dispatch = useDispatch();
+
+    const [user, setUser] = useState({});
     useEffect(() => {
         if (Object.keys(user).length === 0) {
-            axios.get('/api/users/' + localUser.id).then(res => {
+            axios.get(`${BACKEND_URL}/users/` + localUser.id).then(res => {
                 setUser(res.data);
             });
         }
     }, [user, setUser, localUser.id]);
+
+    const [reservations, setReservations] = useState([]);
+    useEffect(() => {
+        if (Object.keys(user).length !== 0) {
+            axios.get(`${BACKEND_URL}/reservations/`, {
+                headers: {
+                    Authorization: `Bearer ${localUser.token}`
+                }
+            }).then(res => {
+                setReservations(res.data);
+            });
+        }
+    }, [user, setReservations, localUser.token]);
+
     const onSubmit = async (event) => {
         event.preventDefault();
         if (!editMode) {
@@ -73,7 +91,7 @@ const Profile = ({ editMode = false }) => {
             error = true;
         });
         if (!error) {
-            await (axios.put(`/api/users/${localUser.id}`,
+            await (axios.put(`${BACKEND_URL}/users/${localUser.id}`,
                 values,
                 {
                     headers: {
@@ -215,7 +233,7 @@ const Profile = ({ editMode = false }) => {
                 // eslint-disable-next-line no-alert
                 const confirmation = confirm('Are you sure you want to delete your account?');
                 if (confirmation) {
-                    axios.delete(`/api/users/${localUser.id}`, {
+                    axios.delete(`${BACKEND_URL}users/${localUser.id}`, {
                         headers: {
                             authorization: `Bearer ${localUser.token}`
                         }
@@ -227,10 +245,36 @@ const Profile = ({ editMode = false }) => {
                     );
                 }
             }}>Delete account</Button>
-            <Collapsible title="Your bookings" titleVariant='h4' id="reservations">
-                {/* TODO: Reservations here */}
-                Soon™
-            </Collapsible>
+            {reservations.length !== 0 &&
+                <Collapsible title="Your bookings" titleVariant='h4' id="reservations">
+                    {reservations.map(reservation => (
+                        <Box key={reservation.id} sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '1rem',
+                            border: '1px solid black',
+                            borderRadius: '5px',
+                            margin: '1rem'
+                        }}>
+                            <Typography variant="h5">{reservation.property.title}</Typography>
+                            <Typography variant="h6" color="text.secondary">{reservation.property.address}</Typography>
+                            <Typography variant="h6">
+                                From
+                                {` ${format(new Date(reservation.startDate), 'dd.MM.yyyy')} `}
+                                to
+                                {` ${format(new Date(reservation.endDate), 'dd.MM.yyyy')}`}
+                            </Typography>
+                            <Typography variant="h6">Total price: TODO</Typography>
+                            <Button variant="contained" color="error" onClick={() => {
+                                null; // TODO: Add cancellation logic
+                            }}>Cancel reservation</Button>
+                        </Box>
+
+                    ))}
+                </Collapsible>
+            }
             {user.properties &&
                 <Collapsible title="Your properties" titleVariant="h4" id="properties">
                     {user.properties.map(property => (
