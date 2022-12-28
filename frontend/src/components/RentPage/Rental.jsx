@@ -111,7 +111,8 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                                 {dates[0] &&
                                     <Button sx={{ mt: 2 }} variant="contained" onClick={async () => {
                                         if (dates?.length === 2) {
-                                            const { data } = await axios.post(`${BACKEND_URL}/properties/${rental.id}/reservations`,
+                                            // eslint-disable-next-line no-unused-vars
+                                            const { status } = await axios.post(`${BACKEND_URL}/properties/${rental.id}/reservations`,
                                                 {
                                                     startDate: dates[0].toISOString(),
                                                     endDate: dates[1].toISOString(),
@@ -122,7 +123,9 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                                                     }
                                                 }
                                             );
-                                            console.log(data);
+                                            if (status === 201) {
+                                                navigate('/profile#reservations');
+                                            }
                                         }
                                     }}>
                                         Rent from {dates[0].toLocaleDateString()} to {dates[1].toLocaleDateString()}

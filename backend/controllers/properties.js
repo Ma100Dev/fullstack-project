@@ -65,7 +65,7 @@ propertyRouter.post('/:id/reservations', userExtractor, async (request, response
         endDate: new Date(body.endDate),
     });
     const saved = await reservation.save();
-    response.json(saved);
+    response.status(201).json(saved);
 });
 
 module.exports = propertyRouter;

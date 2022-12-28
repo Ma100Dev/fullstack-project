@@ -18,6 +18,7 @@ import LoadingIndicator from './LoadingIndicator';
 import useCrypt from '../hooks/useCrypt';
 import { useDispatch } from 'react-redux';
 import { clearUser } from '../reducers/userReducer';
+import Collapsible from './Collapsible';
 
 const editValidationSchema = yup.object().shape({
     username: yup.string()
@@ -226,10 +227,16 @@ const Profile = ({ editMode = false }) => {
                     );
                 }
             }}>Delete account</Button>
-            <Typography variant='h4'>Your properties</Typography>
-            {user.properties.map(property => (
-                <Rental rental={property} key={property.id} />
-            ))}
+            <Collapsible title="Your bookings" titleVariant='h4' id="reservations">
+                {/* TODO: Reservations here */}
+            </Collapsible>
+            {user.properties &&
+                <Collapsible title="Your properties" titleVariant="h4" id="properties">
+                    {user.properties.map(property => (
+                        <Rental rental={property} key={property.id} />
+                    ))}
+                </Collapsible>
+            }
         </div>
     );
 };

@@ -15,6 +15,7 @@ let propertyRouter;
 let messageRouter;
 let conversationRouter;
 let cryptoRouter;
+let reservationRouter;
 
 if (!config.NO_RUN) {
   usersRouter = require('./controllers/users');
@@ -23,6 +24,7 @@ if (!config.NO_RUN) {
   messageRouter = require('./controllers/messages');
   conversationRouter = require('./controllers/conversations');
   cryptoRouter = require('./controllers/crypto');
+  reservationRouter = require('./controllers/reservations');
 }
 
 const createApp = async () => {
@@ -79,6 +81,7 @@ const createApp = async () => {
     app.use('/messages', messageRouter);
     app.use('/conversations', conversationRouter);
     app.use('/crypto', cryptoRouter);
+    app.use('/reservations', reservationRouter);
 
     app.use(middleware.errorHandler);
 
