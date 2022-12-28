@@ -1,6 +1,7 @@
 const propertyRouter = require('express').Router();
 const Property = require('../models/property');
 const User = require('../models/user');
+const Reservation = require('../models/reservation');
 require('express-async-errors');
 const { userExtractor } = require('../utils/middleware');
 const { upload } = require('../utils/multer');
@@ -53,6 +54,18 @@ propertyRouter.get('/:id', async (request, response) => {
     } else {
       response.status(404).end();
     }
+});
+
+propertyRouter.post('/:id/reservations', userExtractor, async (request, response) => {
+    const { body } = request;
+    const reservation = new Reservation({
+        property: request.params.id,
+        user: request.user.id,
+        startDate: new Date(body.startDate),
+        endDate: new Date(body.endDate),
+    });
+    const saved = await reservation.save();
+    response.json(saved);
 });
 
 module.exports = propertyRouter;

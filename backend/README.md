@@ -11,4 +11,5 @@ Variable | Description
 `NO_RUN` | Disables the backend from running for CI/CD, etc. Defaults to `false`.
 `MEMORYDB_PORT` | The port the memory database will listen on. Defaults to a random port. Only used in development mode.
 
-Files id_rsa and id_rsa.pub are required and must provide a valid RSA key pair. 
+Files id_rsa and id_rsa.pub are required and must provide a valid RSA key pair. One can be generated using the following command:
+`node generateKeys.js`

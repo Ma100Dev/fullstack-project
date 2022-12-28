@@ -109,7 +109,22 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                                     }}
                                 />
                                 {dates[0] &&
-                                    <Button sx={{ mt: 2 }} variant="contained">
+                                    <Button sx={{ mt: 2 }} variant="contained" onClick={async () => {
+                                        if (dates?.length === 2) {
+                                            const { data } = await axios.post(`${BACKEND_URL}/properties/${rental.id}/reservations`,
+                                                {
+                                                    startDate: dates[0].toISOString(),
+                                                    endDate: dates[1].toISOString(),
+                                                },
+                                                {
+                                                    headers: {
+                                                        Authorization: `Bearer ${user.token}`
+                                                    }
+                                                }
+                                            );
+                                            console.log(data);
+                                        }
+                                    }}>
                                         Rent from {dates[0].toLocaleDateString()} to {dates[1].toLocaleDateString()}
                                     </Button>
                                 }
