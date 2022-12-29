@@ -110,6 +110,7 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                                     selectRange={true}
                                     showWeekNumbers={true}
                                     returnValue="range"
+                                    allowPartialRange={false}
                                     onChange={(dates) => {
                                         setDates(dates);
                                     }}
@@ -123,6 +124,17 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                                 {dates[0] &&
                                     <Button sx={{ mt: 2 }} variant="contained" onClick={async () => {
                                         if (dates?.length === 2) {
+                                            const invalid = rental.reservations.some(reservation => {
+                                                const startDate = new Date(reservation.startDate);
+                                                const endDate = new Date(reservation.endDate);
+                                                return dates[0] <= endDate && startDate <= dates[1];
+                                            });
+                                            if (invalid) {
+                                                // eslint-disable-next-line no-alert
+                                                alert('Reservation overlaps with an existing reservation. Please select different dates.');
+                                                // TODO: show error message instead of alert
+                                                return;
+                                            }
                                             // eslint-disable-next-line no-unused-vars
                                             const { status } = await axios.post(`${BACKEND_URL}/properties/${rental.id}/reservations`,
                                                 {
