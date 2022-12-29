@@ -1,4 +1,3 @@
-import Login from './components/Login';
 import { Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import PropTypes from 'prop-types';
@@ -6,16 +5,17 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { setUser } from './reducers/userReducer';
 
-import SignUp from './components/SignUp';
-import FrontPage from './components/FrontPage';
-import MenuAppBar from './components/MenuAppBar';
-import RentPage from './components/RentPage';
-import Profile from './components/Profile';
-import AddProperty from './components/AddProperty';
-import SingleRental from './components/SingleRental';
-import Messages from './components/Messages';
-import Conversation from './components/Conversation';
-import NotFound from './components/NotFound';
+import Login from './components/pages/user/Login';
+import SignUp from './components/pages/user/SignUp';
+import FrontPage from './components/pages/general/FrontPage';
+import MenuAppBar from './components/reusables/MenuAppBar';
+import RentPage from './components/pages/rental/RentPage';
+import Profile from './components/pages/user/Profile';
+import AddProperty from './components/pages/rental/AddProperty';
+import SingleRental from './components/pages/rental/SingleRental';
+import Messages from './components/pages/user/Messages';
+import Conversation from './components/pages/user/Conversation';
+import NotFound from './components/pages/general/NotFound';
 
 const user = localStorage.getItem('user');
 

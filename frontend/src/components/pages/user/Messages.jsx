@@ -1,15 +1,15 @@
 import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import format from 'date-fns/format';
-import LoadingIndicator from './LoadingIndicator';
-import useConversations from '../hooks/useConversations';
+import LoadingIndicator from '../LoadingIndicator';
+import useConversations from '../../../hooks/useConversations';
 import {
     Button, Box, Typography,
     List, ListItem, Divider
 } from '@mui/material';
-import RentalImage from './RentPage/RentalImage';
+import RentalImage from '../rental/RentPage/RentalImage';
 import _ from 'lodash';
-import useUser from '../hooks/useUser';
+import useUser from '../../../hooks/useUser';
 
 const Messages = () => {
     const { conversations, refresh } = useConversations();

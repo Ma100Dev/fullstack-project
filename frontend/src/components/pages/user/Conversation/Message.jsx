@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import useUser from '../../hooks/useUser';
+import useUser from '../../../../hooks/useUser';
 import { Box, Typography } from '@mui/material';
 import { format } from 'date-fns';
 

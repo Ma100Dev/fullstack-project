@@ -72,11 +72,18 @@ propertyRouter.post('/:id/reservations', userExtractor, async (request, response
         startDate: new Date(body.startDate),
         endDate: new Date(body.endDate),
     });
+    const property = await Property.findById(request.params.id);
+    const invalid = property.reservations.some((rsv) => {
+        const startDate = new Date(rsv.startDate);
+        const endDate = new Date(rsv.endDate);
+        return reservation.startDate <= endDate && startDate <= reservation.endDate; // Untested
+    });
+    if (invalid) {
+      return response.status(400).json({ error: 'Reservation overlaps with existing reservation' });
+    }
     const saved = await reservation.save();
-    await Property.findOneAndUpdate(
-      { _id: request.params.id },
-      { $push: { reservations: saved.id } },
-    );
+    property.reservations = property.reservations.concat(saved.id);
+    await property.save();
     response.status(201).json(saved);
 });
 

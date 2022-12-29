@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Rental from './RentPage/Rental';
-import LoadingIndicator from './LoadingIndicator';
+import LoadingIndicator from '../../reusables/LoadingIndicator';
 import axios from 'axios';
-import { BACKEND_URL } from '../utils/config';
-import NotFound from './NotFound';
+import { BACKEND_URL } from '../../../utils/config';
+import NotFound from '../general/NotFound';
 
 const SingleRental = () => {
     const { id } = useParams();
