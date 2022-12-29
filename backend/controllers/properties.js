@@ -10,6 +10,9 @@ const logger = require('../utils/logger');
 propertyRouter.post('/', upload.single('image'), userExtractor, async (request, response) => {
     const { body } = request;
     logger.log(Number(body.beds));
+    if (body.pricePer !== 'day' && body.allowCalendarBooking === 'true') {
+      return response.status(400).json({ error: 'Calendar booking is only implemented for day-by-day reservations' });
+    }
     const property = new Property({
         title: body.title,
         address: body.address,
@@ -41,14 +44,19 @@ propertyRouter.get('/', userExtractor, async (request, response) => {
       {
           page,
           limit,
-          populate: { path: 'owner', select: { username: 1, name: 1 } },
+          populate: [
+            { path: 'owner', select: { username: 1, name: 1 } },
+            { path: 'reservations', select: { startDate: 1, endDate: 1 } },
+          ],
       },
     );
     response.json(properties);
 });
 
 propertyRouter.get('/:id', async (request, response) => {
-    const property = await Property.findById(request.params.id).populate('owner', { username: 1, name: 1 });
+    const property = await Property.findById(request.params.id)
+      .populate('owner', { username: 1, name: 1 })
+      .populate('reservations', { startDate: 1, endDate: 1 });
     if (property) {
       response.json(property);
     } else {
@@ -65,6 +73,10 @@ propertyRouter.post('/:id/reservations', userExtractor, async (request, response
         endDate: new Date(body.endDate),
     });
     const saved = await reservation.save();
+    await Property.findOneAndUpdate(
+      { _id: request.params.id },
+      { $push: { reservations: saved.id } },
+    );
     response.status(201).json(saved);
 });
 

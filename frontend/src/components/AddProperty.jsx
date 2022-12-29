@@ -170,7 +170,7 @@ const AddProperty = () => {
                                 <MenuItem value="weekend">Weekend</MenuItem>
                             </Select>
                         </FormControl>
-                        <FormikTextField label="description" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Description" />
+                        <FormikTextField label="description" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Description" multiline />
                         <FormikTextField label="beds" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Count (Beds, etc.)" />
 
                         <FormControlLabel control={
@@ -182,7 +182,9 @@ const AddProperty = () => {
                         <br />
 
                         <FormControlLabel control={
-                            <Checkbox sx={{ mb: 0.5 }} name="allowCalendarBooking" onChange={handleChange} onBlur={handleBlur} value={values.allowCalendarBooking} />
+                            <Checkbox sx={{ mb: 0.5 }} name="allowCalendarBooking" onChange={handleChange} onBlur={handleBlur} value={values.allowCalendarBooking}
+                                disabled={values.pricePer !== 'day'}
+                            />
                         }
                             label="Allow guests to book using the calendar? (If not, you will have to manually approve each booking and set the dates)"
                             labelPlacement="start"

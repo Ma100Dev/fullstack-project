@@ -1,7 +1,7 @@
 import { TextField, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 
-const FormikTextField = ({ label, errors, handleChange, handleBlur, values, type = 'text', touched, placeholder }) => (<>
+const FormikTextField = ({ label, errors, handleChange, handleBlur, values, type = 'text', touched, placeholder, multiline = false }) => (<>
     <TextField
         type={type}
         name={label}
@@ -10,6 +10,7 @@ const FormikTextField = ({ label, errors, handleChange, handleBlur, values, type
         value={values[label]}
         placeholder={placeholder}
         sx={{ width: '100%' }}
+        multiline={multiline}
     />
     <br />
     <Typography
@@ -32,6 +33,7 @@ FormikTextField.propTypes = {
     type: PropTypes.string,
     touched: PropTypes.object.isRequired,
     placeholder: PropTypes.string.isRequired,
+    multiline: PropTypes.bool,
 };
 
 export default FormikTextField;

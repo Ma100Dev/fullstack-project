@@ -53,6 +53,12 @@ const propertySchema = mongoose.Schema({
         required: true,
         default: false,
     },
+    reservations: [
+      {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Reservation',
+      },
+    ],
 });
 propertySchema.plugin(uniqueValidator);
 

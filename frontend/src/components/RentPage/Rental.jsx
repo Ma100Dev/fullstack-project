@@ -13,6 +13,7 @@ import RentalImage from './RentalImage';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
+
 const Rental = ({ rental, fullView = false }) => {
     const navigate = useNavigate();
     const user = useUser(true);
@@ -41,6 +42,11 @@ const Rental = ({ rental, fullView = false }) => {
     );
 };
 const Content = ({ rental, showButtons = false, user, navigate }) => {
+    const dateAlreadyReserved = (date) => rental.reservations.some(reservation => {
+        const startDate = new Date(reservation.startDate);
+        const endDate = new Date(reservation.endDate);
+        return date >= startDate && date <= endDate;
+    });
     const [showCalendar, setShowCalendar] = useState(false);
     const [dates, setDates] = useState([]);
     const imageProps = {
@@ -107,6 +113,12 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                                     onChange={(dates) => {
                                         setDates(dates);
                                     }}
+                                    tileContent={({ date, view }) =>
+                                        view === 'month' && dateAlreadyReserved(date) ? <div style={
+                                            { backgroundColor: 'red', color: 'white', width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }
+                                        } /> : null
+                                    }
+                                    tileDisabled={({ date }) => dateAlreadyReserved(date)}
                                 />
                                 {dates[0] &&
                                     <Button sx={{ mt: 2 }} variant="contained" onClick={async () => {
@@ -177,6 +189,10 @@ const rentalPropType = PropTypes.shape({
     address: PropTypes.string.isRequired,
     petsAllowed: PropTypes.bool.isRequired,
     allowCalendarBooking: PropTypes.bool.isRequired,
+    reservations: PropTypes.arrayOf(PropTypes.shape({
+        startDate: PropTypes.string.isRequired,
+        endDate: PropTypes.string.isRequired,
+    })),
     owner: PropTypes.shape({
         username: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
