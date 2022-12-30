@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import useUser from './useUser';
 import { useSelector, useDispatch } from 'react-redux';
 import { setConversations } from '@reducers/conversationReducer';
+import { addError } from '@reducers/errorReducer';
 
 const useConversations = () => {
     const dispatch = useDispatch();
@@ -16,6 +17,8 @@ const useConversations = () => {
                 headers: {
                     'Authorization': `Bearer ${localUser.token}`
                 }
+            }).catch((error) => {
+                dispatch(addError({ msg: error.response?.data?.error || error.response?.statusText, title: 'Error connecting to server' }));
             });
         setLocalConversations(data);
         dispatch(setConversations(data));

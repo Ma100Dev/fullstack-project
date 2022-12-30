@@ -1,3 +1,5 @@
+import { useRef, useEffect } from 'react';
+
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 
@@ -8,13 +10,19 @@ import PropTypes from 'prop-types';
 
 const Error = ({ error, time }) => {
     const dispatch = useDispatch();
+    const errorRef = useRef(null);
     time && setTimeout(() => {
         dispatch(removeError(error.id));
     }, time);
+    useEffect(() => {
+        errorRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    }, [errorRef]);
     return (
-        <Alert key={error.id} severity="error" variant='outlined' sx={{
+        <Alert ref={errorRef} key={error.id} severity="error" variant='outlined' sx={{
             width: '90%',
-            flex: 1,
+            mr: 'auto',
+            ml: 'auto',
+            mb: 1,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

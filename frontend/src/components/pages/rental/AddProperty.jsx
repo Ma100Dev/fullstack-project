@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import Box from '@mui/material/Box';
 import { Formik } from 'formik';
 
 import {
-    Button, Grid, Typography, Dialog,
-    DialogActions, DialogContent, DialogContentText, DialogTitle,
+    Button, Grid, Typography,
     Checkbox, FormControlLabel, Select, MenuItem,
     InputLabel, FormControl
 } from '@mui/material';
@@ -13,7 +11,8 @@ import {
 import FormikTextField from '@reusables/FormikTextField';
 import axios from 'axios';
 import * as Yup from 'yup';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { addError } from '@reducers/errorReducer';
 import Resizer from 'react-image-file-resizer';
 import { BACKEND_URL } from '@utils/config';
 
@@ -35,9 +34,11 @@ const resizeFile = (file) => new Promise(resolve => {
 
 const PropertySchema = Yup.object().shape({
     title: Yup.string()
-        .required('Title is required'),
+        .required('Title is required')
+        .min(5, 'Title must be at least 5 characters long'),
     description: Yup.string()
-        .required('Description is required'),
+        .required('Description is required')
+        .min(50, 'Description must be at least 50 characters long'),
     price: Yup.number()
         .required('Price is required')
         .positive('Price must be a positive number'),
@@ -47,7 +48,8 @@ const PropertySchema = Yup.object().shape({
         .required('"Count" is required')
         .min(1, '"Count" must be at least 1'),
     address: Yup.string()
-        .required('Address is required'),
+        .required('Address is required')
+        .min(5, 'Address must be at least 5 characters long'),
     petsAllowed: Yup.boolean()
         .required('Pets allowed is required'),
     image: Yup.mixed()
@@ -63,13 +65,7 @@ const PropertySchema = Yup.object().shape({
 
 const AddProperty = () => {
     let user = useSelector(state => state.user);
-    const [open, setOpen] = useState(false);
-    // eslint-disable-next-line no-unused-vars
-    const [error, setError] = useState('');
-    // const navigate = useNavigate();
-    const handleClose = () => {
-        setOpen(false);
-    };
+    const dispatch = useDispatch();
     return (
         <Grid
             container
@@ -79,24 +75,6 @@ const AddProperty = () => {
             justifyContent="center"
             style={{ minHeight: '100vh', width: '100%' }}
         >
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    Error!
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {error}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>OK</Button>
-                </DialogActions>
-            </Dialog>
             <Formik
                 initialValues={{ title: '', address: '', price: '', pricePer: '', description: '', beds: '', petsAllowed: false, image: null }}
                 validationSchema={PropertySchema}
@@ -118,6 +96,8 @@ const AddProperty = () => {
                             headers: {
                                 'Authorization': `Bearer ${user.token}`
                             }
+                        }).catch((err) => {
+                            dispatch(addError({ msg: err.response?.data?.error || err.response?.statusCode, title: 'Error' }));
                         });
                     setSubmitting(false);
 
@@ -151,7 +131,7 @@ const AddProperty = () => {
                         <FormikTextField label="title" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Title" />
                         <FormikTextField label="address" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Address" />
                         <FormikTextField label="price" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Price (€)" />
-                        <FormControl fullWidth sx={{ mb: '2.5rem' }}>
+                        <FormControl fullWidth>
                             <InputLabel id="price-per-label">Price per</InputLabel>
                             <Select
                                 label="Price per"
@@ -170,6 +150,15 @@ const AddProperty = () => {
                                 <MenuItem value="weekend">Weekend</MenuItem>
                             </Select>
                         </FormControl>
+                        <Typography
+                            sx={{
+                                color: 'red',
+                                mt: 1,
+                                mb: 1,
+                            }}
+                        >
+                            {(errors.pricePer && touched.pricePer && errors.pricePer) || '⠀'}
+                        </Typography>
                         <FormikTextField label="description" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Description" multiline />
                         <FormikTextField label="beds" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Count (Beds, etc.)" />
 
@@ -192,7 +181,7 @@ const AddProperty = () => {
                         <br />
 
                         <FormControlLabel control={
-                            <input id="image" name="image" type="file" onChange={(event) => {
+                            <input id="image" accept='.jpg,.jpeg,.png,.webp' name="image" type="file" onChange={(event) => {
                                 setFieldValue('image', event.currentTarget.files[0]);
                             }} />
                         } label={<Typography sx={{ mr: 1 }}>Image: </Typography>} sx={{ mr: 1, mt: 2, mb: 1 }} labelPlacement="start" />

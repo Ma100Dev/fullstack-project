@@ -1,14 +1,8 @@
-import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { Formik } from 'formik';
 import { Button, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import * as Yup from 'yup';
@@ -16,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '@reducers/userReducer';
 import { BACKEND_URL } from '@utils/config';
 import useCrypt from '@hooks/useCrypt';
+import { addError } from '@reducers/errorReducer';
 
 const LoginSchema = Yup.object().shape({
     username: Yup.string()
@@ -26,13 +21,8 @@ const LoginSchema = Yup.object().shape({
 
 const Login = () => {
     const dispatch = useDispatch();
-    const [open, setOpen] = useState(false);
-    const [error, setError] = useState('');
     const navigate = useNavigate();
     const [crypt, publicKey] = useCrypt();
-    const handleClose = () => {
-        setOpen(false);
-    };
     return (
         <Grid
             container
@@ -42,43 +32,28 @@ const Login = () => {
             justifyContent="center"
             style={{ minHeight: '100vh', width: '100%' }}
         >
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    Error!
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {error}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>OK</Button>
-                </DialogActions>
-            </Dialog>
             <Formik
                 initialValues={{ username: '', password: '' }}
                 validationSchema={LoginSchema}
                 onSubmit={async (values, { setSubmitting }) => {
-                    let error = false;
-                    const newValues = { username: values.username, password: crypt.encrypt(publicKey, values.password) };
-                    const { data } = await axios.post(`${BACKEND_URL}/login`, newValues)
-                        .catch(error => {
-                            setError(error.response?.data?.error);
-                            setOpen(true);
-                            error = true;
-                        });
-                    if (!error) {
-                        localStorage.setItem('user', JSON.stringify(data));
-                        dispatch(setUser(data));
+                    let err = false;
+                    try {
+                        const newValues = { username: values.username, password: crypt.encrypt(publicKey, values.password) };
+                        const { data } = await axios.post(`${BACKEND_URL}/login`, newValues)
+                            .catch(error => {
+                                dispatch(addError({ msg: error.response?.data?.error || "Couldn't connect to server" }));
+                                err = true;
+                            });
+                        if (!err) {
+                            localStorage.setItem('user', JSON.stringify(data));
+                            dispatch(setUser(data));
+                            setSubmitting(false);
+                            navigate('/');
+                        }
                         setSubmitting(false);
-                        navigate('/');
+                    } catch (error) {
+                        dispatch(addError({ msg: error.message || "Couldn't connect to server", title: 'An error occurred.' }));
                     }
-                    setSubmitting(false);
                 }}
             >
                 {({

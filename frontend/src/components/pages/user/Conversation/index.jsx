@@ -11,8 +11,10 @@ import { BACKEND_URL } from '@utils/config';
 import useUser from '@hooks/useUser';
 import { useLocation } from 'react-router-dom';
 import NotFound from '@general/NotFound';
+import { useDispatch } from 'react-redux';
+import { addError } from '@reducers/errorReducer';
 
-const sendMessage = async ({ message, id, user, setMessage, refresh }) => {
+const sendMessage = async ({ message, id, user, setMessage, refresh, dispatch }) => {
     const msg = message.trim();
     if (msg.length > 0) {
         await axios.post(`${BACKEND_URL}/messages`, {
@@ -22,9 +24,12 @@ const sendMessage = async ({ message, id, user, setMessage, refresh }) => {
             headers: {
                 Authorization: `Bearer ${user.token}`
             }
+        }).catch(err => {
+            return addError({ title: 'Error', msg: err.response?.data?.error || 'Something went wrong' });
         });
         setMessage('');
         refresh();
+        return true;
     }
 };
 
@@ -36,6 +41,7 @@ const Conversation = () => {
     const [message, setMessage] = useState('');
     const user = useUser();
     const location = useLocation();
+    const dispatch = useDispatch();
 
     const [newRefreshed, setNewRefreshed] = useState(false);
     const isNew = new URLSearchParams(location.search).get('new') === 'true';
@@ -45,14 +51,15 @@ const Conversation = () => {
             if (e.key === 'Enter' && e.ctrlKey) {
                 e.preventDefault();
                 e.stopPropagation();
-                sendMessage({ message, id, user, setMessage, refresh });
+                const status = sendMessage({ message, id, user, setMessage, refresh, dispatch });
+                if (status !== true) dispatch(status);
             }
         };
         document.addEventListener('keydown', keydownHandler);
         return () => {
             document.removeEventListener('keydown', keydownHandler);
         };
-    }, [id, message, refresh, user]);
+    }, [id, message, refresh, user, dispatch]);
 
     if (isNew && !newRefreshed) {
         refresh();
