@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import { useSelector, useDispatch } from 'react-redux';
-import { clearUser } from '../../reducers/userReducer';
+import { clearUser } from '../../../reducers/userReducer';
 import MenuItem from './MenuItem';
 
 const MenuAppBar = () => {
