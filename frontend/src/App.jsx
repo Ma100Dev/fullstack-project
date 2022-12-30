@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
-import PropTypes from 'prop-types';
+import Errors from '@reusables/Errors';
 
 import { useDispatch } from 'react-redux';
 import { setUser } from '@reducers/userReducer';
@@ -16,23 +16,9 @@ import SingleRental from '@rental/SingleRental';
 import Messages from '@pages/user/Messages';
 import Conversation from '@user/Conversation';
 import NotFound from '@general/NotFound';
+import ErrorFallback from '@general/ErrorFallback';
 
 const user = localStorage.getItem('user');
-
-const ErrorFallback = ({ error, resetErrorBoundary }) => {
-  return (
-    <div role="alert">
-      <p>Something went wrong:</p>
-      <pre>{error.message}</pre>
-      <button onClick={resetErrorBoundary}>Try again</button>
-    </div>
-  );
-};
-
-ErrorFallback.propTypes = {
-  error: PropTypes.object.isRequired,
-  resetErrorBoundary: PropTypes.func.isRequired,
-};
 
 // TODO: Feedback.
 const App = () => {
@@ -43,6 +29,7 @@ const App = () => {
   return (
     <>
       <MenuAppBar />
+      <Errors />
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onReset={() => {
