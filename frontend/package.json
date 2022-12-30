@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
+    "@craco/craco": "^7.0.0",
     "@emotion/react": "11.10.0",
     "@emotion/styled": "11.10.0",
     "@mui/icons-material": "5.8.4",
@@ -32,9 +33,9 @@
     "yup": "0.32.11"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "craco start",
+    "build": "craco build",
+    "test": "craco test",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.jsx src/",
     "electron": "electron electron.js"
@@ -61,10 +62,10 @@
     "deep-freeze": "0.0.1",
     "electron": "^21.3.1",
     "eslint": "8.22.0",
+    "eslint-plugin-custom-rules": "file:./eslint",
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-jsx-a11y": "6.6.1",
     "eslint-plugin-react": "7.30.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-custom-rules": "file:./eslint"
+    "eslint-plugin-react-hooks": "^4.6.0"
   }
 }

@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { setRentals } from '../reducers/rentalReducer';
-import { BACKEND_URL } from '../utils/config';
+import { setRentals } from '@reducers/rentalReducer';
+import { BACKEND_URL } from '@utils/config';
 
 
 // TODO: Add redux store for rentals again if it makes sense

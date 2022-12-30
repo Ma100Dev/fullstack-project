@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import Rental from './Rental';
-import useRentals from '../../../../hooks/useRentals';
-import PageSelector from '../../../reusables/PageSelector';
+import useRentals from '@hooks/useRentals';
+import PageSelector from '@reusables/PageSelector';
 import { Typography, Box } from '@mui/material';
-import ScrollToTop from '../../../reusables/ScrollToTop';
+import ScrollToTop from '@reusables/ScrollToTop';
 
 const RentPage = () => {
     const rentals = useRentals();

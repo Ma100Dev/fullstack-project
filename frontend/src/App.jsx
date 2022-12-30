@@ -3,19 +3,19 @@ import { ErrorBoundary } from 'react-error-boundary';
 import PropTypes from 'prop-types';
 
 import { useDispatch } from 'react-redux';
-import { setUser } from './reducers/userReducer';
+import { setUser } from '@reducers/userReducer';
 
-import Login from './components/pages/user/Login';
-import SignUp from './components/pages/user/SignUp';
-import FrontPage from './components/pages/general/FrontPage';
-import MenuAppBar from './components/reusables/MenuAppBar';
-import RentPage from './components/pages/rental/RentPage';
-import Profile from './components/pages/user/Profile';
-import AddProperty from './components/pages/rental/AddProperty';
-import SingleRental from './components/pages/rental/SingleRental';
-import Messages from './components/pages/user/Messages';
-import Conversation from './components/pages/user/Conversation';
-import NotFound from './components/pages/general/NotFound';
+import Login from '@user/Login';
+import SignUp from '@user/SignUp';
+import FrontPage from '@general/FrontPage';
+import MenuAppBar from '@reusables/MenuAppBar';
+import RentPage from '@rental/RentPage';
+import Profile from '@user/Profile';
+import AddProperty from '@rental/AddProperty';
+import SingleRental from '@rental/SingleRental';
+import Messages from '@pages/user/Messages';
+import Conversation from '@user/Conversation';
+import NotFound from '@general/NotFound';
 
 const user = localStorage.getItem('user');
 

@@ -13,9 +13,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../../../reducers/userReducer';
-import { BACKEND_URL } from '../../../utils/config';
-import useCrypt from '../../../hooks/useCrypt';
+import { setUser } from '@reducers/userReducer';
+import { BACKEND_URL } from '@utils/config';
+import useCrypt from '@hooks/useCrypt';
 
 const LoginSchema = Yup.object().shape({
     username: Yup.string()

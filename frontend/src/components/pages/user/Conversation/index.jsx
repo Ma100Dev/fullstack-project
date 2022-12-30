@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
 import { Box, TextField, Typography, Button } from '@mui/material';
 import { useParams } from 'react-router-dom';
-import useConversations from '../../../../hooks/useConversations';
+import useConversations from '@hooks/useConversations';
 import Message from './Message';
-import LoadingIndicator from '../../../reusables/LoadingIndicator';
+import LoadingIndicator from '@reusables/LoadingIndicator';
 import SendIcon from '@mui/icons-material/Send';
 import { useState } from 'react';
 import axios from 'axios';
-import { BACKEND_URL } from '../../../../utils/config';
-import useUser from '../../../../hooks/useUser';
+import { BACKEND_URL } from '@utils/config';
+import useUser from '@hooks/useUser';
 import { useLocation } from 'react-router-dom';
-import NotFound from '../../general/NotFound';
+import NotFound from '@general/NotFound';
 
 const sendMessage = async ({ message, id, user, setMessage, refresh }) => {
     const msg = message.trim();

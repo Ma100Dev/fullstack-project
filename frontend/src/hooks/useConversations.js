@@ -1,9 +1,9 @@
-import { BACKEND_URL } from '../utils/config';
+import { BACKEND_URL } from '@utils/config';
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 import useUser from './useUser';
 import { useSelector, useDispatch } from 'react-redux';
-import { setConversations } from '../reducers/conversationReducer';
+import { setConversations } from '@reducers/conversationReducer';
 
 const useConversations = () => {
     const dispatch = useDispatch();

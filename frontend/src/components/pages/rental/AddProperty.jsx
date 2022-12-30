@@ -10,12 +10,12 @@ import {
 } from '@mui/material';
 
 // import { useNavigate } from 'react-router-dom';
-import FormikTextField from '../../reusables/FormikTextField';
+import FormikTextField from '@reusables/FormikTextField';
 import axios from 'axios';
 import * as Yup from 'yup';
 import { useSelector } from 'react-redux';
 import Resizer from 'react-image-file-resizer';
-import { BACKEND_URL } from '../../../utils/config';
+import { BACKEND_URL } from '@utils/config';
 
 const resizeFile = (file) => new Promise(resolve => {
     // TODO: Add timeout to scaling to avoid freezing
