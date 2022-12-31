@@ -2,12 +2,11 @@ import Box from '@mui/material/Box';
 import { Formik } from 'formik';
 
 import {
-    Button, Grid, Typography,
+    Button, Grid, Typography, Autocomplete,
     Checkbox, FormControlLabel, Select, MenuItem,
-    InputLabel, FormControl
+    InputLabel, FormControl, TextField
 } from '@mui/material';
 
-// import { useNavigate } from 'react-router-dom';
 import FormikTextField from '@reusables/FormikTextField';
 import axios from 'axios';
 import * as Yup from 'yup';
@@ -15,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addError } from '@reducers/errorReducer';
 import Resizer from 'react-image-file-resizer';
 import { BACKEND_URL } from '@utils/config';
+import { getTLDs } from '@utils/tlds';
 
 const resizeFile = (file) => new Promise(resolve => {
     // TODO: Add timeout to scaling to avoid freezing
@@ -50,6 +50,9 @@ const PropertySchema = Yup.object().shape({
     address: Yup.string()
         .required('Address is required')
         .min(5, 'Address must be at least 5 characters long'),
+    country: Yup.string()
+        .required('Country is required')
+        .nullable(),
     petsAllowed: Yup.boolean()
         .required('Pets allowed is required'),
     image: Yup.mixed()
@@ -76,7 +79,7 @@ const AddProperty = () => {
             style={{ minHeight: '100vh', width: '100%' }}
         >
             <Formik
-                initialValues={{ title: '', address: '', price: '', pricePer: '', description: '', beds: '', petsAllowed: false, image: null }}
+                initialValues={{ title: '', address: '', country: '', price: '', pricePer: '', description: '', beds: '', petsAllowed: false, image: null }}
                 validationSchema={PropertySchema}
                 onSubmit={async (values, { setSubmitting }) => {
                     const formData = new FormData();
@@ -90,6 +93,8 @@ const AddProperty = () => {
                     formData.append('beds', values.beds);
                     formData.append('petsAllowed', values.petsAllowed);
                     formData.append('allowCalendarBooking', values.allowCalendarBooking);
+                    return;
+                    // eslint-disable-next-line no-unreachable
                     await axios.post(`${BACKEND_URL}/properties`,
                         formData,
                         {
@@ -99,6 +104,7 @@ const AddProperty = () => {
                         }).catch((err) => {
                             dispatch(addError({ msg: err.response?.data?.error || err.response?.statusCode, title: 'Error' }));
                         });
+                    // eslint-disable-next-line no-unreachable
                     setSubmitting(false);
 
                 }}
@@ -130,6 +136,27 @@ const AddProperty = () => {
 
                         <FormikTextField label="title" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Title" />
                         <FormikTextField label="address" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="text" touched={touched} placeholder="Address" />
+                        <Autocomplete
+                            name="country"
+                            disablePortal
+                            value={values.country || null}
+                            onChange={(event, newValue) => {
+                                setFieldValue('country', newValue);
+                            }}
+                            options={getTLDs().map((tld) => tld.Entity)}
+                            renderInput={(params) => <TextField {...params} label="Country" />}
+                        >
+                        </Autocomplete>
+                        <Typography
+                            sx={{
+                                color: 'red',
+                                mt: 1,
+                                mb: 1,
+                            }}
+                        >
+                            {(errors.country && touched.country && errors.country) || '⠀'}
+                        </Typography>
+
                         <FormikTextField label="price" errors={errors} handleChange={handleChange} handleBlur={handleBlur} values={values} type="number" touched={touched} placeholder="Price (€)" />
                         <FormControl fullWidth>
                             <InputLabel id="price-per-label">Price per</InputLabel>

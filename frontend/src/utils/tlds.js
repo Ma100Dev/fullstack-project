@@ -1,6 +1,5 @@
 // The list of countries is extracted from the Wikipedia article "List of countries and dependent territories by Internet country code top-level domain".
 const TLDs = [
-    [
         {
             'Name': 'ac',
             'Entity': 'Ascension Island (United Kingdom)'
@@ -985,7 +984,6 @@ const TLDs = [
             'Name': 'zw',
             'Entity': 'Zimbabwe'
         }
-    ]
 ];
 
 export const getTLDs = () => {
