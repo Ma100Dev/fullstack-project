@@ -25,6 +25,8 @@ const SignUpSchema = Yup.object().shape({
     email: Yup.string()
         .email('Invalid email address')
         .required('Required'),
+    country: Yup.string()
+        .required('Required'),
     name: Yup.string()
         .min(3, 'Must be at least 3 characters')
         .notRequired()
@@ -44,10 +46,13 @@ const SignUp = () => {
             style={{ minHeight: '100vh', width: '100%' }}
         >
             <Formik
-                initialValues={{ email: '', name: '', username: '', password: '', confirmPassword: 'Confirm password' }}
+                initialValues={{ email: '', name: '', username: '', password: '', confirmPassword: 'Confirm password (delete this text)' }}
                 validationSchema={SignUpSchema}
                 onSubmit={async (values, { setSubmitting }) => {
                     let error = false;
+                    delete values.confirmPassword;
+                    delete values.country;
+                    console.log(values);
                     const { data } = await axios.post(`${BACKEND_URL}/users`, values)
                         .catch(error => {
                             dispatch(addError({ msg: error.response?.data?.error || 'Something went wrong' }));
