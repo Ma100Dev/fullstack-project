@@ -1,14 +1,8 @@
-import { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { Formik } from 'formik';
 import { Button, Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import * as Yup from 'yup';
@@ -16,6 +10,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '@reducers/userReducer';
 import { BACKEND_URL } from '@utils/config';
 import useCrypt from '@hooks/useCrypt';
+import { addError } from '@reducers/errorReducer';
 
 const SignUpSchema = Yup.object().shape({
     username: Yup.string()
@@ -37,13 +32,8 @@ const SignUpSchema = Yup.object().shape({
 
 const SignUp = () => {
     const dispatch = useDispatch();
-    const [open, setOpen] = useState(false);
-    const [error, setError] = useState('');
     const navigate = useNavigate();
     const [crypt, publicKey] = useCrypt();
-    const handleClose = () => {
-        setOpen(false);
-    };
     return (
         <Grid
             container
@@ -53,24 +43,6 @@ const SignUp = () => {
             justifyContent="center"
             style={{ minHeight: '100vh', width: '100%' }}
         >
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    Error!
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        {error}
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>OK</Button>
-                </DialogActions>
-            </Dialog>
             <Formik
                 initialValues={{ email: '', name: '', username: '', password: '', confirmPassword: 'Confirm password' }}
                 validationSchema={SignUpSchema}
@@ -78,16 +50,14 @@ const SignUp = () => {
                     let error = false;
                     const { data } = await axios.post(`${BACKEND_URL}/users`, values)
                         .catch(error => {
-                            setError(error.response?.data?.error);
-                            setOpen(true);
+                            dispatch(addError({ msg: error.response?.data?.error || 'Something went wrong' }));
                             error = true;
                         });
                     const signUpData = { ...data };
                     if (!error) {
                         const { data } = await axios.post(`${BACKEND_URL}/login`, { username: signUpData.username, password: crypt.encrypt(publicKey, values.password) })
                             .catch(error => {
-                                setError(error.response?.data?.error);
-                                setOpen(true);
+                                dispatch(addError({ msg: error.response?.data?.error || 'Something went wrong' }));
                                 error = true;
                             });
                         if (!error) {

@@ -12,7 +12,8 @@ import useUser from '@hooks/useUser';
 import RentalImage from './RentalImage';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
-
+import { useDispatch } from 'react-redux';
+import { addError } from '@reducers/errorReducer';
 
 const Rental = ({ rental, fullView = false }) => {
     const navigate = useNavigate();
@@ -42,6 +43,7 @@ const Rental = ({ rental, fullView = false }) => {
     );
 };
 const Content = ({ rental, showButtons = false, user, navigate }) => {
+    const dispatch = useDispatch();
     const dateAlreadyReserved = (date) => rental.reservations.some(reservation => {
         const startDate = new Date(reservation.startDate);
         const endDate = new Date(reservation.endDate);
@@ -146,9 +148,13 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                                                         Authorization: `Bearer ${user.token}`
                                                     }
                                                 }
-                                            );
+                                            ).catch((err) => {
+                                                dispatch(addError({ msg: err.response?.data?.error || 'Unexpected error' }));
+                                            });
                                             if (status === 201) {
                                                 navigate('/profile#reservations');
+                                            } else {
+                                                dispatch(addError({ title: 'Something went wrong', msg: status ? `HTTP error code: ${status}` : 'Unexpected error' }));
                                             }
                                         }
                                     }}>
@@ -162,6 +168,8 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                                         headers: {
                                             'Authorization': `Bearer ${user.token}`
                                         }
+                                    }).catch((err) => {
+                                        dispatch(addError({ msg: err.response?.data?.error | 'Something went wrong' }));
                                     });
                                 if (data !== null) {
                                     navigate(`/messages/${data.id}`);
@@ -174,9 +182,8 @@ const Content = ({ rental, showButtons = false, user, navigate }) => {
                                             headers: {
                                                 'Authorization': `Bearer ${user.token}`
                                             }
-                                            // eslint-disable-next-line no-unused-vars
                                         }).catch((err) => {
-                                            // console.error(err.response.data.error); // TODO: handle error, global error handler
+                                            dispatch(addError({ msg: err.response?.data?.error | 'Something went wrong' }));
                                         });
                                     navigate(`/messages/${data.id}?new=true`);
                                 }

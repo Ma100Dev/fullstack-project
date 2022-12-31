@@ -22,6 +22,7 @@ import Collapsible from '@reusables/Collapsible';
 import { BACKEND_URL } from '@utils/config';
 import { Box } from '@mui/system';
 import format from 'date-fns/format';
+import { addError } from '@reducers/errorReducer';
 
 const editValidationSchema = yup.object().shape({
     username: yup.string()
@@ -46,7 +47,6 @@ const TypographyProps = {
 };
 
 const Profile = ({ editMode = false }) => {
-    const [errors, setErrors] = useState([]);
     const navigate = useNavigate();
     let localUser = useUser();
     const [crypt, publicKey] = useCrypt();
@@ -57,9 +57,12 @@ const Profile = ({ editMode = false }) => {
         if (Object.keys(user).length === 0) {
             axios.get(`${BACKEND_URL}/users/` + localUser.id).then(res => {
                 setUser(res.data);
+            }).catch(err => {
+                dispatch(addError({ title: 'Error fetching user', msg: err.response?.data?.error || 'Unknown error' }));
+                dispatch(clearUser()); // Just in case
             });
         }
-    }, [user, setUser, localUser.id]);
+    }, [user, setUser, localUser.id, dispatch]);
 
     const [reservations, setReservations] = useState([]);
     useEffect(() => {
@@ -70,9 +73,11 @@ const Profile = ({ editMode = false }) => {
                 }
             }).then(res => {
                 setReservations(res.data);
+            }).catch(err => {
+                dispatch(addError({ title: 'Error fetching reservations', msg: err.response?.data?.error || 'Unknown error' }));
             });
         }
-    }, [user, setReservations, localUser.token]);
+    }, [user, setReservations, localUser.token, dispatch]);
 
     const onSubmit = async (event) => {
         event.preventDefault();
@@ -87,7 +92,7 @@ const Profile = ({ editMode = false }) => {
         };
         let error = false;
         await editValidationSchema.validate(values).catch(err => {
-            setErrors(err.errors);
+            dispatch(addError({ title: 'Error validating form', msg: err.errors.join(', ') }));
             error = true;
         });
         if (!error) {
@@ -99,7 +104,7 @@ const Profile = ({ editMode = false }) => {
                     }
                 }
             )).catch(err => {
-                setErrors([err.response.data.error]);
+                dispatch(addError({ title: 'Error updating user', msg: err.response?.data?.error || 'Unknown error' }));
                 error = true;
             });
             if (!error) {
@@ -120,7 +125,6 @@ const Profile = ({ editMode = false }) => {
                 marginTop: '1rem',
                 marginBottom: '1rem'
             }}>
-                <Typography {...{ ...TypographyProps, sx: { color: 'red' } }}>{errors.join(', ')}</Typography>
                 <table>
                     <tbody>
                         <tr>
@@ -241,8 +245,9 @@ const Profile = ({ editMode = false }) => {
                         localStorage.removeItem('user');
                         dispatch(clearUser());
                         navigate('/');
-                    }
-                    );
+                    }).catch(err => {
+                        dispatch(addError({ title: 'Error deleting account', msg: err.response?.data?.error || 'An error occurred' }));
+                    });
                 }
             }}>Delete account</Button>
             {reservations.length !== 0 &&

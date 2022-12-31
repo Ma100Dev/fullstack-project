@@ -14,7 +14,7 @@ import NotFound from '@general/NotFound';
 import { useDispatch } from 'react-redux';
 import { addError } from '@reducers/errorReducer';
 
-const sendMessage = async ({ message, id, user, setMessage, refresh, dispatch }) => {
+const sendMessage = async ({ message, id, user, setMessage, refresh }) => {
     const msg = message.trim();
     if (msg.length > 0) {
         await axios.post(`${BACKEND_URL}/messages`, {
