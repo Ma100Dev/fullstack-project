@@ -38,6 +38,7 @@
     "test": "craco test",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.jsx src/",
+    "cypress:open": "cypress open",
     "electron": "electron electron.js"
   },
   "eslintConfig": {
@@ -59,6 +60,7 @@
     ]
   },
   "devDependencies": {
+    "cypress": "^12.2.0",
     "deep-freeze": "0.0.1",
     "electron": "^21.3.1",
     "eslint": "8.22.0",
