@@ -28,4 +28,7 @@ describe('Log in ', () => {
         cy.url().should('eq', 'http://localhost:3000/');
         cy.getLocalStorage('user').should('exist');
     });
+    afterEach(() => {
+        cy.saveLocalStorage();
+    });
 });
