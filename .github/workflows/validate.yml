@@ -57,5 +57,5 @@ jobs:
           working-directory: frontend
           start: |
             yarn run start
-            cd ../backend && yarn run start:test
+            yarn --cwd ../backend/ start:test
           wait-on: http://localhost:3000
