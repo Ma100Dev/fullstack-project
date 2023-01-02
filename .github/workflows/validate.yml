@@ -60,3 +60,7 @@ jobs:
             yarn run start
             yarn --cwd ../backend/ start:test
           wait-on: http://localhost:3000
+      - uses: actions/upload-artifact@v3
+        with:
+          name: cypress-videos
+          path: frontend/cypress/videos/
