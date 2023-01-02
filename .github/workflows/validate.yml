@@ -24,6 +24,7 @@ jobs:
           cd backend
           rm -rf node_modules
           yarn install --immutable --immutable-cache --check-cache
+          yarn run generateKeys
       - name: Prepare frontend
         run: |
           cd frontend
