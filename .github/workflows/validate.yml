@@ -54,9 +54,10 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           command: yarn run cypress:run
+          working-directory: frontend
           start: |
-            cd frontend
             yarn run start
             cd ../backend
+            yarn install --immutable --immutable-cache --check-cache --frozen-lockfile
             yarn run start:test
           wait-on: http://localhost:3000
