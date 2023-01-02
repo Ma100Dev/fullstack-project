@@ -24,6 +24,7 @@ jobs:
           cd backend
           rm -rf node_modules
           yarn install --immutable --immutable-cache --check-cache
+          yarn run generateKeys
       - name: Prepare frontend
         run: |
           cd frontend
@@ -50,3 +51,16 @@ jobs:
           export NO_RUN=true
           yarn
           yarn start
+      - name: Frontend E2E tests
+        uses: cypress-io/github-action@v5
+        with:
+          command: yarn run cypress:run
+          install: false
+          working-directory: frontend
+          start: yarn run start:test
+          wait-on: http://localhost:3000
+      - uses: actions/upload-artifact@v3
+        if: ${{ failure() }}
+        with:
+          name: cypress-videos
+          path: frontend/cypress/videos/

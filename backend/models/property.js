@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const mongoosePaginate = require('mongoose-paginate-v2');
 
+// TODO: Add createdAt and updatedAt fields
 const propertySchema = mongoose.Schema({
     title: {
         type: String,
@@ -17,6 +18,11 @@ const propertySchema = mongoose.Schema({
         type: Number,
         required: true,
         min: 1,
+    },
+    pricePer: {
+        type: String,
+        required: true,
+        enum: ['night', 'week', 'month', 'year', 'day', 'hour', 'weekend'],
     },
     beds: {
         type: Number,
@@ -42,6 +48,17 @@ const propertySchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
     },
+    allowCalendarBooking: {
+        type: Boolean,
+        required: true,
+        default: false,
+    },
+    reservations: [
+      {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Reservation',
+      },
+    ],
 });
 propertySchema.plugin(uniqueValidator);
 

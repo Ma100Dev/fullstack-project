@@ -1,40 +1,26 @@
-import React from 'react';
-import Login from './components/Login';
 import { Routes, Route } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
-import PropTypes from 'prop-types';
+import Errors from '@reusables/Errors';
 
 import { useDispatch } from 'react-redux';
-import { setUser } from './reducers/userReducer';
+import { setUser } from '@reducers/userReducer';
 
-import SignUp from './components/SignUp';
-import FrontPage from './components/FrontPage';
-import MenuAppBar from './components/MenuAppBar';
-import RentPage from './components/RentPage';
-import Profile from './components/Profile';
-import AddProperty from './components/AddProperty';
-import SingleRental from './components/SingleRental';
-import Messages from './components/Messages';
-import Conversation from './components/Conversation';
-import NotFound from './components/NotFound';
+import Login from '@user/Login';
+import SignUp from '@user/SignUp';
+import FrontPage from '@general/FrontPage';
+import MenuAppBar from '@reusables/MenuAppBar';
+import RentPage from '@rental/RentPage';
+import Profile from '@user/Profile';
+import AddProperty from '@rental/AddProperty';
+import SingleRental from '@rental/SingleRental';
+import Messages from '@pages/user/Messages';
+import Conversation from '@user/Conversation';
+import NotFound from '@general/NotFound';
+import ErrorFallback from '@general/ErrorFallback';
 
 const user = localStorage.getItem('user');
 
-const ErrorFallback = ({ error, resetErrorBoundary }) => {
-  return (
-    <div role="alert">
-      <p>Something went wrong:</p>
-      <pre>{error.message}</pre>
-      <button onClick={resetErrorBoundary}>Try again</button>
-    </div>
-  );
-};
-
-ErrorFallback.propTypes = {
-  error: PropTypes.object.isRequired,
-  resetErrorBoundary: PropTypes.func.isRequired,
-};
-
+// TODO: Feedback.
 const App = () => {
   const dispatch = useDispatch();
   if (user) {
@@ -43,6 +29,7 @@ const App = () => {
   return (
     <>
       <MenuAppBar />
+      <Errors />
       <ErrorBoundary
         FallbackComponent={ErrorFallback}
         onReset={() => {

@@ -5,7 +5,7 @@ const Property = require('../../models/property');
 const Conversation = require('../../models/conversation');
 const Message = require('../../models/message');
 
-const passwordHash = '$2a$10$BWybLp0dsP/XzUOoMIeUY.Mv.K15jkkx2/q1F1vwf3/gBgr00WP2y'; // password
+const passwordHash = '$2a$10$BWybLp0dsP/XzUOoMIeUY.Mv.K15jkkx2/q1F1vwf3/gBgr00WP2y'; // "password" with bcrypt. The password is password for all users.
 const populateUsers = async (count) => {
     const users = [];
 
@@ -36,6 +36,7 @@ const populateProperties = async (count) => {
               min: 100,
               max: 1000000,
           }),
+          pricePer: faker.helpers.arrayElement(['night', 'week', 'month', 'year', 'day', 'hour', 'weekend']),
           beds: faker.datatype.number({
               min: 1,
               max: 10,
@@ -43,6 +44,7 @@ const populateProperties = async (count) => {
           description: faker.lorem.paragraph(),
           petsAllowed: faker.datatype.boolean(),
           owner: faker.helpers.arrayElement(users),
+          allowCalendarBooking: faker.datatype.boolean(),
           // Including an image would be unnecessary, slow down everything and use a lot of RAM
           image: null,
       });
@@ -102,7 +104,8 @@ const populateMessages = async (count) => {
     return messages;
 };
 
-const generateDefaultUser = async () => { // Contains repeated code from other functions
+// Contains repeated code from other functions
+const generateDefaultUser = async (createConversations = true) => {
     const defaultUser = new User({
         username: 'test',
         name: 'Test User',
@@ -121,6 +124,7 @@ const generateDefaultUser = async () => { // Contains repeated code from other f
               min: 100,
               max: 1000000,
           }),
+          pricePer: faker.helpers.arrayElement(['night', 'week', 'month', 'year', 'day', 'hour', 'weekend']),
           beds: faker.datatype.number({
               min: 1,
               max: 10,
@@ -136,6 +140,7 @@ const generateDefaultUser = async () => { // Contains repeated code from other f
     }
 
     // Generate 10 conversations for the default user
+    if (!createConversations) return defaultUser;
     const properties = [...defaultUser.properties];
     const conversations = [];
     for (let i = 0; i < 10; i++) {

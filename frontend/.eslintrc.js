@@ -23,7 +23,8 @@ module.exports = {
   },
   plugins: [
     'react',
-    'react-hooks'
+    'react-hooks',
+    'custom-rules'
   ],
   rules: {
     'react-hooks/rules-of-hooks': 'error', 
@@ -37,5 +38,8 @@ module.exports = {
     'no-alert': 'warn',
     'spaced-comment': 'error',
     'eol-last': 'error',
+    'react/react-in-jsx-scope': 'off',
+    'no-unused-vars': 'warn',
+    'custom-rules/no-react-default-import': 'error',
   },
 };

@@ -1,0 +1,34 @@
+{
+    "compilerOptions": {
+        "baseUrl": "src",
+        "paths": {
+            "@components/*": [
+                "components/*"
+            ],
+            "@pages/*": [
+                "pages/*"
+            ],
+            "@utils/*": [
+                "utils/*"
+            ],
+            "@reducers/*": [
+                "reducers/*"
+            ],
+            "@hooks/*": [
+                "hooks/*"
+            ],
+            "@general/*": [
+                "components/pages/general/*"
+            ],
+            "@user/*": [
+                "components/pages/user/*"
+            ],
+            "@rental/*": [
+                "components/pages/rental/*"
+            ],
+            "@reusables/*": [
+                "components/reusables/*"
+            ]
+        }
+    }
+}

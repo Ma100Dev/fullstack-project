@@ -7,10 +7,9 @@ conversationRouter.get('/', userExtractor, async (request, response) => {
     response.json(await Conversation.find({
         $or: [{ starter: request.user.id }, { receiver: request.user.id }],
     })
-      .populate('property')
       .populate('starter')
       .populate('receiver')
-      .deepPopulate('messages.sender'));
+      .deepPopulate('messages.sender property.owner'));
 });
 
 conversationRouter.get('/:property', userExtractor, async (request, response) => {
@@ -24,7 +23,7 @@ conversationRouter.get('/:property', userExtractor, async (request, response) =>
       .populate('property')
       .populate('starter')
       .populate('receiver')
-      .deepPopulate('messages.sender');
+      .deepPopulate('messages.sender property.owner');
     response.json(conversation);
 });
 
@@ -38,6 +37,7 @@ conversationRouter.post('/', userExtractor, async (request, response) => {
         starter: request.user.id,
         receiver: propertyObject.owner.id,
         property: propertyObject.toJSON().id,
+        startedAt: Date.now(),
         messages: [],
     });
     const savedConversation = await conversation.save();

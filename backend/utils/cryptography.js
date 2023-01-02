@@ -1,10 +1,9 @@
-const { RSA, Crypt } = require('hybrid-crypto-js');
+const { Crypt } = require('hybrid-crypto-js');
 const fs = require('fs');
 const crypto = require('crypto');
 
 const entropy = crypto.randomBytes(32).toString('hex');
 const crypt = new Crypt({ entropy });
-const rsa = new RSA({ entropy });
 
 const publicKey = fs.readFileSync('id_rsa.pub', 'utf8');
 const privateKey = fs.readFileSync('id_rsa', 'utf8');

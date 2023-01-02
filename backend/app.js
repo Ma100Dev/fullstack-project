@@ -1,6 +1,7 @@
 /* eslint-disable global-require */
 
 const express = require('express');
+const morgan = require('morgan');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
@@ -15,6 +16,8 @@ let propertyRouter;
 let messageRouter;
 let conversationRouter;
 let cryptoRouter;
+let reservationRouter;
+let testingRouter;
 
 if (!config.NO_RUN) {
   usersRouter = require('./controllers/users');
@@ -23,6 +26,8 @@ if (!config.NO_RUN) {
   messageRouter = require('./controllers/messages');
   conversationRouter = require('./controllers/conversations');
   cryptoRouter = require('./controllers/crypto');
+  reservationRouter = require('./controllers/reservations');
+  testingRouter = require('./controllers/testing');
 }
 
 const createApp = async () => {
@@ -73,12 +78,23 @@ const createApp = async () => {
 
     app.use(cors());
     app.use(express.json());
+    if (config.LOG_REQUESTS) {
+      if (config.ENV === 'development') {
+        app.use(morgan('dev'));
+      } else {
+        app.use(morgan('tiny'));
+      }
+    }
     app.use('/users', usersRouter);
     app.use('/login', loginRouter);
     app.use('/properties', propertyRouter);
     app.use('/messages', messageRouter);
     app.use('/conversations', conversationRouter);
     app.use('/crypto', cryptoRouter);
+    app.use('/reservations', reservationRouter);
+    if (config.ENV === 'test') {
+      app.use('/testing', testingRouter);
+    }
 
     app.use(middleware.errorHandler);
 

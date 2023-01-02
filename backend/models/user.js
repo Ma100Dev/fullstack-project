@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
+// TODO: Add createdAt field
 const userSchema = mongoose.Schema({
     username: {
         type: String,

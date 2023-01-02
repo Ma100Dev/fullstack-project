@@ -6,6 +6,7 @@ const ENV = process.env.NODE_ENV || 'development';
 const POPULATE_DB = process.env.POPULATE_DB?.toLowerCase() === 'true' || false;
 const NO_RUN = process.env.NO_RUN?.toLowerCase() === 'true' || false;
 const MEMORYDB_PORT = process.env?.MEMORYDB_PORT && Number(process.env.MEMORYDB_PORT);
+const LOG_REQUESTS = (ENV === 'development' ? true : process.env.LOG_REQUESTS?.toLowerCase() === 'true' || false);
 
 module.exports = {
     MONGODB_URI,
@@ -15,4 +16,5 @@ module.exports = {
     POPULATE_DB,
     NO_RUN,
     MEMORYDB_PORT,
+    LOG_REQUESTS,
 };
