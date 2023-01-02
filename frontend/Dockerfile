@@ -6,6 +6,8 @@ COPY . .
 
 RUN rm -rf node_modules && yarn install --immutable --immutable-cache --check-cache --prod
 
+ENV DISABLE_ESLINT_PLUGIN=true
+
 RUN yarn run build
 
 FROM nginx:1.23-alpine
