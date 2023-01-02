@@ -93,8 +93,6 @@ const AddProperty = () => {
                     formData.append('beds', values.beds);
                     formData.append('petsAllowed', values.petsAllowed);
                     formData.append('allowCalendarBooking', values.allowCalendarBooking);
-                    return;
-                    // eslint-disable-next-line no-unreachable
                     await axios.post(`${BACKEND_URL}/properties`,
                         formData,
                         {
@@ -104,7 +102,6 @@ const AddProperty = () => {
                         }).catch((err) => {
                             dispatch(addError({ msg: err.response?.data?.error || err.response?.statusCode, title: 'Error' }));
                         });
-                    // eslint-disable-next-line no-unreachable
                     setSubmitting(false);
 
                 }}

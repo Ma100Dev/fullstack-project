@@ -16,7 +16,7 @@ usersRouter.post('/', async (request, response) => {
     const password = decrypt(
       body.password,
     ).message;
-    if (password) {
+    if (!password) {
       response.status(400).json({ error: 'User validation failed: password: Path `password` is required.' });
       return;
     } if (password.length < 3) {

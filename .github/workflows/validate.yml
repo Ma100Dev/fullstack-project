@@ -50,3 +50,13 @@ jobs:
           export NO_RUN=true
           yarn
           yarn start
+      - name: Frontend E2E tests
+        uses: cypress-io/github-action@v5
+        with:
+          command: yarn run cypress:run
+          start: |
+            cd frontend
+            yarn run start
+            cd ../backend
+            yarn run start:test
+          wait-on: http://localhost:3000

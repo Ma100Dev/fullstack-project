@@ -47,15 +47,20 @@ const SignUp = () => {
                 initialValues={{ email: '', name: '', username: '', password: '', confirmPassword: 'Confirm password' }}
                 validationSchema={SignUpSchema}
                 onSubmit={async (values, { setSubmitting }) => {
+                    const valueCopy = { ...values };
+                    delete valueCopy.confirmPassword;
+                    valueCopy.password = crypt.encrypt(publicKey, values.password);
                     let error = false;
-                    const { data } = await axios.post(`${BACKEND_URL}/users`, values)
+                    const { data } = await axios.post(`${BACKEND_URL}/users`, valueCopy)
                         .catch(error => {
                             dispatch(addError({ msg: error.response?.data?.error || 'Something went wrong' }));
                             error = true;
                         });
                     const signUpData = { ...data };
                     if (!error) {
-                        const { data } = await axios.post(`${BACKEND_URL}/login`, { username: signUpData.username, password: crypt.encrypt(publicKey, values.password) })
+                        const { data } = await axios.post(`${BACKEND_URL}/login`, {
+                            username: signUpData.username, password: crypt.encrypt(publicKey, values.password)
+                        })
                             .catch(error => {
                                 dispatch(addError({ msg: error.response?.data?.error || 'Something went wrong' }));
                                 error = true;

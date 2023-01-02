@@ -104,7 +104,8 @@ const populateMessages = async (count) => {
     return messages;
 };
 
-const generateDefaultUser = async () => { // Contains repeated code from other functions
+// Contains repeated code from other functions
+const generateDefaultUser = async (createConversations = true) => {
     const defaultUser = new User({
         username: 'test',
         name: 'Test User',
@@ -139,6 +140,7 @@ const generateDefaultUser = async () => { // Contains repeated code from other f
     }
 
     // Generate 10 conversations for the default user
+    if (!createConversations) return defaultUser;
     const properties = [...defaultUser.properties];
     const conversations = [];
     for (let i = 0; i < 10; i++) {
