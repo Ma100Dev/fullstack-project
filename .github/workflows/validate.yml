@@ -57,7 +57,5 @@ jobs:
           working-directory: frontend
           start: |
             yarn run start
-            cd ../backend
-            yarn install --immutable --immutable-cache --check-cache --frozen-lockfile
-            yarn run start:test
+            cd ../backend && yarn run start:test
           wait-on: http://localhost:3000
