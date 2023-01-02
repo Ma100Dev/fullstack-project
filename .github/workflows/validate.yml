@@ -61,6 +61,7 @@ jobs:
             yarn --cwd ../backend/ start:test
           wait-on: http://localhost:3000
       - uses: actions/upload-artifact@v3
+        if: always()
         with:
           name: cypress-videos
           path: frontend/cypress/videos/
