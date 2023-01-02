@@ -57,11 +57,11 @@ jobs:
           command: yarn run cypress:run
           working-directory: frontend
           start: |
-            yarn run start
             yarn --cwd ../backend/ start:test
-          wait-on: http://localhost:3000
+            yarn run start
+          wait-on: http://localhost:3001, http://localhost:3000
       - uses: actions/upload-artifact@v3
-        if: always()
+        if: ${{ failure() }}
         with:
           name: cypress-videos
           path: frontend/cypress/videos/
