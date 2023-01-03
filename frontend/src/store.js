@@ -18,10 +18,11 @@ const reducer = combineReducers(
 );
 
 
-const store = configureStore({
+const setupStore = (state = {}) => configureStore({
     reducer,
     devTools: ENV === 'development',
-    middleware: [thunk]
+    middleware: [thunk],
+    preloadedState: state
 });
 
-export default store;
+export default setupStore;
