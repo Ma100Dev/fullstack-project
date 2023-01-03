@@ -27,7 +27,9 @@ if (!config.NO_RUN) {
   conversationRouter = require('./controllers/conversations');
   cryptoRouter = require('./controllers/crypto');
   reservationRouter = require('./controllers/reservations');
-  testingRouter = require('./controllers/testing');
+  if (config.ENV === 'test') {
+    testingRouter = require('./controllers/testing');
+  }
 }
 
 const createApp = async () => {
