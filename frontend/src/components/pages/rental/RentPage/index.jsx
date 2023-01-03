@@ -8,6 +8,17 @@ import ScrollToTop from '@reusables/ScrollToTop';
 const RentPage = () => {
     const rentals = useRentals();
     const [page, setPage] = useState(1);
+
+    const onChange = async (page) => {
+        setPage(page);
+        const data = await rentals.fetchData(page);
+        rentals.setRentalState(data);
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
+    };
+
     return (
         <>
             <Box sx={{
@@ -26,7 +37,7 @@ const RentPage = () => {
             {rentals.docs?.map(rental => (
                 <Rental rental={rental} key={rental.id} />
             ))}
-            <PageSelector rentals={rentals} pageCount={rentals.totalPages} onChange={setPage} />
+            <PageSelector rentals={rentals} pageCount={rentals.totalPages} onChange={onChange} />
             <ScrollToTop />
         </>
     );

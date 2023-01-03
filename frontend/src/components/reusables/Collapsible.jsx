@@ -9,7 +9,7 @@ const Collapsible = ({ children, title, titleVariant = 'body1', open = false }) 
         setIsOpen(!isOpen);
     };
     return (
-        <>
+        <div className='collapsible'>
             <Box onClick={toggleOpen} sx={{
                 display: 'flex',
                 flexDirection: 'row',
@@ -27,7 +27,7 @@ const Collapsible = ({ children, title, titleVariant = 'body1', open = false }) 
             <Box>
                 {isOpen && children}
             </Box>
-        </>
+        </div>
     );
 };
 

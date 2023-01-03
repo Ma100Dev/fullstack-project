@@ -39,7 +39,7 @@
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "electron": "electron electron.js",
-    "start:test": "concurrently \"yarn --cwd ../backend/ start:test\" \"wait-on http-get://localhost:3001/testing/ping && yarn start\""
+    "start:test": "concurrently \"yarn --cwd ../backend/ start:test\" \"wait-on http-get://localhost:3001/testing/ping && cross-env BROWSER=none yarn start\""
   },
   "eslintConfig": {
     "extends": [
@@ -75,6 +75,7 @@
     "eslint-plugin-jsx-a11y": "6.6.1",
     "eslint-plugin-react": "7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "jest-fail-on-console": "^3.0.2",
     "wait-on": "^7.0.1"
   },
   "jest": {

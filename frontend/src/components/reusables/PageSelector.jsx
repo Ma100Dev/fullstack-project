@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '@mui/material';
 
-const PageSelector = ({ pageCount, rentals, onChange }) => {
+const PageSelector = ({ pageCount, onChange }) => {
     const [page, setPage] = useState(1);
     const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
     return (
@@ -25,10 +25,7 @@ const PageSelector = ({ pageCount, rentals, onChange }) => {
                     onClick={async () => {
                         if (p === page) return;
                         onChange && onChange(p);
-                        const data = await rentals.fetchData(p);
-                        await rentals.setRentalState(data);
                         setPage(p);
-                        window.scrollTo(0, 0);
                     }}
                 >
                     {p}
@@ -39,7 +36,7 @@ const PageSelector = ({ pageCount, rentals, onChange }) => {
 };
 
 PageSelector.propTypes = {
-    pageCount: PropTypes.number.isRequired,
+    pageCount: PropTypes.number,
     rentals: PropTypes.object,
     onChange: PropTypes.func,
 };
