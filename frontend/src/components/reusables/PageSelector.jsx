@@ -39,7 +39,7 @@ const PageSelector = ({ pageCount, rentals, onChange }) => {
 };
 
 PageSelector.propTypes = {
-    pageCount: PropTypes.number,
+    pageCount: PropTypes.number.isRequired,
     rentals: PropTypes.object,
     onChange: PropTypes.func,
 };

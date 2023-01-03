@@ -20,8 +20,8 @@ test('renders correct options when logged out', () => {
 test('renders correct options when logged in', () => {
     const state = {
         user: {
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjYzYjNmN2YyMzI3ODllZTgyYjU3MDk1MSIsImlhdCI6MTY3Mjc0MTExMX0.ApwCY_MvtfDjQm11iYhyd3wS840oCz9hHZfs2emtahU',
-            id: '63b3f7f232789ee82b570951'
+            token: 'some-token',
+            id: 'test-id',
         },
         rentals: [],
         conversations: [],
