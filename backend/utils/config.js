@@ -1,4 +1,7 @@
-require('dotenv').config();
+if (!process.env.SKIP_DOTENV === 'true') {
+  // eslint-disable-next-line global-require
+  require('dotenv').config();
+}
 
 const { MONGODB_URI, JWT_SECRET } = process.env;
 const PORT = process.env.PORT || 3001;

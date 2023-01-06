@@ -9,7 +9,7 @@
     "lint": "eslint \"**/*.js\"",
     "start:test": "cross-env NODE_ENV=test JWT_SECRET=secret node index.js",
     "generateKeys": "node generateKeys.js",
-    "test": "cross-env NODE_ENV=test JWT_SECRET=secret jest --verbose --runInBand",
+    "test": "cross-env SKIP_DOTENV=true NODE_ENV=test JWT_SECRET=secret jest --verbose --runInBand",
     "test:watch": "yarn test --watch"
   },
   "repository": {

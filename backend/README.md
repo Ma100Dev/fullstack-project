@@ -11,6 +11,7 @@ Variable | Description
 `NO_RUN` | Disables the backend from running for CI/CD, etc. Defaults to `false`.
 `LOG_REQUESTS` | Whether to log requests. Defaults to `true` if `NODE_ENV` is `development`, otherwise to `false`.
 `MEMORYDB_PORT` | The port the memory database will listen on. Defaults to a random port. Only used in development mode.
+`SKIP_DOTENV` | Whether to skip loading the .env file. Defaults to `false`.
 
 Files id_rsa and id_rsa.pub are required and must provide a valid RSA key pair. One can be generated using the following command:
 `yarn run generateKeys`
