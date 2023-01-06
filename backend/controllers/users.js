@@ -31,7 +31,14 @@ usersRouter.post('/', async (request, response) => {
       response.status(400).json({ error: 'User validation failed: password: Path `password` is required.' });
       return;
     } if (password.length < 3) {
-      response.status(400).json({ error: 'User validation failed: username: Path `password` is shorter than the minimum allowed length (3).' });
+      response.status(400).json({ error: 'User validation failed: password: Path `password` is shorter than the minimum allowed length (3).' });
+      return;
+    }
+    if (!body.email) {
+      response.status(400).json({ error: 'User validation failed: email: Path `email` is required.' });
+      return;
+    } if (!body.email.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i)) { // Regex for email validation
+      response.status(400).json({ error: 'User validation failed: email: Path `email` is invalid.' });
       return;
     }
     const passwordHash = await bcrypt.hash(password, 10);
