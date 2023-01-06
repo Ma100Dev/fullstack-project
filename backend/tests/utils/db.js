@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MEMORYDB_PORT } = require('../../utils/config');
+const logger = require('../../utils/logger');
 
 const connect = async (mongod) => {
     const uri = mongod.getUri();
-    console.log('DB URI: ', uri);
+    logger.log('DB URI: ', uri);
     mongoose.connect(uri);
 };
 

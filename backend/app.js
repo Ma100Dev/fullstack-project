@@ -10,29 +10,28 @@ const logger = require('./utils/logger');
 const middleware = require('./utils/middleware');
 require('express-async-errors');
 
-let usersRouter;
-let loginRouter;
-let propertyRouter;
-let messageRouter;
-let conversationRouter;
-let cryptoRouter;
-let reservationRouter;
-let testingRouter;
-
-if (!config.NO_RUN) {
-  usersRouter = require('./controllers/users');
-  loginRouter = require('./controllers/login');
-  propertyRouter = require('./controllers/properties');
-  messageRouter = require('./controllers/messages');
-  conversationRouter = require('./controllers/conversations');
-  cryptoRouter = require('./controllers/crypto');
-  reservationRouter = require('./controllers/reservations');
-  if (config.ENV === 'test') {
-    testingRouter = require('./controllers/testing');
-  }
-}
-
 const createApp = async () => {
+    let usersRouter;
+    let loginRouter;
+    let propertyRouter;
+    let messageRouter;
+    let conversationRouter;
+    let cryptoRouter;
+    let reservationRouter;
+    let testingRouter;
+
+    if (!config.NO_RUN) {
+      usersRouter = require('./controllers/users');
+      loginRouter = require('./controllers/login');
+      propertyRouter = require('./controllers/properties');
+      messageRouter = require('./controllers/messages');
+      conversationRouter = require('./controllers/conversations');
+      cryptoRouter = require('./controllers/crypto');
+      reservationRouter = require('./controllers/reservations');
+      if (config.ENV === 'test') {
+        testingRouter = require('./controllers/testing');
+      }
+    }
     logger.log('Environment:', config.ENV);
 
     const app = express();
