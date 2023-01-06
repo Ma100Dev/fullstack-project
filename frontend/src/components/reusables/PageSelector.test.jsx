@@ -1,5 +1,5 @@
 import { test, expect, jest } from '@jest/globals';
-import { screen, render, act } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import PageSelector from './PageSelector';
 import userEvent from '@testing-library/user-event';
 
