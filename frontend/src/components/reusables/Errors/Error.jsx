@@ -17,8 +17,13 @@ const Error = ({ error, time }) => {
     useEffect(() => {
         errorRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }, [errorRef]);
+
+    // This is a warning because it's not a fatal error, but it's not ideal
+    // eslint-disable-next-line no-console
+    if (!error?.id) console.warn('Error component received an error without an id. This is not recommended.');
+
     return (
-        <Alert ref={errorRef} key={error.id} severity="error" variant='outlined' sx={{
+        <Alert ref={errorRef} key={error?.id || Math.random()} severity="error" variant='outlined' data-testid="error" sx={{
             width: '90%',
             mr: 'auto',
             ml: 'auto',
@@ -27,8 +32,8 @@ const Error = ({ error, time }) => {
             alignItems: 'center',
             justifyContent: 'center',
         }}>
-            {error.title && <AlertTitle>{error.title}</AlertTitle>}
-            {error.msg}
+            {error?.title && <AlertTitle>{error.title}</AlertTitle>}
+            {error?.msg || 'An error occurred'}
         </Alert>
     );
 };
@@ -36,10 +41,10 @@ const Error = ({ error, time }) => {
 Error.propTypes = {
     time: PropTypes.number,
     error: PropTypes.shape({
-        id: PropTypes.string.isRequired,
+        id: PropTypes.string,
         title: PropTypes.string,
-        msg: PropTypes.string.isRequired,
-    }).isRequired,
+        msg: PropTypes.string,
+    }),
 };
 
 export default Error;

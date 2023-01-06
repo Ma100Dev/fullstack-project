@@ -27,7 +27,7 @@ MenuItem.propTypes = {
     text: PropTypes.string.isRequired,
     isButton: PropTypes.bool,
     link: (props, propName, componentName) => {
-        if ((props['isButton'] || false) == false && (props['link'] == undefined || typeof (props['link']) != 'string')) {
+        if (!props.isButton && typeof props[propName] !== 'string') {
             return new Error(
                 'Invalid prop `' + propName + '` supplied to' +
                 ' `' + componentName + '`. Validation failed.'
