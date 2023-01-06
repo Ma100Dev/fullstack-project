@@ -9,7 +9,7 @@ beforeAll(async () => {
 });
 
 test('GET /testing/ping', async () => {
-    await api.get('/test/ping').expect(200);
+    await api.get('/testing/ping').expect(200);
 });
 
 afterAll(() => {
