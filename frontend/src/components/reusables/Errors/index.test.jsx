@@ -13,22 +13,21 @@ describe('Errors', () => {
 
     test('Error list renders errors', async () => {
         window.HTMLElement.prototype.scrollIntoView = () => null;
+        const errors = [];
+        for (let i = 0; i < 10; i++) {
+            errors.push({
+                id: i.toString(),
+                msg: `Error ${i}`,
+            });
+        }
         renderWithProviders({
             ui: <Errors />,
             state: {
-                errors: [
-                    {
-                        id: '1',
-                        message: 'Error 1',
-                    },
-                    {
-                        id: '2',
-                        message: 'Error 2',
-                    },
-                ],
+                errors,
             },
         });
-        expect(await screen.findByText('Error 1')).not.toBeNull();
-        expect(await screen.findByText('Error 2')).not.toBeNull();
+        errors.forEach((error) => {
+            expect(screen.getByText(error.msg)).toBeInTheDocument();
+        });
     });
 });
