@@ -13,9 +13,15 @@ const { decrypt } = require('../utils/cryptography');
 // TODO: Email verification
 usersRouter.post('/', async (request, response) => {
     const { body } = request;
-    const password = decrypt(
-      body.password,
-    ).message;
+    let password;
+    try {
+      password = decrypt(
+        body.password,
+      ).message;
+    } catch (error) {
+      response.status(400).json({ error: 'Invalid password' }).end();
+      return;
+    }
     if (!password) {
       response.status(400).json({ error: 'User validation failed: password: Path `password` is required.' });
       return;

@@ -12,8 +12,11 @@ beforeEach(async () => {
     await api.post('/testing/reset');
 });
 
-test('GET /testing/ping', async () => {
-    await api.get('/testing/ping').expect(200);
+test('POST /users', async () => {
+    const newUser = {};
+    const response = await api.post('/users').send(newUser);
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('username', newUser.username);
 });
 
 afterAll(async () => {
