@@ -3,6 +3,8 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 const { MEMORYDB_PORT } = require('../../utils/config');
 const logger = require('../../utils/logger');
 
+let localMongod;
+
 const connect = async (mongod) => {
     const uri = mongod.getUri();
     logger.log('DB URI: ', uri);
@@ -32,12 +34,17 @@ const init = async () => {
         },
     });
     await connect(mongod);
+    localMongod = mongod;
     return mongod;
 };
+
+/** @deprecated Not recommended to use. Store the result of `init()` instead.  */
+const getLocalMongod = () => localMongod;
 
 module.exports = {
     init,
     connect,
     close,
     clear,
+    getLocalMongod,
 };

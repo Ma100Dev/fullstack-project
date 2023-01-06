@@ -1,6 +1,6 @@
 const supertest = require('supertest');
-const mongoose = require('mongoose');
 const createApp = require('../app');
+const { close, getLocalMongod } = require('./utils/db');
 
 let api;
 beforeAll(async () => {
@@ -8,10 +8,14 @@ beforeAll(async () => {
     api = supertest(app);
 });
 
+beforeEach(async () => {
+    await api.post('/testing/reset');
+});
+
 test('GET /testing/ping', async () => {
     await api.get('/testing/ping').expect(200);
 });
 
-afterAll(() => {
-    mongoose.connection.close();
+afterAll(async () => {
+    await close(await getLocalMongod());
 });
