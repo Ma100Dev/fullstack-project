@@ -45,9 +45,9 @@ const createApp = async () => {
           generateDefaultUser,
       } = require('./tests/utils/populateDb');
 
-      init().then(() => {
-          logger.log('Connected to database');
-      });
+      await init();
+      logger.log('Connected to database');
+
       if (config.POPULATE_DB) { // If POPULATE_DB is true, populate the database with test data
         const populate = async () => {
             const users = await populateUsers(100);
@@ -98,7 +98,6 @@ const createApp = async () => {
     }
 
     app.use(middleware.errorHandler);
-
     return app;
 };
 module.exports = createApp;

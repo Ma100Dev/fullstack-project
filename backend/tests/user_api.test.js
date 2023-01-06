@@ -1,12 +1,17 @@
 const supertest = require('supertest');
-const app = require('../app');
+const mongoose = require('mongoose');
+const createApp = require('../app');
 
-it('Testing', () => {
-    expect(1).toBe(1);
+let api;
+beforeAll(async () => {
+    const app = await createApp();
+    api = supertest(app);
 });
 
-const api = supertest(app);
-
-test('GET /test/ping', async () => {
+test('GET /testing/ping', async () => {
     await api.get('/test/ping').expect(200);
+});
+
+afterAll(() => {
+    mongoose.connection.close();
 });

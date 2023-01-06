@@ -6,7 +6,7 @@ const log = (...arg) => {
 };
 
 const error = (...arg) => {
-    if (config.ENV !== 'test') { console.error(...arg); }
+    console.error(...arg);
 };
 
 module.exports = {
