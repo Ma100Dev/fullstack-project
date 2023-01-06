@@ -1,7 +1,10 @@
 const supertest = require('supertest');
 const app = require('../app');
 
-jest.setTimeout(50000);
+it('Testing', () => {
+    expect(1).toBe(1);
+});
+
 const api = supertest(app);
 
 test('GET /test/ping', async () => {
