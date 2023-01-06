@@ -1,6 +1,5 @@
 // TODO: Add proper front page
 // TODO: Make app look better
-import Collapsible from '@reusables/Collapsible';
 
 const FrontPage = () => {
     return (

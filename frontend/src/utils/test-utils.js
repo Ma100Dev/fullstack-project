@@ -15,6 +15,17 @@ export const renderWithProviders = ({ui, state, renderOptions}) => {
     return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
 };
 
+export const renderWithRouter = ({ ui, renderOptions }) => {
+    const Wrapper = ({ children }) => {
+        return <MemoryRouter>{children}</MemoryRouter>;
+    };
+    Wrapper.propTypes = {
+        children: PropTypes.node,
+    };
+    return { ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
+};
+
+
 export const renderWithProvidersAndRouter = ({ ui, state, renderOptions }) => {
     const store = setupStore(state || {});
     const Wrapper = ({ children }) => {
