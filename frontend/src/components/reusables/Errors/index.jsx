@@ -12,7 +12,7 @@ const Errors = () => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-        }}>
+        }} data-testid="errors">
             <Stack spacing={1} sx={{ width: '100%' }}>
                 {errors?.map((error) => (
                     <Error key={error.id} error={error} time={10_000} />

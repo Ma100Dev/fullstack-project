@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - development
 
 jobs:
   checkPipeline:
@@ -19,12 +20,27 @@ jobs:
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - name: Install Yarn
         run: npm install -g yarn
+
       - name: Prepare backend
         run: |
           cd backend
           rm -rf node_modules
           yarn install --immutable --immutable-cache --check-cache
           yarn run generateKeys
+      - name: Test backend db
+        run: |
+          cd backend
+          export MONGOMS_VERSION=6.0.3
+          export MONGOMS_DOWNLOAD_URL=https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-6.0.3.tgz
+          export POPULATE_DB=true
+          export NO_RUN=true
+          yarn
+          yarn start
+      - name: Lint backend
+        run: |
+          cd backend
+          yarn run lint
+
       - name: Prepare frontend
         run: |
           cd frontend
@@ -38,19 +54,10 @@ jobs:
         run: |
           cd frontend
           yarn run build
-      - name: Lint backend
+      - name: Test frontend
         run: |
-          cd backend
-          yarn run lint
-      - name: Test backend db
-        run: |
-          cd backend
-          export MONGOMS_VERSION=6.0.3
-          export MONGOMS_DOWNLOAD_URL=https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-6.0.3.tgz
-          export POPULATE_DB=true
-          export NO_RUN=true
-          yarn
-          yarn start
+          cd frontend
+          yarn run test
       - name: Frontend E2E tests
         uses: cypress-io/github-action@v5
         with:

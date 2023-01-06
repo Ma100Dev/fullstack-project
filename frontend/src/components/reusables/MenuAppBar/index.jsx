@@ -19,7 +19,9 @@ const MenuAppBar = () => {
             outlineColor: 'black',
             justifyContent: 'center',
             alignItems: 'center',
-        }}>
+        }}
+            data-testid="menu-app-bar"
+        >
             <MenuItem text="Home" link="/" />
             <MenuItem text="Rent" link="/rent" />
             {isLoggedIn ? (

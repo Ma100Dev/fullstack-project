@@ -7,7 +7,7 @@ const LoadingIndicator = () => (
         'justifyContent': 'center',
         'alignItems': 'center',
         'height': '100vh'
-    }}>
+    }} data-testid="loading">
         <CircularProgress />
     </Box>
 );

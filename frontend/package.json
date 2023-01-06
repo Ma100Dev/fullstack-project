@@ -10,9 +10,6 @@
     "@mui/icons-material": "5.8.4",
     "@mui/material": "5.10.0",
     "@reduxjs/toolkit": "1.8.4",
-    "@testing-library/jest-dom": "5.16.5",
-    "@testing-library/react": "13.3.0",
-    "@testing-library/user-event": "13.5.0",
     "axios": "0.27.2",
     "date-fns": "2.29.3",
     "formik": "2.2.9",
@@ -35,13 +32,14 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test",
+    "test": "cross-env CI=true craco test",
+    "test:watch": "craco test",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.jsx src/",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "electron": "electron electron.js",
-    "start:test": "concurrently \"yarn --cwd ../backend/ start:test\" \"wait-on http-get://localhost:3001/testing/ping && yarn start\""
+    "start:test": "concurrently \"yarn --cwd ../backend/ start:test\" \"wait-on http-get://localhost:3001/testing/ping && cross-env BROWSER=none yarn start\""
   },
   "eslintConfig": {
     "extends": [
@@ -62,7 +60,11 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
     "concurrently": "^7.6.0",
+    "cross-env": "^7.0.3",
     "cypress": "^12.2.0",
     "cypress-localstorage-commands": "^2.2.2",
     "deep-freeze": "0.0.1",
@@ -73,6 +75,13 @@
     "eslint-plugin-jsx-a11y": "6.6.1",
     "eslint-plugin-react": "7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "jest-fail-on-console": "^3.0.2",
     "wait-on": "^7.0.1"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^@reducers(.*)$": "<rootDir>/src/reducers/$1",
+      "^@utils(.*)$": "<rootDir>/src/utils/$1"
+    }
   }
 }

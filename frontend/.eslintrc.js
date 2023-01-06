@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-undef
 module.exports = {
   settings: {
     react: {
@@ -13,6 +12,7 @@ module.exports = {
   extends: [
     'plugin:react/recommended',
     'eslint:recommended',
+    'react-app/jest',
   ],
   parserOptions: {
     ecmaFeatures: {

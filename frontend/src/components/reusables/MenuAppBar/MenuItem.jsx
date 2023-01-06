@@ -25,8 +25,15 @@ const MenuItem = ({ text, link, isButton = false, onClick }) => (
 
 MenuItem.propTypes = {
     text: PropTypes.string.isRequired,
-    link: PropTypes.string,
     isButton: PropTypes.bool,
+    link: (props, propName, componentName) => {
+        if (!props.isButton && typeof props[propName] !== 'string') {
+            return new Error(
+                'Invalid prop `' + propName + '` supplied to' +
+                ' `' + componentName + '`. Validation failed.'
+            );
+        }
+    },
     onClick: PropTypes.func
 };
 
