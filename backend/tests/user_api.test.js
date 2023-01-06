@@ -13,10 +13,20 @@ beforeEach(async () => {
 });
 
 test('POST /users', async () => {
-    const newUser = {};
+    const newUser = {
+        username: 'testuser',
+        name: 'Test User',
+        email: 'test@example.com',
+        password: 'testpassword',
+        ignoreCrypt: true, // This is only for testing
+    };
     const response = await api.post('/users').send(newUser);
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('username', newUser.username);
+    expect(response.body).toHaveProperty('name', newUser.name);
+    expect(response.body).toHaveProperty('email', newUser.email);
+    expect(response.body).not.toHaveProperty('password');
+    expect(response.body).not.toHaveProperty('passwordHash');
 });
 
 afterAll(async () => {

@@ -9,18 +9,23 @@ const Archival = require('../models/archival');
 require('express-async-errors');
 const { userExtractor } = require('../utils/middleware');
 const { decrypt } = require('../utils/cryptography');
+const { ENV } = require('../utils/config');
 
 // TODO: Email verification
 usersRouter.post('/', async (request, response) => {
     const { body } = request;
     let password;
-    try {
-      password = decrypt(
-        body.password,
-      ).message;
-    } catch (error) {
-      response.status(400).json({ error: 'Invalid password' }).end();
-      return;
+    if (ENV === 'test' && body?.ignoreCrypt === true) {
+      password = body.password;
+    } else {
+      try {
+        password = decrypt(
+          body.password,
+        ).message;
+      } catch (error) {
+        response.status(400).json({ error: 'Invalid password' }).end();
+        return;
+      }
     }
     if (!password) {
       response.status(400).json({ error: 'User validation failed: password: Path `password` is required.' });
@@ -37,7 +42,7 @@ usersRouter.post('/', async (request, response) => {
         passwordHash,
     });
     const savedUser = await user.save();
-    response.json(savedUser);
+    response.status(201).json(savedUser).end();
 });
 
 // Should only be allowed for admins
