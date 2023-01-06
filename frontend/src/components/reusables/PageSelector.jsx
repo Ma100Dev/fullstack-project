@@ -6,7 +6,7 @@ const PageSelector = ({ pageCount, onChange }) => {
     const [page, setPage] = useState(1);
     const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
     return (
-        <Box className="page-selector" sx={{
+        <Box data-testid="page-selector" sx={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',

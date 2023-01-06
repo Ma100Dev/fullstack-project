@@ -9,16 +9,16 @@ describe('MenuAppBar', () => {
         renderWithProvidersAndRouter({ ui: component });
     });
 
-    test('renders correct options when logged out', () => {
+    test('renders correct options when logged out', async () => {
         renderWithProvidersAndRouter({ ui: component });
-        expect(document.querySelector('.menu-app-bar')).not.toBeNull();
+        expect(await screen.findByTestId('menu-app-bar')).not.toBeNull();
         expect(screen.getByText('Home')).not.toBeNull();
         expect(screen.getByText('Rent')).not.toBeNull();
         expect(screen.getByText('Log in')).not.toBeNull();
         expect(screen.getByText('Sign up')).not.toBeNull();
     });
 
-    test('renders correct options when logged in', () => {
+    test('renders correct options when logged in', async () => {
         const state = {
             user: {
                 token: 'some-token',
@@ -29,7 +29,7 @@ describe('MenuAppBar', () => {
             errors: []
         };
         renderWithProvidersAndRouter({ ui: component, state });
-        expect(document.querySelector('.menu-app-bar')).not.toBeNull();
+        expect(await screen.findByTestId('menu-app-bar')).not.toBeNull();
         expect(screen.getByText('Home')).not.toBeNull();
         expect(screen.getByText('Rent')).not.toBeNull();
         expect(screen.getByText('List a new property')).not.toBeNull();

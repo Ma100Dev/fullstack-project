@@ -20,7 +20,7 @@ const MenuAppBar = () => {
             justifyContent: 'center',
             alignItems: 'center',
         }}
-            className="menu-app-bar"
+            data-testid="menu-app-bar"
         >
             <MenuItem text="Home" link="/" />
             <MenuItem text="Rent" link="/rent" />

@@ -4,21 +4,21 @@ import userEvent from '@testing-library/user-event';
 import Collapsible from './Collapsible';
 
 
-test('empty Collapsible throws error', () => {
+test('empty Collapsible throws error', async () => {
     const fakeLogger = jest.fn();
     jest.spyOn(global.console, 'error').mockImplementation((params) => fakeLogger(params));
 
     render(<Collapsible />);
-    expect(document.querySelector('.collapsible')).not.toBeNull();
+    expect(await screen.findByTestId('collapsible')).not.toBeNull();
     expect(fakeLogger).toHaveBeenCalledTimes(2); // Both "title" and "children" are missing
 });
 
-test('Collapsible with title and children renders', () => {
+test('Collapsible with title and children renders', async () => {
     render(
         <Collapsible title="Title">
             <div>Content</div>
         </Collapsible>);
-    expect(document.querySelector('.collapsible')).not.toBeNull();
+    expect(await screen.findByTestId('collapsible')).not.toBeNull();
     expect(screen.getByText('Title')).not.toBeNull();
 
     expect(screen.queryByText('Content')).toBeNull();
@@ -29,7 +29,7 @@ test('Collapsible with title and children renders, opens and closes', async () =
         <Collapsible title="Title">
             <div>Content</div>
         </Collapsible>);
-    expect(document.querySelector('.collapsible')).not.toBeNull();
+    expect(await screen.findByTestId('collapsible')).not.toBeNull();
     expect(screen.getByText('Title')).not.toBeNull();
 
     expect(screen.queryByText('Content')).toBeNull();
