@@ -14,7 +14,10 @@ const connect = async (mongod) => {
 const close = async (mongod) => {
     await mongoose.connection.dropDatabase();
     await mongoose.connection.close();
-    await mongod.stop();
+    await mongod.stop({
+        force: true,
+        doCleanup: true,
+    });
 };
 
 const clear = async () => {
@@ -31,6 +34,7 @@ const init = async () => {
     const mongod = await MongoMemoryServer.create({
         instance: {
             port: MEMORYDB_PORT,
+            storageEngine: 'ephemeralForTest',
         },
     });
     await connect(mongod);

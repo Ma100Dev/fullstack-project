@@ -1,6 +1,8 @@
 // This file is for testing the property API
 const { default: mongoose } = require('mongoose');
 const supertest = require('supertest');
+const path = require('path');
+const fs = require('fs');
 const createApp = require('../app');
 const { close, getLocalMongod } = require('./utils/db');
 
@@ -31,6 +33,8 @@ beforeEach(async () => {
     jwt = response.body.token;
 });
 
+const buffer = fs.readFileSync(path.join(__dirname, '/utils/test.png')); // Test image, 1x1 red pixel
+
 const newProperty = Object.freeze({
     title: 'Test Property',
     address: 'Test Address',
@@ -39,6 +43,7 @@ const newProperty = Object.freeze({
     description: // >=50 characters lorem ipsum
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl sed ultricies lacinia, nisl nisl aliquam nisl, et aliquam nunc nisl eu nisl. Sed euismod, nisl sed ultricies lacinia, nisl nisl aliquam nisl, et aliquam nunc nisl eu nisl.',
     beds: 1,
+    image: buffer,
     petsAllowed: true,
     allowCalendarBooking: true,
 });
