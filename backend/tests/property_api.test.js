@@ -48,12 +48,12 @@ const newProperty = Object.freeze({
 
 // This is a seriously ugly hack but it does make testing file uploads easier.
 // It also breaks a lot of eslint rules.
-const postFormData = async (url, data, _api) => {
+const postFormData = async (url, data) => {
     let executed = 'return await api.post(url)';
     Object.keys(data).forEach((key) => {
         if (key !== 'image') {
           executed += `.field('${key}', data.${key})`;
-        } else {
+        } else if (data[key] === true) {
           executed += '.attach(\'image\', path.join(__dirname, \'/utils/test.png\'))';
         }
     });
@@ -61,12 +61,12 @@ const postFormData = async (url, data, _api) => {
     // eslint-disable-next-line no-new-func, func-names, prefer-arrow-callback, no-empty-function
     const AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
     const func = new AsyncFunction('url', 'api', 'data', 'path', '__dirname', executed);
-    const response = await func(url, _api, data, path, __dirname);
+    const response = await func(url, api, data, path, __dirname);
     return response;
 };
 
 test('POST /properties', async () => {
-    const response = await postFormData('/properties', newProperty, api);
+    const response = await postFormData('/properties', newProperty);
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('title', newProperty.title);
     expect(response.body).toHaveProperty('address', newProperty.address);
@@ -79,7 +79,28 @@ test('POST /properties', async () => {
     expect(response.body).toHaveProperty('allowCalendarBooking', newProperty.allowCalendarBooking);
 });
 
+test('POST /properties without image', async () => {
+    const response = await postFormData('/properties', { ...newProperty, image: false }, api);
+    expect(response.status).toBe(201);
+    expect(response.body).toHaveProperty('title', newProperty.title);
+    expect(response.body).toHaveProperty('address', newProperty.address);
+    expect(response.body).toHaveProperty('price', newProperty.price);
+    expect(response.body).toHaveProperty('pricePer', newProperty.pricePer);
+    expect(response.body).toHaveProperty('description', newProperty.description);
+    expect(response.body).toHaveProperty('beds', newProperty.beds);
+    expect(response.body).toHaveProperty('petsAllowed', newProperty.petsAllowed);
+    expect(response.body).not.toHaveProperty('image');
+    expect(response.body).toHaveProperty('allowCalendarBooking', newProperty.allowCalendarBooking);
+});
+
+test('POST /properties without title', async () => {
+    const response = await postFormData('/properties', { ...newProperty, title: '' });
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'Property validation failed: title: Path `title` is required.');
+});
+
 afterAll(async () => {
     await close(getLocalMongod()); // Stop the local MongoDB instance and close the connection
     await mongoose.connection.close(); // Double check that the connection is closed
+    // Something is probably here because there seems to be a memory leak somewhere
 });

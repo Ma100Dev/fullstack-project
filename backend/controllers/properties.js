@@ -24,7 +24,7 @@ propertyRouter.post('/', upload.single('image'), userExtractor, async (request, 
         owner: request.user.id,
         allowCalendarBooking: body.allowCalendarBooking === 'true',
         // eslint-disable-next-line new-cap
-        image: { data: new Buffer.from(request.file.buffer, 'base64'), contentType: request.file.mimetype },
+        image: (request?.file ? { data: new Buffer.from(request.file.buffer, 'base64'), contentType: request.file.mimetype } : null),
     });
     await User.findOneAndUpdate({ _id: request.user.id }, { $push: { properties: property.id } });
     const saved = await property.save();

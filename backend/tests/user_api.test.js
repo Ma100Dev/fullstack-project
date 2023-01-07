@@ -39,11 +39,25 @@ test('POST /users with invalid password', async () => {
     expect(response.body).toHaveProperty('error', 'User validation failed: password: Path `password` is shorter than the minimum allowed length (3).');
 });
 
+test('POST /users without username', async () => {
+    const invalidUser = { ...newUser, username: undefined };
+    const response = await api.post('/users').send(invalidUser);
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'User validation failed: username: Path `username` is required.');
+});
+
 test('POST /users with invalid email', async () => {
     const invalidUser = { ...newUser, email: 'invalidemail' };
     const response = await api.post('/users').send(invalidUser);
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty('error', 'User validation failed: email: Path `email` is invalid.');
+});
+
+test('POST /users without email', async () => {
+    const invalidUser = { ...newUser, email: undefined };
+    const response = await api.post('/users').send(invalidUser);
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'User validation failed: email: Path `email` is required.');
 });
 
 test('POST /users with invalid username', async () => {
@@ -53,11 +67,25 @@ test('POST /users with invalid username', async () => {
     expect(response.body).toHaveProperty('error', 'User validation failed: username: Path `username` (`te`) is shorter than the minimum allowed length (3).');
 });
 
+test('POST /users without username', async () => {
+    const invalidUser = { ...newUser, username: undefined };
+    const response = await api.post('/users').send(invalidUser);
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'User validation failed: username: Path `username` is required.');
+});
+
 test('POST /users with invalid name', async () => {
     const invalidUser = { ...newUser, name: 'TE' };
     const response = await api.post('/users').send(invalidUser);
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty('error', 'User validation failed: name: Path `name` (`TE`) is shorter than the minimum allowed length (3).');
+});
+
+test('POST /users without name', async () => {
+    const invalidUser = { ...newUser, name: undefined };
+    const response = await api.post('/users').send(invalidUser);
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'User validation failed: name: Path `name` is required.');
 });
 
 test('POST /users with duplicate username', async () => {
@@ -112,6 +140,26 @@ test('POST /login with invalid password', async () => {
     });
     expect(response.status).toBe(401);
     expect(response.body).toHaveProperty('error', 'invalid username or password');
+});
+
+test('POST /login without username', async () => {
+    await api.post('/users').send(newUser);
+    const response = await api.post('/login').send({
+        password: newUser.password,
+        ignoreCrypt: true, // This is only for testing
+    });
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'username and password required');
+});
+
+test('POST /login without password', async () => {
+    await api.post('/users').send(newUser);
+    const response = await api.post('/login').send({
+        username: newUser.username,
+        ignoreCrypt: true, // This is only for testing
+    });
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'username and password required');
 });
 
 test('GET /users', async () => { // Getting all users is not allowed because it is unnecessary
@@ -215,4 +263,5 @@ test('DELETE /users/:id with another id', async () => {
 afterAll(async () => {
     await close(await getLocalMongod()); // Stop the local MongoDB instance and close the connection
     await mongoose.connection.close(); // Double check that the connection is closed
+    // Something is probably here because there seems to be a memory leak somewhere
 });

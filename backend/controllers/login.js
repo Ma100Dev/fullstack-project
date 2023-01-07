@@ -5,6 +5,11 @@ const { isCorrectPassword } = require('../utils/password');
 
 loginRouter.post('/', async (request, response) => {
     const { body } = request;
+    if (!(body.username && body.password)) {
+      return response.status(400).json({
+          error: 'username and password required',
+      });
+    }
     const { passwordCorrect, user } = await isCorrectPassword({ body, response });
     if (!(user && passwordCorrect)) {
       return response.status(401).json({
