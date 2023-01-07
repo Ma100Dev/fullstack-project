@@ -46,9 +46,10 @@ const newProperty = Object.freeze({
     image: true,
 });
 
-// This is a seriously ugly insecure hack
-const postFormData = async (url, data) => {
-    let executed = 'async () => { return await api.post(url)';
+// This is a seriously ugly hack but it does make testing file uploads easier.
+// It also breaks a lot of eslint rules.
+const postFormData = async (url, data, _api) => {
+    let executed = 'return await api.post(url)';
     Object.keys(data).forEach((key) => {
         if (key !== 'image') {
           executed += `.field('${key}', data.${key})`;
@@ -56,15 +57,16 @@ const postFormData = async (url, data) => {
           executed += '.attach(\'image\', path.join(__dirname, \'/utils/test.png\'))';
         }
     });
-    executed += `.set('Authorization', \`Bearer ${jwt}\`)}`;
-    // eslint-disable-next-line no-eval
-    const response = eval(executed);
+    executed += `.set('Authorization', \`Bearer ${jwt}\`)`;
+    // eslint-disable-next-line no-new-func, func-names, prefer-arrow-callback, no-empty-function
+    const AsyncFunction = Object.getPrototypeOf(async function () { }).constructor;
+    const func = new AsyncFunction('url', 'api', 'data', 'path', '__dirname', executed);
+    const response = await func(url, _api, data, path, __dirname);
     return response;
 };
 
 test('POST /properties', async () => {
-    const func = await postFormData('/properties', newProperty);
-    const response = await func();
+    const response = await postFormData('/properties', newProperty, api);
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('title', newProperty.title);
     expect(response.body).toHaveProperty('address', newProperty.address);
