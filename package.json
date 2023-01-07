@@ -4,7 +4,8 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "lint": "cd backend && yarn run lint --fix && cd ../frontend && yarn run lint --fix"
+    "lint": "cd backend && yarn run lint --fix && cd ../frontend && yarn run lint --fix",
+    "test": "cd backend && yarn run test && cd ../frontend && yarn run test"
   },
   "license": "MIT",
   "private": true
