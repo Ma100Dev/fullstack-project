@@ -4,13 +4,24 @@ const loginRouter = require('express').Router();
 const User = require('../models/user');
 const config = require('../utils/config');
 const { decrypt } = require('../utils/cryptography');
+const { ENV } = require('../utils/config');
 
 loginRouter.post('/', async (request, response) => {
     const { body } = request;
     const user = await User.findOne({ username: body.username });
-    const password = decrypt(
-      body.password,
-    ).message;
+    let password;
+    if (ENV === 'test' && body?.ignoreCrypt === true) {
+      password = body.password;
+    } else {
+      try {
+        password = decrypt(
+          body.password,
+        ).message;
+      } catch (error) {
+        response.status(400).json({ error: 'Invalid password' }).end();
+        return;
+      }
+    }
     const passwordCorrect = user === null
       ? false
       : await bcrypt.compare(password, user.passwordHash);

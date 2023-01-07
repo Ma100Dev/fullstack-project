@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const usersRouter = require('express').Router();
-require('../models/property');
 const User = require('../models/user');
 const Message = require('../models/message');
 const Conversation = require('../models/conversation');
@@ -52,7 +51,11 @@ usersRouter.post('/', async (request, response) => {
     response.status(201).json(savedUser).end();
 });
 
-// Should only be allowed for admins
+usersRouter.get('/', async (request, response) => { // Temporary route
+    response.status(405).json({ error: 'Method not allowed' }).end();
+});
+
+// This route should only be allowed for admins, but admins are not implemented yet
 // TODO: Add admins and admin UI
 // usersRouter.get('/', async (request, response) => {
 //     const users = await User.find({}).populate('properties', {

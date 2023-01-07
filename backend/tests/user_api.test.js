@@ -91,9 +91,124 @@ test('POST /users with duplicate username', async () => {
         ignoreCrypt: true, // This is only for testing
     };
     await api.post('/users').send(newUser);
+    newUser.email = 'another@example.com';
     const response = await api.post('/users').send(newUser);
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty('error', 'User validation failed: username: Error, expected `username` to be unique. Value: `testuser`');
+});
+
+test('POST /users with duplicate email', async () => {
+    const newUser = {
+        username: 'testuser',
+        name: 'Test User',
+        email: 'test@example.com',
+        password: 'testpassword',
+        ignoreCrypt: true, // This is only for testing
+    };
+    await api.post('/users').send(newUser);
+    newUser.username = 'anotheruser';
+    const response = await api.post('/users').send(newUser);
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'User validation failed: email: Error, expected `email` to be unique. Value: `test@example.com`');
+});
+
+test('POST /login', async () => {
+    const newUser = {
+        username: 'testuser',
+        name: 'Test User',
+        email: 'test@example.com',
+        password: 'testpassword',
+        ignoreCrypt: true, // This is only for testing
+    };
+    await api.post('/users').send(newUser);
+    const response = await api.post('/login').send({
+        username: newUser.username,
+        password: newUser.password,
+        ignoreCrypt: true, // This is only for testing
+    });
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id');
+    expect(response.body.id).toMatch(/^[a-f\d]{24}$/i); // Check if it is a valid MongoDB ObjectId
+    expect(response.body).toHaveProperty('token');
+    expect(response.body.token).toMatch(/(^[A-Za-z0-9-_]*\.[A-Za-z0-9-_]*\.[A-Za-z0-9-_]*$)/); // Check if it is a valid JWT
+    expect(response.body).not.toHaveProperty('password');
+    expect(response.body).not.toHaveProperty('passwordHash');
+});
+
+test('POST /login with invalid username', async () => {
+    const newUser = {
+        username: 'testuser',
+        name: 'Test User',
+        email: 'test@example.com',
+        password: 'testpassword',
+        ignoreCrypt: true, // This is only for testing
+    };
+    await api.post('/users').send(newUser);
+    const response = await api.post('/login').send({
+        username: 'invaliduser',
+        password: newUser.password,
+        ignoreCrypt: true, // This is only for testing
+    });
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('error', 'invalid username or password');
+});
+
+test('POST /login with invalid password', async () => {
+    const newUser = {
+        username: 'testuser',
+        name: 'Test User',
+        email: 'test@example.com',
+        password: 'testpassword',
+        ignoreCrypt: true, // This is only for testing
+    };
+    await api.post('/users').send(newUser);
+    const response = await api.post('/login').send({
+        username: newUser.username,
+        password: 'invalidpassword',
+        ignoreCrypt: true, // This is only for testing
+    });
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('error', 'invalid username or password');
+});
+
+test('GET /users', async () => { // Getting all users is not allowed because it is unnecessary
+    const response = await api.get('/users');
+    expect(response.status).toBe(405); // Method Not Allowed
+    expect(response.body).toHaveProperty('error', 'Method not allowed');
+});
+
+test('GET /users/:id', async () => {
+    const newUser = {
+        username: 'testuser',
+        name: 'Test User',
+        email: 'test@example.com',
+        password: 'testpassword',
+        ignoreCrypt: true, // This is only for testing
+    };
+    const user = await api.post('/users').send(newUser);
+    const response = await api.get(`/users/${user.body.id}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id', user.body.id);
+    expect(response.body).toHaveProperty('username', newUser.username);
+    expect(response.body).toHaveProperty('name', newUser.name);
+    expect(response.body).toHaveProperty('email', newUser.email);
+    expect(response.body).toHaveProperty('properties', []);
+    expect(response.body).not.toHaveProperty('password');
+    expect(response.body).not.toHaveProperty('passwordHash');
+});
+
+test('GET /users/:id with invalid id', async () => {
+    const response = await api.get('/users/invalidid');
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'Malformatted id');
+});
+
+test('GET /users/:id with non-existent id', async () => {
+    // This is a random valid MongoDB ObjectId.
+    // Since the database is empty, this id should absolutely not exist.
+    const response = await api.get('/users/63b96d59686054b5d7f48329');
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty('error', 'User not found');
 });
 
 afterAll(async () => {

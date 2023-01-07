@@ -40,6 +40,10 @@ jobs:
         run: |
           cd backend
           yarn run lint
+      - name: Test backend
+        run: |
+          cd backend
+          yarn run test
 
       - name: Prepare frontend
         run: |
