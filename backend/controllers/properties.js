@@ -10,9 +10,18 @@ const logger = require('../utils/logger');
 propertyRouter.post('/', upload.single('image'), userExtractor, async (request, response) => {
     const { body } = request;
     logger.log(Number(body.beds));
+
+    // This check could be better
+    if (!body.pricePer) {
+      return response.status(400).json({ error: 'Property validation failed: pricePer: Path `pricePer` is required.' });
+    }
+    if (!['night', 'week', 'month', 'year', 'day', 'hour', 'weekend'].includes(body.pricePer)) {
+      return response.status(400).json({ error: `Property validation failed: pricePer: \`${body.pricePer}\` is not a valid enum value for path \`pricePer\`.` });
+    }
     if (body.pricePer !== 'day' && body.allowCalendarBooking === 'true') {
       return response.status(400).json({ error: 'Calendar booking is only implemented for day-by-day reservations' });
     }
+
     const property = new Property({
         title: body.title,
         address: body.address,

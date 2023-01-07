@@ -93,6 +93,48 @@ test('POST /properties without image', async () => {
     expect(response.body).toHaveProperty('allowCalendarBooking', newProperty.allowCalendarBooking);
 });
 
+test('POST /properties without price', async () => {
+    const response = await postFormData('/properties', { ...newProperty, price: '' });
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'Property validation failed: price: Path `price` (0) is less than minimum allowed value (1).');
+});
+
+test('POST /properties with invalid price', async () => {
+    const response = await postFormData('/properties', { ...newProperty, price: 'invalid' });
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'Property validation failed: price: Cast to Number failed for value "NaN" (type number) at path "price"');
+});
+
+test('POST /properties without pricePer', async () => {
+    const response = await postFormData('/properties', { ...newProperty, pricePer: '' });
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'Property validation failed: pricePer: Path `pricePer` is required.');
+});
+
+test('POST /properties with invalid pricePer', async () => {
+    const response = await postFormData('/properties', { ...newProperty, pricePer: 'invalid' });
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'Property validation failed: pricePer: `invalid` is not a valid enum value for path `pricePer`.');
+});
+
+test('POST /properties without beds', async () => {
+    const response = await postFormData('/properties', { ...newProperty, beds: '' });
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'Property validation failed: beds: Path `beds` (0) is less than minimum allowed value (1).');
+});
+
+test('POST /properties with invalid beds', async () => {
+    const response = await postFormData('/properties', { ...newProperty, beds: 'invalid' });
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'Property validation failed: beds: Cast to Number failed for value "NaN" (type number) at path "beds"');
+});
+
+test('POST /properties without address', async () => {
+    const response = await postFormData('/properties', { ...newProperty, address: '' });
+    expect(response.status).toBe(400);
+    expect(response.body).toHaveProperty('error', 'Property validation failed: address: Path `address` is required.');
+});
+
 test('POST /properties without title', async () => {
     const response = await postFormData('/properties', { ...newProperty, title: '' });
     expect(response.status).toBe(400);
