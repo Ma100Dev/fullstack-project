@@ -1,6 +1,7 @@
 // This file is for testing the property API
 const { default: mongoose } = require('mongoose');
 const supertest = require('supertest');
+// eslint-disable-next-line no-unused-vars
 const path = require('path');
 const createApp = require('../app');
 const { close, getLocalMongod } = require('./utils/db');
@@ -42,19 +43,28 @@ const newProperty = Object.freeze({
     beds: 1,
     petsAllowed: true,
     allowCalendarBooking: true,
+    image: true,
 });
 
+// This is a seriously ugly insecure hack
+const postFormData = async (url, data) => {
+    let executed = 'async () => { return await api.post(url)';
+    Object.keys(data).forEach((key) => {
+        if (key !== 'image') {
+          executed += `.field('${key}', data.${key})`;
+        } else {
+          executed += '.attach(\'image\', path.join(__dirname, \'/utils/test.png\'))';
+        }
+    });
+    executed += `.set('Authorization', \`Bearer ${jwt}\`)}`;
+    // eslint-disable-next-line no-eval
+    const response = eval(executed);
+    return response;
+};
+
 test('POST /properties', async () => {
-    const response = await api.post('/properties').attach('image', path.join(__dirname, '/utils/test.png'))
-      .field('price', newProperty.price)
-      .field('pricePer', newProperty.pricePer)
-      .field('title', newProperty.title)
-      .field('address', newProperty.address)
-      .field('description', newProperty.description)
-      .field('beds', newProperty.beds)
-      .field('petsAllowed', newProperty.petsAllowed)
-      .field('allowCalendarBooking', newProperty.allowCalendarBooking)
-      .set('Authorization', `Bearer ${jwt}`);
+    const func = await postFormData('/properties', newProperty);
+    const response = await func();
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('title', newProperty.title);
     expect(response.body).toHaveProperty('address', newProperty.address);
@@ -63,11 +73,11 @@ test('POST /properties', async () => {
     expect(response.body).toHaveProperty('description', newProperty.description);
     expect(response.body).toHaveProperty('beds', newProperty.beds);
     expect(response.body).toHaveProperty('petsAllowed', newProperty.petsAllowed);
-    expect(response.body).toHaveProperty('image', expect.any(Object)); // It is enough to check here that the image is an object
+    expect(response.body).toHaveProperty('image', expect.any(Object));
     expect(response.body).toHaveProperty('allowCalendarBooking', newProperty.allowCalendarBooking);
 });
 
 afterAll(async () => {
-    await close(await getLocalMongod()); // Stop the local MongoDB instance and close the connection
+    await close(getLocalMongod()); // Stop the local MongoDB instance and close the connection
     await mongoose.connection.close(); // Double check that the connection is closed
 });
