@@ -1,4 +1,5 @@
 // This file is for testing the user and login API
+const { default: mongoose } = require('mongoose');
 const supertest = require('supertest');
 const createApp = require('../app');
 const { close, getLocalMongod } = require('./utils/db');
@@ -169,6 +170,49 @@ test('PUT /users/:id', async () => {
     expect(response.body).not.toHaveProperty('passwordHash');
 });
 
+test('PUT /users/:id with another id', async () => {
+    await api.post('/users').send(newUser);
+    const user = await api.post('/login').send({
+        username: newUser.username,
+        password: newUser.password,
+        ignoreCrypt: true, // This is only for testing
+    });
+    const response = await api.put('/users/invalidId').send({
+        name: 'New Name',
+        email: 'another@example.com',
+        password: 'testpassword', // Password confirmation. Changing the password is not yet supported.
+        ignoreCrypt: true, // This is only for testing
+    }).set('Authorization', `Bearer ${user.body.token}`);
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('error', 'Not authorized');
+});
+
+test('DELETE /users/:id', async () => {
+    await api.post('/users').send(newUser);
+    const user = await api.post('/login').send({
+        username: newUser.username,
+        password: newUser.password,
+        ignoreCrypt: true, // This is only for testing
+    });
+    const response = await api.delete(`/users/${user.body.id}`).set('Authorization', `Bearer ${user.body.token}`);
+    expect(response.status).toBe(204);
+    const userGet = await api.get(`/users/${user.body.id}`);
+    expect(userGet.status).toBe(404);
+});
+
+test('DELETE /users/:id with another id', async () => {
+    await api.post('/users').send(newUser);
+    const user = await api.post('/login').send({
+        username: newUser.username,
+        password: newUser.password,
+        ignoreCrypt: true, // This is only for testing
+    });
+    const response = await api.delete('/users/invalidId').set('Authorization', `Bearer ${user.body.token}`);
+    expect(response.status).toBe(401);
+    expect(response.body).toHaveProperty('error', 'Not authorized');
+});
+
 afterAll(async () => {
-    await close(await getLocalMongod());
+    await close(await getLocalMongod()); // Stop the local MongoDB instance and close the connection
+    await mongoose.connection.close(); // Double check that the connection is closed
 });
