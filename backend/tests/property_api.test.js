@@ -65,80 +65,111 @@ const postFormData = async (url, data) => {
     return response;
 };
 
-test('POST /properties', async () => {
-    const response = await postFormData('/properties', newProperty);
-    expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty('title', newProperty.title);
-    expect(response.body).toHaveProperty('address', newProperty.address);
-    expect(response.body).toHaveProperty('price', newProperty.price);
-    expect(response.body).toHaveProperty('pricePer', newProperty.pricePer);
-    expect(response.body).toHaveProperty('description', newProperty.description);
-    expect(response.body).toHaveProperty('beds', newProperty.beds);
-    expect(response.body).toHaveProperty('petsAllowed', newProperty.petsAllowed);
-    expect(response.body).toHaveProperty('image', expect.any(Object));
-    expect(response.body).toHaveProperty('allowCalendarBooking', newProperty.allowCalendarBooking);
-});
+describe('Property creation', () => {
+    test('POST /properties', async () => {
+        const response = await postFormData('/properties', newProperty);
+        expect(response.status).toBe(201);
+        expect(response.body).toHaveProperty('title', newProperty.title);
+        expect(response.body).toHaveProperty('address', newProperty.address);
+        expect(response.body).toHaveProperty('price', newProperty.price);
+        expect(response.body).toHaveProperty('pricePer', newProperty.pricePer);
+        expect(response.body).toHaveProperty('description', newProperty.description);
+        expect(response.body).toHaveProperty('beds', newProperty.beds);
+        expect(response.body).toHaveProperty('petsAllowed', newProperty.petsAllowed);
+        expect(response.body).toHaveProperty('image', expect.any(Object));
+        expect(response.body).toHaveProperty('allowCalendarBooking', newProperty.allowCalendarBooking);
+    });
 
-test('POST /properties without image', async () => {
-    const response = await postFormData('/properties', { ...newProperty, image: false }, api);
-    expect(response.status).toBe(201);
-    expect(response.body).toHaveProperty('title', newProperty.title);
-    expect(response.body).toHaveProperty('address', newProperty.address);
-    expect(response.body).toHaveProperty('price', newProperty.price);
-    expect(response.body).toHaveProperty('pricePer', newProperty.pricePer);
-    expect(response.body).toHaveProperty('description', newProperty.description);
-    expect(response.body).toHaveProperty('beds', newProperty.beds);
-    expect(response.body).toHaveProperty('petsAllowed', newProperty.petsAllowed);
-    expect(response.body).not.toHaveProperty('image');
-    expect(response.body).toHaveProperty('allowCalendarBooking', newProperty.allowCalendarBooking);
-});
+    test('POST /properties without image', async () => {
+        const response = await postFormData('/properties', { ...newProperty, image: false }, api);
+        expect(response.status).toBe(201);
+        expect(response.body).toHaveProperty('title', newProperty.title);
+        expect(response.body).toHaveProperty('address', newProperty.address);
+        expect(response.body).toHaveProperty('price', newProperty.price);
+        expect(response.body).toHaveProperty('pricePer', newProperty.pricePer);
+        expect(response.body).toHaveProperty('description', newProperty.description);
+        expect(response.body).toHaveProperty('beds', newProperty.beds);
+        expect(response.body).toHaveProperty('petsAllowed', newProperty.petsAllowed);
+        expect(response.body).not.toHaveProperty('image');
+        expect(response.body).toHaveProperty('allowCalendarBooking', newProperty.allowCalendarBooking);
+    });
 
-test('POST /properties without price', async () => {
-    const response = await postFormData('/properties', { ...newProperty, price: '' });
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('error', 'Property validation failed: price: Path `price` (0) is less than minimum allowed value (1).');
-});
+    test('POST /properties without price', async () => {
+        const response = await postFormData('/properties', { ...newProperty, price: '' });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Property validation failed: price: Path `price` (0) is less than minimum allowed value (1).');
+    });
+    test('POST /properties with invalid price', async () => {
+        const response = await postFormData('/properties', { ...newProperty, price: 'invalid' });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Property validation failed: price: Cast to Number failed for value "NaN" (type number) at path "price"');
+    });
 
-test('POST /properties with invalid price', async () => {
-    const response = await postFormData('/properties', { ...newProperty, price: 'invalid' });
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('error', 'Property validation failed: price: Cast to Number failed for value "NaN" (type number) at path "price"');
-});
+    test('POST /properties without pricePer', async () => {
+        const response = await postFormData('/properties', { ...newProperty, pricePer: '' });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Property validation failed: pricePer: Path `pricePer` is required.');
+    });
+    test('POST /properties with invalid pricePer', async () => {
+        const response = await postFormData('/properties', { ...newProperty, pricePer: 'invalid' });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Property validation failed: pricePer: `invalid` is not a valid enum value for path `pricePer`.');
+    });
 
-test('POST /properties without pricePer', async () => {
-    const response = await postFormData('/properties', { ...newProperty, pricePer: '' });
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('error', 'Property validation failed: pricePer: Path `pricePer` is required.');
-});
+    test('POST /properties without beds', async () => {
+        const response = await postFormData('/properties', { ...newProperty, beds: '' });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Property validation failed: beds: Path `beds` (0) is less than minimum allowed value (1).');
+    });
+    test('POST /properties with invalid beds', async () => {
+        const response = await postFormData('/properties', { ...newProperty, beds: 'invalid' });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Property validation failed: beds: Cast to Number failed for value "NaN" (type number) at path "beds"');
+    });
 
-test('POST /properties with invalid pricePer', async () => {
-    const response = await postFormData('/properties', { ...newProperty, pricePer: 'invalid' });
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('error', 'Property validation failed: pricePer: `invalid` is not a valid enum value for path `pricePer`.');
-});
+    test('POST /properties without address', async () => {
+        const response = await postFormData('/properties', { ...newProperty, address: '' });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Property validation failed: address: Path `address` is required.');
+    });
+    test('POST /properties without title', async () => {
+        const response = await postFormData('/properties', { ...newProperty, title: '' });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Property validation failed: title: Path `title` is required.');
+    });
 
-test('POST /properties without beds', async () => {
-    const response = await postFormData('/properties', { ...newProperty, beds: '' });
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('error', 'Property validation failed: beds: Path `beds` (0) is less than minimum allowed value (1).');
-});
+    test('POST /properties without description', async () => {
+        const response = await postFormData('/properties', { ...newProperty, description: '' });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Property validation failed: description: Path `description` is required.');
+    });
+    test('POST /properties with invalid description', async () => {
+        const response = await postFormData('/properties', { ...newProperty, description: 'a'.repeat(48) });
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Property validation failed: description: Path `description` (`aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`) is shorter than the minimum allowed length (50).');
+    });
 
-test('POST /properties with invalid beds', async () => {
-    const response = await postFormData('/properties', { ...newProperty, beds: 'invalid' });
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('error', 'Property validation failed: beds: Cast to Number failed for value "NaN" (type number) at path "beds"');
-});
+    test('POST /properties without petsAllowed', async () => { // Invalid values should be ignored and it should default to false
+        const response = await postFormData('/properties', { ...newProperty, petsAllowed: '' });
+        expect(response.status).toBe(201);
+        expect(response.body).toHaveProperty('petsAllowed', false);
+    });
+    test('POST /properties with invalid petsAllowed', async () => {
+        const response = await postFormData('/properties', { ...newProperty, petsAllowed: 'invalid' });
+        expect(response.status).toBe(201);
+        expect(response.body).toHaveProperty('petsAllowed', false);
+    });
 
-test('POST /properties without address', async () => {
-    const response = await postFormData('/properties', { ...newProperty, address: '' });
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('error', 'Property validation failed: address: Path `address` is required.');
-});
-
-test('POST /properties without title', async () => {
-    const response = await postFormData('/properties', { ...newProperty, title: '' });
-    expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('error', 'Property validation failed: title: Path `title` is required.');
+    test('POST /properties without allowCalendarBooking', async () => { // Invalid values should be ignored and it should default to false
+        const response = await postFormData('/properties', { ...newProperty, allowCalendarBooking: '' });
+        expect(response.status).toBe(201);
+        expect(response.body).toHaveProperty('allowCalendarBooking', false);
+    });
+    test('POST /properties with invalid allowCalendarBooking', async () => {
+        const response = await postFormData('/properties', { ...newProperty, allowCalendarBooking: 'invalid' });
+        expect(response.status).toBe(201);
+        expect(response.body).toHaveProperty('allowCalendarBooking', false);
+    });
 });
 
 afterAll(async () => {
