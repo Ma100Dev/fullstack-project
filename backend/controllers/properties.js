@@ -41,10 +41,13 @@ propertyRouter.post('/', upload.single('image'), userExtractor, async (request, 
 });
 
 propertyRouter.get('/', userExtractor, async (request, response) => {
-    const page = request.query.page || 1;
-    const limit = request.query.limit || 10;
-    if (limit > 100) {
-      return response.status(400).json({ error: 'limit must be less than or equal 100' });
+    const page = Number(request.query.page || 1);
+    const limit = Number(request.query.limit || 10);
+    if (Number.isNaN(limit) || limit > 100 || limit < 1) {
+      return response.status(400).json({ error: 'limit must be between 1 and 100' });
+    }
+    if (Number.isNaN(page) || page < 1) {
+      return response.status(400).json({ error: 'page must be greater than 0' });
     }
     const properties = await Property.paginate(
       {
@@ -69,7 +72,7 @@ propertyRouter.get('/:id', async (request, response) => {
     if (property) {
       response.json(property);
     } else {
-      response.status(404).end();
+      response.status(404).json({ error: 'Property not found' }).end();
     }
 });
 
@@ -85,7 +88,7 @@ propertyRouter.post('/:id/reservations', userExtractor, async (request, response
     const invalid = property.reservations.some((rsv) => {
         const startDate = new Date(rsv.startDate);
         const endDate = new Date(rsv.endDate);
-        return reservation.startDate <= endDate && startDate <= reservation.endDate; // Untested
+        return reservation.startDate <= endDate && startDate <= reservation.endDate;
     });
     if (invalid) {
       return response.status(400).json({ error: 'Reservation overlaps with existing reservation' });

@@ -1,10 +1,12 @@
-// This file is for testing the property API
+// This file is for testing the property and reservation API
 const { default: mongoose } = require('mongoose');
 const supertest = require('supertest');
 // eslint-disable-next-line no-unused-vars
 const path = require('path');
+const Property = require('../models/property');
 const createApp = require('../app');
 const { close, getLocalMongod } = require('./utils/db');
+const User = require('../models/user');
 
 let api;
 beforeAll(async () => {
@@ -13,25 +15,6 @@ beforeAll(async () => {
 });
 
 let jwt;
-beforeEach(async () => {
-    await api.post('/testing/reset');
-    /*
-    Generate default user for testing:
-    {
-        username: 'test',
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'password',
-        properties: [],
-    */
-    await api.post('/testing/createDefaultUser');
-    const response = await api.post('/login').send({ // Logging in every time is not optimal, but it's the easiest way to get a valid JWT
-        username: 'test',
-        password: 'password',
-        ignoreCrypt: true, // This is only for testing
-    });
-    jwt = response.body.token;
-});
 
 const newProperty = Object.freeze({
     title: 'Test Property',
@@ -66,6 +49,26 @@ const postFormData = async (url, data) => {
 };
 
 describe('Property creation', () => {
+    beforeEach(async () => {
+        await Property.deleteMany({});
+        /*
+        Generate default user for testing:
+        {
+            username: 'test',
+            name: 'Test User',
+            email: 'test@example.com',
+            password: 'password',
+            properties: [],
+        */
+        await api.post('/testing/createDefaultUser');
+        const response = await api.post('/login').send({ // Logging in every time is not optimal, but it's the easiest way to get a valid JWT
+            username: 'test',
+            password: 'password',
+            ignoreCrypt: true, // This is only for testing
+        });
+        jwt = response.body.token;
+    });
+
     test('POST /properties', async () => {
         const response = await postFormData('/properties', newProperty);
         expect(response.status).toBe(201);
@@ -171,6 +174,88 @@ describe('Property creation', () => {
         expect(response.body).toHaveProperty('allowCalendarBooking', false);
     });
 });
+
+let id;
+describe('Property getting', () => {
+    beforeEach(async () => {
+        await User.deleteMany({});
+        await api.post('/testing/createDefaultUser').send();
+        await Property.deleteMany({});
+        const response = await api.post('/login').send({ // Logging in every time is not optimal, but it's the easiest way to get a valid JWT
+            username: 'test',
+            password: 'password',
+            ignoreCrypt: true, // This is only for testing
+        });
+        jwt = response.body.token;
+        const { body } = await postFormData('/properties', newProperty);
+        id = body.id;
+    });
+
+    test('GET /properties', async () => {
+        const response = await api.get('/properties?limit=10&page=1');
+        expect(response.status).toBe(200);
+        expect(response.body.docs).toHaveLength(1);
+        expect(response.body.docs[0]).toHaveProperty('price', newProperty.price);
+        expect(response.body.docs[0]).toHaveProperty('pricePer', newProperty.pricePer);
+        expect(response.body.docs[0]).toHaveProperty('beds', newProperty.beds);
+        expect(response.body.docs[0]).toHaveProperty('address', newProperty.address);
+        expect(response.body.docs[0]).toHaveProperty('title', newProperty.title);
+        expect(response.body.docs[0]).toHaveProperty('description', newProperty.description);
+        expect(response.body.docs[0]).toHaveProperty('petsAllowed', newProperty.petsAllowed);
+        expect(response.body.docs[0]).toHaveProperty('allowCalendarBooking', newProperty.allowCalendarBooking);
+    });
+    test('GET /properties with invalid limit', async () => {
+        let response = await api.get('/properties?limit=invalid&page=1');
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'limit must be between 1 and 100');
+        response = await api.get('/properties?limit=-1&page=1');
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'limit must be between 1 and 100');
+        response = await api.get('/properties?limit=1000&page=1');
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'limit must be between 1 and 100');
+    });
+    test('GET /properties with invalid page', async () => {
+        let response = await api.get('/properties?limit=10&page=invalid');
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'page must be greater than 0');
+        response = await api.get('/properties?limit=10&page=-1');
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'page must be greater than 0');
+    });
+
+    test('GET /properties/:id', async () => {
+        const response = await api.get(`/properties/${id}`);
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveProperty('price', newProperty.price);
+        expect(response.body).toHaveProperty('pricePer', newProperty.pricePer);
+        expect(response.body).toHaveProperty('beds', newProperty.beds);
+        expect(response.body).toHaveProperty('address', newProperty.address);
+        expect(response.body).toHaveProperty('title', newProperty.title);
+        expect(response.body).toHaveProperty('description', newProperty.description);
+        expect(response.body).toHaveProperty('petsAllowed', newProperty.petsAllowed);
+        expect(response.body).toHaveProperty('allowCalendarBooking', newProperty.allowCalendarBooking);
+    });
+    test('GET /properties/:id with invalid id', async () => {
+        const response = await api.get('/properties/invalid');
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error', 'Malformatted id');
+    });
+    test('GET /properties/:id with non-existing id', async () => {
+        const response = await api.get('/properties/5f4d2e2e2e2e2e2e2e2e2e2e');
+        expect(response.status).toBe(404);
+        expect(response.body).toHaveProperty('error', 'Property not found');
+    });
+});
+
+// describe('Reservation posting', () => {
+//     beforeEach(async () => {
+//         await Property.deleteMany({});
+//         await Reservation.deleteMany({});
+//         await api.post('/testing/createDefaultUser');
+//         const { body } = await postFormData('/properties', newProperty);
+//         id = body.id;
+//     });
 
 afterAll(async () => {
     await close(getLocalMongod()); // Stop the local MongoDB instance and close the connection

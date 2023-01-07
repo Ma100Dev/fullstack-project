@@ -10,7 +10,7 @@
     "start:test": "cross-env NODE_ENV=test JWT_SECRET=secret node index.js",
     "generateKeys": "node generateKeys.js",
     "test": "cross-env SKIP_DOTENV=true NODE_ENV=test JWT_SECRET=secret jest --verbose --runInBand",
-    "test:watch": "yarn test --watch"
+    "test:watch": "cross-env NODE_OPTIONS=--max_old_space_size=4096 yarn test --watch"
   },
   "repository": {
     "type": "git",

@@ -12,7 +12,7 @@ testingRouter.post('/reset', async (request, response) => {
 });
 
 testingRouter.post('/createDefaultUser', async (request, response) => {
-    await generateDefaultUser();
+    await generateDefaultUser(request.body.createConversations || false);
     response.status(204).end();
 });
 
