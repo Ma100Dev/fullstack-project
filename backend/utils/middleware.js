@@ -19,7 +19,7 @@ const errorHandler = (error, request, response, next) => {
       response.status(400).json({ error: 'Malformatted id' });
       return;
     }
-    response.status(500).send({ error: 'Something went wrong', details: error });
+    response.status(500).send({ error: 'Something went wrong', details: error.message });
     next(error);
 };
 
