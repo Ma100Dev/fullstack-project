@@ -1,31 +1,11 @@
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 const loginRouter = require('express').Router();
-const User = require('../models/user');
+const jwt = require('jsonwebtoken');
 const config = require('../utils/config');
-const { decrypt } = require('../utils/cryptography');
-const { ENV } = require('../utils/config');
+const { isCorrectPassword } = require('../utils/password');
 
 loginRouter.post('/', async (request, response) => {
     const { body } = request;
-    const user = await User.findOne({ username: body.username });
-    let password;
-    if (ENV === 'test' && body?.ignoreCrypt === true) {
-      password = body.password;
-    } else {
-      try {
-        password = decrypt(
-          body.password,
-        ).message;
-      } catch (error) {
-        response.status(400).json({ error: 'Invalid password' }).end();
-        return;
-      }
-    }
-    const passwordCorrect = user === null
-      ? false
-      : await bcrypt.compare(password, user.passwordHash);
-
+    const { passwordCorrect, user } = await isCorrectPassword({ body, response });
     if (!(user && passwordCorrect)) {
       return response.status(401).json({
           error: 'invalid username or password',

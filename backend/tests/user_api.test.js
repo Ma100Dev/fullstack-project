@@ -13,14 +13,15 @@ beforeEach(async () => {
     await api.post('/testing/reset');
 });
 
+const newUser = Object.freeze({
+    username: 'testuser',
+    name: 'Test User',
+    email: 'test@example.com',
+    password: 'testpassword',
+    ignoreCrypt: true, // This is only for testing
+}); // Default user for testing
+
 test('POST /users', async () => {
-    const newUser = {
-        username: 'testuser',
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'testpassword',
-        ignoreCrypt: true, // This is only for testing
-    };
     const response = await api.post('/users').send(newUser);
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('username', newUser.username);
@@ -31,95 +32,50 @@ test('POST /users', async () => {
 });
 
 test('POST /users with invalid password', async () => {
-    const newUser = {
-        username: 'testuser',
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'te',
-        ignoreCrypt: true, // This is only for testing
-    };
-    const response = await api.post('/users').send(newUser);
+    const invalidUser = { ...newUser, password: 'te' };
+    const response = await api.post('/users').send(invalidUser);
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty('error', 'User validation failed: password: Path `password` is shorter than the minimum allowed length (3).');
 });
 
 test('POST /users with invalid email', async () => {
-    const newUser = {
-        username: 'testuser',
-        name: 'Test User',
-        email: 'test',
-        password: 'testpassword',
-        ignoreCrypt: true, // This is only for testing
-    };
-    const response = await api.post('/users').send(newUser);
+    const invalidUser = { ...newUser, email: 'invalidemail' };
+    const response = await api.post('/users').send(invalidUser);
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty('error', 'User validation failed: email: Path `email` is invalid.');
 });
 
 test('POST /users with invalid username', async () => {
-    const newUser = {
-        username: 'te',
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'testpassword',
-        ignoreCrypt: true, // This is only for testing
-    };
-    const response = await api.post('/users').send(newUser);
+    const invalidUser = { ...newUser, username: 'te' };
+    const response = await api.post('/users').send(invalidUser);
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty('error', 'User validation failed: username: Path `username` (`te`) is shorter than the minimum allowed length (3).');
 });
 
 test('POST /users with invalid name', async () => {
-    const newUser = {
-        username: 'testuser',
-        name: 'T',
-        email: 'test@example.com',
-        password: 'testpassword',
-        ignoreCrypt: true, // This is only for testing
-    };
-    const response = await api.post('/users').send(newUser);
+    const invalidUser = { ...newUser, name: 'TE' };
+    const response = await api.post('/users').send(invalidUser);
     expect(response.status).toBe(400);
-    expect(response.body).toHaveProperty('error', 'User validation failed: name: Path `name` (`T`) is shorter than the minimum allowed length (3).');
+    expect(response.body).toHaveProperty('error', 'User validation failed: name: Path `name` (`TE`) is shorter than the minimum allowed length (3).');
 });
 
 test('POST /users with duplicate username', async () => {
-    const newUser = {
-        username: 'testuser',
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'testpassword',
-        ignoreCrypt: true, // This is only for testing
-    };
     await api.post('/users').send(newUser);
-    newUser.email = 'another@example.com';
-    const response = await api.post('/users').send(newUser);
+    const anotherUser = { ...newUser, email: 'another@example.com' };
+    const response = await api.post('/users').send(anotherUser);
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty('error', 'User validation failed: username: Error, expected `username` to be unique. Value: `testuser`');
 });
 
 test('POST /users with duplicate email', async () => {
-    const newUser = {
-        username: 'testuser',
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'testpassword',
-        ignoreCrypt: true, // This is only for testing
-    };
     await api.post('/users').send(newUser);
-    newUser.username = 'anotheruser';
-    const response = await api.post('/users').send(newUser);
+    const anotherUser = { ...newUser, username: 'anotherUser' };
+    const response = await api.post('/users').send(anotherUser);
     expect(response.status).toBe(400);
     expect(response.body).toHaveProperty('error', 'User validation failed: email: Error, expected `email` to be unique. Value: `test@example.com`');
 });
 
 test('POST /login', async () => {
-    const newUser = {
-        username: 'testuser',
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'testpassword',
-        ignoreCrypt: true, // This is only for testing
-    };
     await api.post('/users').send(newUser);
     const response = await api.post('/login').send({
         username: newUser.username,
@@ -136,13 +92,6 @@ test('POST /login', async () => {
 });
 
 test('POST /login with invalid username', async () => {
-    const newUser = {
-        username: 'testuser',
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'testpassword',
-        ignoreCrypt: true, // This is only for testing
-    };
     await api.post('/users').send(newUser);
     const response = await api.post('/login').send({
         username: 'invaliduser',
@@ -154,13 +103,6 @@ test('POST /login with invalid username', async () => {
 });
 
 test('POST /login with invalid password', async () => {
-    const newUser = {
-        username: 'testuser',
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'testpassword',
-        ignoreCrypt: true, // This is only for testing
-    };
     await api.post('/users').send(newUser);
     const response = await api.post('/login').send({
         username: newUser.username,
@@ -178,13 +120,6 @@ test('GET /users', async () => { // Getting all users is not allowed because it 
 });
 
 test('GET /users/:id', async () => {
-    const newUser = {
-        username: 'testuser',
-        name: 'Test User',
-        email: 'test@example.com',
-        password: 'testpassword',
-        ignoreCrypt: true, // This is only for testing
-    };
     const user = await api.post('/users').send(newUser);
     const response = await api.get(`/users/${user.body.id}`);
     expect(response.status).toBe(200);
@@ -209,6 +144,29 @@ test('GET /users/:id with non-existent id', async () => {
     const response = await api.get('/users/63b96d59686054b5d7f48329');
     expect(response.status).toBe(404);
     expect(response.body).toHaveProperty('error', 'User not found');
+});
+
+test('PUT /users/:id', async () => {
+    await api.post('/users').send(newUser);
+    const user = await api.post('/login').send({
+        username: newUser.username,
+        password: newUser.password,
+        ignoreCrypt: true, // This is only for testing
+    });
+    const response = await api.put(`/users/${user.body.id}`).send({
+        name: 'New Name',
+        email: 'another@example.com',
+        password: 'testpassword', // Password confirmation. Changing the password is not yet supported.
+        ignoreCrypt: true, // This is only for testing
+    }).set('Authorization', `Bearer ${user.body.token}`);
+    expect(response.status).toBe(200);
+    expect(response.body).toHaveProperty('id', user.body.id);
+    expect(response.body).toHaveProperty('username', newUser.username);
+    expect(response.body).toHaveProperty('name', 'New Name');
+    expect(response.body).toHaveProperty('email', 'another@example.com');
+    expect(response.body).toHaveProperty('properties', []);
+    expect(response.body).not.toHaveProperty('password');
+    expect(response.body).not.toHaveProperty('passwordHash');
 });
 
 afterAll(async () => {

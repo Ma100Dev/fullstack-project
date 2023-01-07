@@ -9,6 +9,7 @@ require('express-async-errors');
 const { userExtractor } = require('../utils/middleware');
 const { decrypt } = require('../utils/cryptography');
 const { ENV } = require('../utils/config');
+const { isCorrectPassword } = require('../utils/password');
 
 // TODO: Email verification
 usersRouter.post('/', async (request, response) => {
@@ -72,13 +73,8 @@ usersRouter.put('/:id', userExtractor, async (request, response) => {
       response.status(401).json({ error: 'Not authorized' });
       return;
     }
-    const password = decrypt(
-      body.password,
-    ).message;
-    const passwordCorrect = user === null
-      ? false
-      : await bcrypt.compare(password, user.passwordHash);
-    if (!passwordCorrect) {
+    const checkPassword = await isCorrectPassword({ body, response, username: user.username });
+    if (!checkPassword.passwordCorrect) {
       response.status(401).json({ error: 'Incorrect password confirmation' });
       return;
     }
