@@ -3,6 +3,7 @@ const { default: mongoose } = require('mongoose');
 const supertest = require('supertest');
 const path = require('path');
 const fs = require('fs');
+const FormData = require('form-data');
 const createApp = require('../app');
 const { close, getLocalMongod } = require('./utils/db');
 
@@ -35,21 +36,22 @@ beforeEach(async () => {
 
 const buffer = fs.readFileSync(path.join(__dirname, '/utils/test.png')); // Test image, 1x1 red pixel
 
-const newProperty = Object.freeze({
-    title: 'Test Property',
-    address: 'Test Address',
-    price: 100000,
-    pricePer: 'day',
-    description: // >=50 characters lorem ipsum
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl sed ultricies lacinia, nisl nisl aliquam nisl, et aliquam nunc nisl eu nisl. Sed euismod, nisl sed ultricies lacinia, nisl nisl aliquam nisl, et aliquam nunc nisl eu nisl.',
-    beds: 1,
-    image: buffer,
-    petsAllowed: true,
-    allowCalendarBooking: true,
-});
+const newProperty = new FormData();
+newProperty.append('title', 'Test Property');
+newProperty.append('address', 'Test Address');
+newProperty.append('price', 100000);
+newProperty.append('pricePer', 'day');
+newProperty.append(
+  'description', // >=50 characters lorem ipsum
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl sed ultricies lacinia, nisl nisl aliquam nisl, et aliquam nunc nisl eu nisl. Sed euismod, nisl sed ultricies lacinia, nisl nisl aliquam nisl, et aliquam nunc nisl eu nisl.'
+);
+newProperty.append('beds', 1);
+newProperty.append('image', buffer);
+newProperty.append('petsAllowed', true);
+newProperty.append('allowCalendarBooking', true);
 
 test('POST /properties', async () => {
-    const response = await api.post('/properties').send(newProperty).set('Authorization', `Bearer ${jwt}`);
+    const response = await api.post('/properties').attach('image', buffer).set('Authorization', `Bearer ${jwt}`);
     console.log(response.body);
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('title', newProperty.title);

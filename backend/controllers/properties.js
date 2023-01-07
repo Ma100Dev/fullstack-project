@@ -13,6 +13,7 @@ propertyRouter.post('/', upload.single('image'), userExtractor, async (request, 
     if (body.pricePer !== 'day' && body.allowCalendarBooking === 'true') {
       return response.status(400).json({ error: 'Calendar booking is only implemented for day-by-day reservations' });
     }
+    console.log(request.image);
     const property = new Property({
         title: body.title,
         address: body.address,
