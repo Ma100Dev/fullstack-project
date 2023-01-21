@@ -7,6 +7,7 @@ const Property = require('../models/property');
 const createApp = require('../app');
 const { close, getLocalMongod } = require('./utils/db');
 const User = require('../models/user');
+const Reservation = require('../models/reservation');
 
 let api;
 beforeAll(async () => {
@@ -248,14 +249,35 @@ describe('Property getting', () => {
     });
 });
 
-// describe('Reservation posting', () => {
-//     beforeEach(async () => {
-//         await Property.deleteMany({});
-//         await Reservation.deleteMany({});
-//         await api.post('/testing/createDefaultUser');
-//         const { body } = await postFormData('/properties', newProperty);
-//         id = body.id;
-//     });
+let user;
+describe('Reservation posting', () => {
+    beforeEach(async () => {
+        await User.deleteMany({});
+        await Property.deleteMany({});
+        await Reservation.deleteMany({});
+        await api.post('/testing/createDefaultUser').send({});
+        const response = await api.post('/login').send({ // Logging in every time is not optimal, but it's the easiest way to get a valid JWT
+            username: 'test',
+            password: 'password',
+            ignoreCrypt: true, // This is only for testing
+        });
+        jwt = response.body.token;
+        user = response.body.id;
+        const { body } = await postFormData('/properties', newProperty);
+        id = body.id;
+    });
+    test('POST /properties/:id/reservations', async () => {
+        const response = await api.post(`/properties/${id}/reservations`).send({
+            startDate: new Date('2020-08-01').toISOString(),
+            endDate: new Date('2020-08-10').toISOString(),
+        }).set('Authorization', `Bearer ${jwt}`);
+        expect(response.status).toBe(201);
+        expect(response.body).toHaveProperty('startDate', new Date('2020-08-01').toISOString());
+        expect(response.body).toHaveProperty('endDate', new Date('2020-08-10').toISOString());
+        expect(response.body).toHaveProperty('property', id);
+        expect(response.body).toHaveProperty('user', user);
+    });
+});
 
 afterAll(async () => {
     await close(getLocalMongod()); // Stop the local MongoDB instance and close the connection
