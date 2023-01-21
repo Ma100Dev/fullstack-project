@@ -199,7 +199,7 @@ const AddProperty = () => {
                                 disabled={values.pricePer !== 'day'}
                             />
                         }
-                            label="Allow guests to book using the calendar? (If not, you will have to manually approve each booking and set the dates)"
+                            label="Allow guests to book using the calendar? (If not, you will have to manually approve each booking and keep track of the bookings yourself)"
                             labelPlacement="start"
                         />
                         <br />
