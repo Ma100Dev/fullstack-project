@@ -1,4 +1,4 @@
-// This file is for testing the property and reservation API
+// This file is for testing the property and reservation APIs
 const { default: mongoose } = require('mongoose');
 const supertest = require('supertest');
 // eslint-disable-next-line no-unused-vars

@@ -1,4 +1,4 @@
-// This file is for testing the user and login API
+// This file is for testing the user and login APIs
 const { default: mongoose } = require('mongoose');
 const supertest = require('supertest');
 const createApp = require('../app');
