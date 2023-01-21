@@ -14,7 +14,8 @@ beforeAll(async () => {
 let jwt;
 beforeEach(async () => {
     await api.post('/api/testing/reset');
-    await api.post('/testing/createDefaultUser').send({});
+    await api.post('/testing/createUsers').send({ count: 10 });
+    await api.post('/testing/createDefaultUser').send({ createConversations: true });
     const response = await api.post('/login').send({ // Logging in every time is not optimal, but it's the easiest way to get a valid JWT
         username: 'test',
         password: 'password',
@@ -27,7 +28,7 @@ describe('Conversations', () => {
     test('GET /conversations', async () => {
         const response = await api.get('/conversations').set('Authorization', `Bearer ${jwt}`);
         expect(response.status).toBe(200);
-        expect(response.body).toHaveLength(0);
+        expect(response.body).toHaveLength(10); // The test generates 10 conversations.
     });
 });
 

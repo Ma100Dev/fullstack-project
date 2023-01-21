@@ -4,7 +4,7 @@ const Conversation = require('../models/conversation');
 require('express-async-errors');
 const { userExtractor } = require('../utils/middleware');
 
-// TODO: Message encryption?
+// TODO: Message encryption? Probably not necessary, but it would be cool
 
 messageRouter.post('/', userExtractor, async (request, response) => {
     const { body } = request;
