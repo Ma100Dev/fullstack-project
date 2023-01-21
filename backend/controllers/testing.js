@@ -1,6 +1,6 @@
 const testingRouter = require('express').Router();
 const { clear } = require('../tests/utils/db');
-const { generateDefaultUser, populateUsers } = require('../tests/utils/populateDb');
+const { generateDefaultUser, populateUsers, populateProperties } = require('../tests/utils/populateDb');
 
 testingRouter.get('/ping', (request, response) => {
     response.status(200).send('pong');
@@ -12,13 +12,18 @@ testingRouter.post('/reset', async (request, response) => {
 });
 
 testingRouter.post('/createUsers', async (request, response) => {
-    await populateUsers(request.body.count || 10);
-    response.status(204).end();
+    const users = await populateUsers(request.body.count || 10);
+    response.status(201).json(users);
+});
+
+testingRouter.post('/createProperties', async (request, response) => {
+    const properties = await populateProperties(request.body.count || 10);
+    response.status(201).json(properties);
 });
 
 testingRouter.post('/createDefaultUser', async (request, response) => {
-    await generateDefaultUser(request.body.createConversations || false);
-    response.status(204).end();
+    const user = await generateDefaultUser(request.body.createConversations || false);
+    response.status(201).json(user);
 });
 
 module.exports = testingRouter;
