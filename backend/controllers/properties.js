@@ -85,6 +85,15 @@ propertyRouter.post('/:id/reservations', userExtractor, async (request, response
         endDate: new Date(body.endDate),
     });
     const property = await Property.findById(request.params.id);
+    if (Date(body.startDate) < new Date()) {
+      return response.status(400).json({ error: 'Reservation start date must be in the future' });
+    }
+    if (new Date(body.endDate) < new Date()) {
+      return response.status(400).json({ error: 'Reservation end date must be in the future' });
+    }
+    if (new Date(body.startDate) > new Date(body.endDate)) {
+      return response.status(400).json({ error: 'Reservation start date must be before end date' });
+    }
     const invalid = property.reservations.some((rsv) => {
         const startDate = new Date(rsv.startDate);
         const endDate = new Date(rsv.endDate);

@@ -250,6 +250,13 @@ describe('Property getting', () => {
 });
 
 let user;
+const newReservation = Object.freeze({
+    startDate: new Date().toISOString(),
+    endDate: new Date(
+      new Date().setDate(new Date().getDate() + 2),
+    ).toISOString(),
+});
+
 describe('Reservation posting', () => {
     beforeEach(async () => {
         await User.deleteMany({});
@@ -267,16 +274,52 @@ describe('Reservation posting', () => {
         id = body.id;
     });
     test('POST /properties/:id/reservations', async () => {
-        const response = await api.post(`/properties/${id}/reservations`).send({
-            startDate: new Date('2020-08-01').toISOString(),
-            endDate: new Date('2020-08-10').toISOString(),
-        }).set('Authorization', `Bearer ${jwt}`);
+        const response = await api.post(`/properties/${id}/reservations`).send(newReservation)
+          .set('Authorization', `Bearer ${jwt}`);
         expect(response.status).toBe(201);
-        expect(response.body).toHaveProperty('startDate', new Date('2020-08-01').toISOString());
-        expect(response.body).toHaveProperty('endDate', new Date('2020-08-10').toISOString());
+        expect(response.body).toHaveProperty('startDate', newReservation.startDate);
+        expect(response.body).toHaveProperty('endDate', newReservation.endDate);
         expect(response.body).toHaveProperty('property', id);
         expect(response.body).toHaveProperty('user', user);
     });
+    // test('POST /properties/:id/reservations with invalid id', async () => {
+    //     const response = await api.post('/properties/invalid/reservations').send({
+    //         startDate: new Date('2020-08-01').toISOString(),
+    //         endDate: new Date('2020-08-10').toISOString(),
+    //     }).set('Authorization', `Bearer ${jwt}`);
+    //     expect(response.status).toBe(400);
+    //     expect(response.body).toHaveProperty('error', 'Malformatted id');
+    // });
+    // test('POST /properties/:id/reservations with non-existing id', async () => {
+    //     const response = await api.post('/properties/5f4d2e2e2e2e2e2e2e2e2e2e/reservations').send({
+    //         startDate: new Date('2020-08-01').toISOString(),
+    //         endDate: new Date('2020-08-10').toISOString(),
+    //     }).set('Authorization', `Bearer ${jwt}`);
+    //     expect(response.status).toBe(404);
+    //     expect(response.body).toHaveProperty('error', 'Property not found');
+    // });
+    // test('POST /properties/:id/reservations with backward dates', async () => {
+    //     const response = await api.post(`/properties/${id}/reservations`).send({
+    //         startDate: new Date('2020-08-01').toISOString(),
+    //         endDate: new Date('2020-07-10').toISOString(),
+    //     }).set('Authorization', `Bearer ${jwt}`);
+    //     expect(response.status).toBe(400);
+    //     expect(response.body).toHaveProperty('error', 'Invalid dates');
+    // });
+    // test('POST /properties/:id/reservations with invalid dates', async () => {
+    //     let response = await api.post(`/properties/${id}/reservations`).send({
+    //         startDate: new Date('2020-08-01').toISOString(),
+    //         endDate: 'invalid',
+    //     }).set('Authorization', `Bearer ${jwt}`);
+    //     expect(response.status).toBe(400);
+    //     expect(response.body).toHaveProperty('error', 'Reservation validation failed: endDate: Cast to date failed for value "Invalid Date" (type Date) at path "endDate"');
+    //     response = await api.post(`/properties/${id}/reservations`).send({
+    //         startDate: 'invalid',
+    //         endDate: new Date('2020-08-10').toISOString(),
+    //     }).set('Authorization', `Bearer ${jwt}`);
+    //     expect(response.status).toBe(400);
+    //     expect(response.body).toHaveProperty('error', 'Reservation validation failed: startDate: Cast to date failed for value "Invalid Date" (type Date) at path "startDate"');
+    // });
 });
 
 afterAll(async () => {
