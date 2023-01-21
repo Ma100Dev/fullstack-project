@@ -85,10 +85,16 @@ propertyRouter.post('/:id/reservations', userExtractor, async (request, response
         endDate: new Date(body.endDate),
     });
     const property = await Property.findById(request.params.id);
-    if (Date(body.startDate) < new Date()) {
+
+    // This is intentional. Number.isNaN is not applicable here
+    // eslint-disable-next-line no-restricted-globals
+    if (isNaN(new Date(body.startDate)) || isNaN(new Date(body.endDate))) {
+      return response.status(400).json({ error: 'Invalid date' });
+    }
+    if (new Date(body.startDate) < new Date(new Date().setUTCHours(0, 0, 0, 0))) {
       return response.status(400).json({ error: 'Reservation start date must be in the future' });
     }
-    if (new Date(body.endDate) < new Date()) {
+    if (new Date(body.endDate) < new Date(new Date().setUTCHours(0, 0, 0, 0))) {
       return response.status(400).json({ error: 'Reservation end date must be in the future' });
     }
     if (new Date(body.startDate) > new Date(body.endDate)) {
