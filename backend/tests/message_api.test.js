@@ -39,7 +39,7 @@ describe('Conversations', () => {
     test('GET /conversations/:id', async () => { // This test is not very good, but it's probably good enough for now
         const { body } = await api.get('/conversations').set('Authorization', `Bearer ${jwt}`);
         const response = await api.get(`/conversations/${body[0].property.id}`).set('Authorization', `Bearer ${jwt}`);
-        console.log(response.body, response.status);
+        console.log(response.body, response.status); // This is here for debugging purposes
         expect(response.status).toBe(200);
         expect(response.body.property).toEqual(body[0].property);
         expect(response.body.messages).not.toBeUndefined();
