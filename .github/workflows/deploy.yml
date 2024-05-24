@@ -25,7 +25,7 @@ jobs:
           echo "${{ secrets.ID_RSA_PUB }}" > backend/id_rsa.pub
       - name: Deploy to server
         if: ${{!contains(github.event.head_commit.message, '#skip')}}
-        uses: Ma100Dev/github-action-ssh-docker-compose@cd69ee74de318c724c8e6d8d34d8a6294eb2eb55 # Not recommended to use master
+        uses: Ma100Dev/github-action-ssh-docker-compose@939fca7cb1435b087116d020e5ff0084640acf69 # Not recommended to use master
         with:
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh_host: ${{ secrets.SSH_HOST }}
